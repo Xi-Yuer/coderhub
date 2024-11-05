@@ -1,0 +1,83 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: coderhub
+      MYSQL_ROOT_PASSWORD: 2214380963Wx!!
+    ports:
+      - "3306:3306"
+    networks:
+      - coderhub-network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    networks:
+      - coderhub-network
+
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.0
+    container_name: etcd
+    networks:
+      - coderhub-network
+    ports:
+      - "2379"
+      - "2380"
+    command: [
+      "etcd",
+      "--name", "etcd0",
+      "--advertise-client-urls", "http://0.0.0.0:2379",
+      "--listen-client-urls", "http://0.0.0.0:2379",
+      "--initial-advertise-peer-urls", "http://0.0.0.0:2380",
+      "--listen-peer-urls", "http://0.0.0.0:2380",
+      "--initial-cluster", "etcd0=http://0.0.0.0:2380"
+    ]
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    networks:
+      - coderhub-network
+    #    depends_on:
+    #      auth-service:
+    #        condition: service_started
+    #      user-service:
+    #        condition: service_started
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+        consistency: consistent
+
+  # RPC 服务
+  user-service:
+    build:
+      context: .
+      dockerfile: ./rpc/user/Dockerfile
+    container_name: user-service
+    ports:
+      - "9527:9527"
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+    networks:
+      - coderhub-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9527" ]  # 健康检查命令
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    restart: always
+
+networks:
+  coderhub-network:
+    driver: bridge  # 使用默认的 Docker bridge 网络驱动
+
+volumes:
+  etcd-data:

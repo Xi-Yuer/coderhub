@@ -1,0 +1,113 @@
+// goctl api go -api user.api -dir ../
+syntax = "v1"
+
+info (
+	title:   "User API"
+	version: "1.0.0"
+)
+
+type (
+	CheckUserExistsRequest {
+		Username string `json:"username"`
+	}
+	CheckUserExistsResponse {
+		Exists bool `json:"exists"`
+	}
+	CreateUserRequest {
+		Username     string `json:"username"`
+		PasswordHash string `json:"password_hash"`
+	}
+	CreateUserResponse {
+		UserId int64 `json:"user_id"`
+	}
+	GetUserInfoRequest {
+		UserId int64 `json:"user_id"`
+	}
+	GetUserInfoResponse {
+		UserId    int64  `json:"user_id"`
+		Username  string `json:"username"`
+		Avatar    string `json:"avatar"`
+		Email     string `json:"email"`
+		Nickname  string `json:"nickname"`
+		IsAdmin   string `json:"is_admin"`
+		Status    bool   `json:"status"`
+		CreatedAt int64  `json:"created_at"`
+		UpdatedAt int64  `json:"updated_at"`
+	}
+	UpdateUserInfoRequest {
+		UserId   int64  `json:"user_id"`
+		Username string `json:"username"`
+		Avatar   string `json:"avatar"`
+		Email    string `json:"email"`
+		Nickname string `json:"nickname"`
+		IsAdmin  string `json:"is_admin"`
+		Status   bool   `json:"status"`
+	}
+	UpdateUserInfoResponse {
+		Success bool `json:"success"`
+	}
+	AuthenticateUserRequest {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	AuthenticateUserResponse {
+		Authenticated bool `json:"authenticated"`
+	}
+	GenerateTokenRequest {
+		UserId int64 `json:"user_id"`
+	}
+	GenerateTokenResponse {
+		Token string `json:"token"`
+	}
+	ChangePasswordRequest {
+		UserId      int64  `json:"user_id"`
+		OldPassword string `json:"old_password"`
+		NewPassword string `json:"new_password"`
+	}
+	ChangePasswordResponse {
+		Success bool `json:"success"`
+	}
+	ResetPasswordRequest {
+		Email       string `json:"email"`
+		NewPassword string `json:"new_password"`
+	}
+	ResetPasswordResponse {
+		Success bool `json:"success"`
+	}
+	DeleteUserRequest {
+		UserId int64 `json:"user_id"`
+	}
+	DeleteUserResponse {
+		Success bool `json:"success"`
+	}
+)
+
+service user-api {
+	@handler CheckUserExists
+	get /api/user/check-exists (CheckUserExistsRequest) returns (CheckUserExistsResponse)
+
+	@handler CreateUser
+	post /api/user/create (CreateUserRequest) returns (CreateUserResponse)
+
+	@handler GetUserInfo
+	get /api/user/info (GetUserInfoRequest) returns (GetUserInfoResponse)
+
+	@handler UpdateUserInfo
+	put /api/user/update (UpdateUserInfoRequest) returns (UpdateUserInfoResponse)
+
+	@handler AuthenticateUser
+	post /api/user/authenticate (AuthenticateUserRequest) returns (AuthenticateUserResponse)
+
+	@handler GenerateToken
+	post /api/user/token (GenerateTokenRequest) returns (GenerateTokenResponse)
+
+	@handler ChangePassword
+	post /api/user/change-password (ChangePasswordRequest) returns (ChangePasswordResponse)
+
+	@handler ResetPassword
+	post /api/user/reset-password (ResetPasswordRequest) returns (ResetPasswordResponse)
+
+	@handler DeleteUser
+	delete /api/user/delete (DeleteUserRequest) returns (DeleteUserResponse)
+}
+
