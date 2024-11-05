@@ -41,6 +41,11 @@ func (s *UserServiceServer) GetUserInfo(ctx context.Context, in *user.GetUserInf
 	return l.GetUserInfo(in)
 }
 
+func (s *UserServiceServer) GetUserInfoByUsername(ctx context.Context, in *user.GetUserInfoByUsernameRequest) (*user.GetUserInfoResponse, error) {
+	l := logic.NewGetUserInfoByUsernameLogic(ctx, s.svcCtx)
+	return l.GetUserInfoByUsername(in)
+}
+
 // 更新用户信息
 func (s *UserServiceServer) UpdateUserInfo(ctx context.Context, in *user.UpdateUserInfoRequest) (*user.UpdateUserInfoResponse, error) {
 	l := logic.NewUpdateUserInfoLogic(ctx, s.svcCtx)
@@ -51,12 +56,6 @@ func (s *UserServiceServer) UpdateUserInfo(ctx context.Context, in *user.UpdateU
 func (s *UserServiceServer) AuthenticateUser(ctx context.Context, in *user.AuthenticateUserRequest) (*user.AuthenticateUserResponse, error) {
 	l := logic.NewAuthenticateUserLogic(ctx, s.svcCtx)
 	return l.AuthenticateUser(in)
-}
-
-// 生成用户的 JWT Token
-func (s *UserServiceServer) GenerateToken(ctx context.Context, in *user.GenerateTokenRequest) (*user.GenerateTokenResponse, error) {
-	l := logic.NewGenerateTokenLogic(ctx, s.svcCtx)
-	return l.GenerateToken(in)
 }
 
 // 修改密码

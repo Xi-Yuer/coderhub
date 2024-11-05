@@ -21,11 +21,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/api/user/check-exists",
-				Handler: CheckUserExistsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
 				Path:    "/api/user/info",
 				Handler: GetUserInfoHandler(serverCtx),
 			},

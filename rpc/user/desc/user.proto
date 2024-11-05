@@ -15,15 +15,13 @@ service UserService {
 
   // 获取用户信息
   rpc GetUserInfo (GetUserInfoRequest) returns (GetUserInfoResponse);
+  rpc GetUserInfoByUsername (GetUserInfoByUsernameRequest) returns (GetUserInfoResponse);
 
   // 更新用户信息
   rpc UpdateUserInfo (UpdateUserInfoRequest) returns (UpdateUserInfoResponse);
 
   // 验证用户登录
   rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse);
-
-  // 生成用户的 JWT Token
-  rpc GenerateToken (GenerateTokenRequest) returns (GenerateTokenResponse);
 
   // 修改密码
   rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse);
@@ -43,6 +41,7 @@ message CreateUserRequest {string username = 1; string password_hash = 2;}
 message CreateUserResponse {int64 user_id = 1;}
 
 message GetUserInfoRequest {int64 user_id = 1;}
+message GetUserInfoByUsernameRequest {string username = 1;}
 message GetUserInfoResponse {
   int64 user_id = 1;
   string username = 2;

@@ -23,7 +23,6 @@ func NewCheckUserExistsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 	}
 }
 
-// CheckUserExists 检查用户是否存在
 func (l *CheckUserExistsLogic) CheckUserExists(in *user.CheckUserExistsRequest) (*user.CheckUserExistsResponse, error) {
 	return &user.CheckUserExistsResponse{
 		Exists: true,

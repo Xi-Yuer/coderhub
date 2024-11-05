@@ -21,15 +21,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserService_CheckUserExists_FullMethodName  = "/user.UserService/CheckUserExists"
-	UserService_CreateUser_FullMethodName       = "/user.UserService/CreateUser"
-	UserService_GetUserInfo_FullMethodName      = "/user.UserService/GetUserInfo"
-	UserService_UpdateUserInfo_FullMethodName   = "/user.UserService/UpdateUserInfo"
-	UserService_AuthenticateUser_FullMethodName = "/user.UserService/AuthenticateUser"
-	UserService_GenerateToken_FullMethodName    = "/user.UserService/GenerateToken"
-	UserService_ChangePassword_FullMethodName   = "/user.UserService/ChangePassword"
-	UserService_ResetPassword_FullMethodName    = "/user.UserService/ResetPassword"
-	UserService_DeleteUser_FullMethodName       = "/user.UserService/DeleteUser"
+	UserService_CheckUserExists_FullMethodName       = "/user.UserService/CheckUserExists"
+	UserService_CreateUser_FullMethodName            = "/user.UserService/CreateUser"
+	UserService_GetUserInfo_FullMethodName           = "/user.UserService/GetUserInfo"
+	UserService_GetUserInfoByUsername_FullMethodName = "/user.UserService/GetUserInfoByUsername"
+	UserService_UpdateUserInfo_FullMethodName        = "/user.UserService/UpdateUserInfo"
+	UserService_AuthenticateUser_FullMethodName      = "/user.UserService/AuthenticateUser"
+	UserService_ChangePassword_FullMethodName        = "/user.UserService/ChangePassword"
+	UserService_ResetPassword_FullMethodName         = "/user.UserService/ResetPassword"
+	UserService_DeleteUser_FullMethodName            = "/user.UserService/DeleteUser"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -42,12 +42,11 @@ type UserServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	// 获取用户信息
 	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
+	GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
 	// 更新用户信息
 	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error)
 	// 验证用户登录
 	AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, opts ...grpc.CallOption) (*AuthenticateUserResponse, error)
-	// 生成用户的 JWT Token
-	GenerateToken(ctx context.Context, in *GenerateTokenRequest, opts ...grpc.CallOption) (*GenerateTokenResponse, error)
 	// 修改密码
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 	// 重置密码
@@ -94,6 +93,16 @@ func (c *userServiceClient) GetUserInfo(ctx context.Context, in *GetUserInfoRequ
 	return out, nil
 }
 
+func (c *userServiceClient) GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserInfoResponse)
+	err := c.cc.Invoke(ctx, UserService_GetUserInfoByUsername_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateUserInfoResponse)
@@ -108,16 +117,6 @@ func (c *userServiceClient) AuthenticateUser(ctx context.Context, in *Authentica
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AuthenticateUserResponse)
 	err := c.cc.Invoke(ctx, UserService_AuthenticateUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) GenerateToken(ctx context.Context, in *GenerateTokenRequest, opts ...grpc.CallOption) (*GenerateTokenResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GenerateTokenResponse)
-	err := c.cc.Invoke(ctx, UserService_GenerateToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -164,12 +163,11 @@ type UserServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	// 获取用户信息
 	GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error)
+	GetUserInfoByUsername(context.Context, *GetUserInfoByUsernameRequest) (*GetUserInfoResponse, error)
 	// 更新用户信息
 	UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*UpdateUserInfoResponse, error)
 	// 验证用户登录
 	AuthenticateUser(context.Context, *AuthenticateUserRequest) (*AuthenticateUserResponse, error)
-	// 生成用户的 JWT Token
-	GenerateToken(context.Context, *GenerateTokenRequest) (*GenerateTokenResponse, error)
 	// 修改密码
 	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
 	// 重置密码
@@ -195,14 +193,14 @@ func (UnimplementedUserServiceServer) CreateUser(context.Context, *CreateUserReq
 func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
 }
+func (UnimplementedUserServiceServer) GetUserInfoByUsername(context.Context, *GetUserInfoByUsernameRequest) (*GetUserInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfoByUsername not implemented")
+}
 func (UnimplementedUserServiceServer) UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*UpdateUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserInfo not implemented")
 }
 func (UnimplementedUserServiceServer) AuthenticateUser(context.Context, *AuthenticateUserRequest) (*AuthenticateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AuthenticateUser not implemented")
-}
-func (UnimplementedUserServiceServer) GenerateToken(context.Context, *GenerateTokenRequest) (*GenerateTokenResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GenerateToken not implemented")
 }
 func (UnimplementedUserServiceServer) ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
@@ -288,6 +286,24 @@ func _UserService_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetUserInfoByUsername_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserInfoByUsernameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserInfoByUsername(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetUserInfoByUsername_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserInfoByUsername(ctx, req.(*GetUserInfoByUsernameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_UpdateUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateUserInfoRequest)
 	if err := dec(in); err != nil {
@@ -320,24 +336,6 @@ func _UserService_AuthenticateUser_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).AuthenticateUser(ctx, req.(*AuthenticateUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_GenerateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GenerateTokenRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).GenerateToken(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_GenerateToken_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GenerateToken(ctx, req.(*GenerateTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -416,16 +414,16 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_GetUserInfo_Handler,
 		},
 		{
+			MethodName: "GetUserInfoByUsername",
+			Handler:    _UserService_GetUserInfoByUsername_Handler,
+		},
+		{
 			MethodName: "UpdateUserInfo",
 			Handler:    _UserService_UpdateUserInfo_Handler,
 		},
 		{
 			MethodName: "AuthenticateUser",
 			Handler:    _UserService_AuthenticateUser_Handler,
-		},
-		{
-			MethodName: "GenerateToken",
-			Handler:    _UserService_GenerateToken_Handler,
 		},
 		{
 			MethodName: "ChangePassword",

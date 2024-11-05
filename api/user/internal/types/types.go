@@ -9,7 +9,8 @@ type AuthenticateUserRequest struct {
 }
 
 type AuthenticateUserResponse struct {
-	Authenticated bool `json:"authenticated"`
+	Response
+	Data string `json:"data"`
 }
 
 type ChangePasswordRequest struct {
@@ -19,15 +20,8 @@ type ChangePasswordRequest struct {
 }
 
 type ChangePasswordResponse struct {
-	Success bool `json:"success"`
-}
-
-type CheckUserExistsRequest struct {
-	Username string `json:"username"`
-}
-
-type CheckUserExistsResponse struct {
-	Exists bool `json:"exists"`
+	Response
+	Data bool `json:"data"`
 }
 
 type CreateUserRequest struct {
@@ -36,7 +30,8 @@ type CreateUserRequest struct {
 }
 
 type CreateUserResponse struct {
-	UserId int64 `json:"user_id"`
+	Response
+	Data bool `json:"data"`
 }
 
 type DeleteUserRequest struct {
@@ -44,15 +39,8 @@ type DeleteUserRequest struct {
 }
 
 type DeleteUserResponse struct {
-	Success bool `json:"success"`
-}
-
-type GenerateTokenRequest struct {
-	UserId int64 `json:"user_id"`
-}
-
-type GenerateTokenResponse struct {
-	Token string `json:"token"`
+	Response
+	Data bool `json:"data"`
 }
 
 type GetUserInfoRequest struct {
@@ -60,15 +48,8 @@ type GetUserInfoRequest struct {
 }
 
 type GetUserInfoResponse struct {
-	UserId    int64  `json:"user_id"`
-	Username  string `json:"username"`
-	Avatar    string `json:"avatar"`
-	Email     string `json:"email"`
-	Nickname  string `json:"nickname"`
-	IsAdmin   string `json:"is_admin"`
-	Status    bool   `json:"status"`
-	CreatedAt int64  `json:"created_at"`
-	UpdatedAt int64  `json:"updated_at"`
+	Response
+	Data UserInfo `json:"data"`
 }
 
 type ResetPasswordRequest struct {
@@ -77,7 +58,13 @@ type ResetPasswordRequest struct {
 }
 
 type ResetPasswordResponse struct {
-	Success bool `json:"success"`
+	Response
+	Data bool `json:"data"`
+}
+
+type Response struct {
+	Code    int32  `json:"code"`    // 状态码
+	Message string `json:"message"` // 提示信息
 }
 
 type UpdateUserInfoRequest struct {
@@ -91,5 +78,18 @@ type UpdateUserInfoRequest struct {
 }
 
 type UpdateUserInfoResponse struct {
-	Success bool `json:"success"`
+	Response
+	Data bool `json:"data"`
+}
+
+type UserInfo struct {
+	UserId    int64  `json:"user_id"`
+	Username  string `json:"username"`
+	Avatar    string `json:"avatar"`
+	Email     string `json:"email"`
+	Nickname  string `json:"nickname"`
+	IsAdmin   string `json:"is_admin"`
+	Status    bool   `json:"status"`
+	CreatedAt int64  `json:"created_at"`
+	UpdatedAt int64  `json:"updated_at"`
 }

@@ -24,7 +24,8 @@ func NewCreateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateUserLogic) CreateUser(req *types.CreateUserRequest) (resp *types.CreateUserResponse, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	return &types.CreateUserResponse{
+		Response: types.Response{},
+		Data:     true,
+	}, nil
 }

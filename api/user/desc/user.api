@@ -7,23 +7,22 @@ info (
 )
 
 type (
-	CheckUserExistsRequest {
-		Username string `json:"username"`
-	}
-	CheckUserExistsResponse {
-		Exists bool `json:"exists"`
+	Response {
+		Code    int32  `json:"code"` // 状态码
+		Message string `json:"message"` // 提示信息
 	}
 	CreateUserRequest {
 		Username     string `json:"username"`
 		PasswordHash string `json:"password_hash"`
 	}
 	CreateUserResponse {
-		UserId int64 `json:"user_id"`
+		Response
+		Data bool `json:"data"`
 	}
 	GetUserInfoRequest {
 		UserId int64 `json:"user_id"`
 	}
-	GetUserInfoResponse {
+	UserInfo {
 		UserId    int64  `json:"user_id"`
 		Username  string `json:"username"`
 		Avatar    string `json:"avatar"`
@@ -33,6 +32,10 @@ type (
 		Status    bool   `json:"status"`
 		CreatedAt int64  `json:"created_at"`
 		UpdatedAt int64  `json:"updated_at"`
+	}
+	GetUserInfoResponse {
+		Response
+		Data UserInfo `json:"data"`
 	}
 	UpdateUserInfoRequest {
 		UserId   int64  `json:"user_id"`
@@ -44,20 +47,16 @@ type (
 		Status   bool   `json:"status"`
 	}
 	UpdateUserInfoResponse {
-		Success bool `json:"success"`
+		Response
+		Data bool `json:"data"`
 	}
 	AuthenticateUserRequest {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	}
 	AuthenticateUserResponse {
-		Authenticated bool `json:"authenticated"`
-	}
-	GenerateTokenRequest {
-		UserId int64 `json:"user_id"`
-	}
-	GenerateTokenResponse {
-		Token string `json:"token"`
+		Response
+		Data string `json:"data"`
 	}
 	ChangePasswordRequest {
 		UserId      int64  `json:"user_id"`
@@ -65,33 +64,32 @@ type (
 		NewPassword string `json:"new_password"`
 	}
 	ChangePasswordResponse {
-		Success bool `json:"success"`
+		Response
+		Data bool `json:"data"`
 	}
 	ResetPasswordRequest {
 		Email       string `json:"email"`
 		NewPassword string `json:"new_password"`
 	}
 	ResetPasswordResponse {
-		Success bool `json:"success"`
+		Response
+		Data bool `json:"data"`
 	}
 	DeleteUserRequest {
 		UserId int64 `json:"user_id"`
 	}
 	DeleteUserResponse {
-		Success bool `json:"success"`
+		Response
+		Data bool `json:"data"`
 	}
 )
 
 service user-api {
-	// 检查用户是否存在
-	@handler CheckUserExists
-	get /api/user/check-exists (CheckUserExistsRequest) returns (CheckUserExistsResponse)
-
 	// 获取用户信息
 	@handler GetUserInfo
 	get /api/user/info (GetUserInfoRequest) returns (GetUserInfoResponse)
 
-	// 验证用户登录
+	// 用户登录
 	@handler AuthenticateUser
 	post /api/user/authenticate (AuthenticateUserRequest) returns (AuthenticateUserResponse)
 }

@@ -14,24 +14,25 @@ import (
 )
 
 type (
-	AuthenticateUserRequest  = user.AuthenticateUserRequest
-	AuthenticateUserResponse = user.AuthenticateUserResponse
-	ChangePasswordRequest    = user.ChangePasswordRequest
-	ChangePasswordResponse   = user.ChangePasswordResponse
-	CheckUserExistsRequest   = user.CheckUserExistsRequest
-	CheckUserExistsResponse  = user.CheckUserExistsResponse
-	CreateUserRequest        = user.CreateUserRequest
-	CreateUserResponse       = user.CreateUserResponse
-	DeleteUserRequest        = user.DeleteUserRequest
-	DeleteUserResponse       = user.DeleteUserResponse
-	GenerateTokenRequest     = user.GenerateTokenRequest
-	GenerateTokenResponse    = user.GenerateTokenResponse
-	GetUserInfoRequest       = user.GetUserInfoRequest
-	GetUserInfoResponse      = user.GetUserInfoResponse
-	ResetPasswordRequest     = user.ResetPasswordRequest
-	ResetPasswordResponse    = user.ResetPasswordResponse
-	UpdateUserInfoRequest    = user.UpdateUserInfoRequest
-	UpdateUserInfoResponse   = user.UpdateUserInfoResponse
+	AuthenticateUserRequest      = user.AuthenticateUserRequest
+	AuthenticateUserResponse     = user.AuthenticateUserResponse
+	ChangePasswordRequest        = user.ChangePasswordRequest
+	ChangePasswordResponse       = user.ChangePasswordResponse
+	CheckUserExistsRequest       = user.CheckUserExistsRequest
+	CheckUserExistsResponse      = user.CheckUserExistsResponse
+	CreateUserRequest            = user.CreateUserRequest
+	CreateUserResponse           = user.CreateUserResponse
+	DeleteUserRequest            = user.DeleteUserRequest
+	DeleteUserResponse           = user.DeleteUserResponse
+	GenerateTokenRequest         = user.GenerateTokenRequest
+	GenerateTokenResponse        = user.GenerateTokenResponse
+	GetUserInfoByUsernameRequest = user.GetUserInfoByUsernameRequest
+	GetUserInfoRequest           = user.GetUserInfoRequest
+	GetUserInfoResponse          = user.GetUserInfoResponse
+	ResetPasswordRequest         = user.ResetPasswordRequest
+	ResetPasswordResponse        = user.ResetPasswordResponse
+	UpdateUserInfoRequest        = user.UpdateUserInfoRequest
+	UpdateUserInfoResponse       = user.UpdateUserInfoResponse
 
 	UserService interface {
 		// 检查用户是否存在
@@ -40,12 +41,11 @@ type (
 		CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 		// 获取用户信息
 		GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
+		GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
 		// 更新用户信息
 		UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error)
 		// 验证用户登录
 		AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, opts ...grpc.CallOption) (*AuthenticateUserResponse, error)
-		// 生成用户的 JWT Token
-		GenerateToken(ctx context.Context, in *GenerateTokenRequest, opts ...grpc.CallOption) (*GenerateTokenResponse, error)
 		// 修改密码
 		ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 		// 重置密码
@@ -83,6 +83,11 @@ func (m *defaultUserService) GetUserInfo(ctx context.Context, in *GetUserInfoReq
 	return client.GetUserInfo(ctx, in, opts...)
 }
 
+func (m *defaultUserService) GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
+	client := user.NewUserServiceClient(m.cli.Conn())
+	return client.GetUserInfoByUsername(ctx, in, opts...)
+}
+
 // 更新用户信息
 func (m *defaultUserService) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error) {
 	client := user.NewUserServiceClient(m.cli.Conn())
@@ -93,12 +98,6 @@ func (m *defaultUserService) UpdateUserInfo(ctx context.Context, in *UpdateUserI
 func (m *defaultUserService) AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, opts ...grpc.CallOption) (*AuthenticateUserResponse, error) {
 	client := user.NewUserServiceClient(m.cli.Conn())
 	return client.AuthenticateUser(ctx, in, opts...)
-}
-
-// 生成用户的 JWT Token
-func (m *defaultUserService) GenerateToken(ctx context.Context, in *GenerateTokenRequest, opts ...grpc.CallOption) (*GenerateTokenResponse, error) {
-	client := user.NewUserServiceClient(m.cli.Conn())
-	return client.GenerateToken(ctx, in, opts...)
 }
 
 // 修改密码

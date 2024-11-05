@@ -2,6 +2,7 @@ package logic
 
 import (
 	"coderhub/rpc/user/user"
+	"coderhub/shared/token"
 	"context"
 
 	"coderhub/api/user/internal/svc"
@@ -29,11 +30,47 @@ func (l *AuthenticateUserLogic) AuthenticateUser(req *types.AuthenticateUserRequ
 		Username: req.Username,
 	})
 	if err != nil {
-		return nil, err
+		return &types.AuthenticateUserResponse{
+			Response: types.Response{
+				Code:    0,
+				Message: "fail",
+			},
+			Data: err.Error()}, err
 	}
 	if !exists.Exists {
-		return nil, err
+		return &types.AuthenticateUserResponse{
+			Response: types.Response{
+				Code:    0,
+				Message: "fail",
+			},
+			Data: "用户不存在",
+		}, err
 	}
 
-	return
+	UserInfo, err := l.svcCtx.UserService.GetUserInfoByUsername(l.ctx, &user.GetUserInfoByUsernameRequest{Username: req.Username})
+	if err != nil {
+		return &types.AuthenticateUserResponse{
+			Response: types.Response{
+				Code:    0,
+				Message: "fail",
+			},
+			Data: err.Error()}, err
+	}
+
+	authorization, err := token.GenerateAuthorization(UserInfo.UserId)
+	if err != nil {
+		return &types.AuthenticateUserResponse{
+			Response: types.Response{
+				Code:    0,
+				Message: "fail",
+			},
+			Data: err.Error()}, err
+	}
+	return &types.AuthenticateUserResponse{
+		Response: types.Response{
+			Code:    0,
+			Message: "success",
+		},
+		Data: authorization,
+	}, nil
 }
