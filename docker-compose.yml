@@ -6,7 +6,7 @@ services:
       MYSQL_DATABASE: coderhub
       MYSQL_ROOT_PASSWORD: 2214380963Wx!!
     ports:
-      - "3306:3306"
+      - "3306"
     networks:
       - coderhub-network
 
@@ -39,19 +39,42 @@ services:
     container_name: nginx
     ports:
       - "80:80"
+    depends_on:
+      user-service:
+        condition: service_started
+      user-api:
+        condition: service_started
     networks:
       - coderhub-network
-    #    depends_on:
-    #      auth-service:
-    #        condition: service_started
-    #      user-service:
-    #        condition: service_started
     volumes:
       - type: bind
         source: ./nginx.conf
         target: /etc/nginx/nginx.conf
         read_only: true
         consistency: consistent
+
+  #  Api 服务
+  user-api:
+    build:
+      context: .
+      dockerfile: ./api/user/Dockerfile
+    container_name: user-api
+    ports:
+      - "8527"
+    depends_on:
+      - etcd
+      - mysql
+      - redis
+      - user-service
+    networks:
+      - coderhub-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8527" ]  # 健康检查命令
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    restart: always
 
   # RPC 服务
   user-service:
@@ -60,13 +83,20 @@ services:
       dockerfile: ./rpc/user/Dockerfile
     container_name: user-service
     ports:
-      - "9527:9527"
+      - "9527"
     depends_on:
       - mysql
       - redis
       - etcd
     networks:
       - coderhub-network
+    environment:
+      REDIS_HOST: redis  # 使用服务名称作为主机名
+      REDIS_PORT: 6379
+      ETCD_HOST: etcd
+      ETCD_PORT: 2379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9527" ]  # 健康检查命令
       interval: 10s

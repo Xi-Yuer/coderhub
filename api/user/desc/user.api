@@ -83,30 +83,40 @@ type (
 )
 
 service user-api {
+	// 检查用户是否存在
 	@handler CheckUserExists
 	get /api/user/check-exists (CheckUserExistsRequest) returns (CheckUserExistsResponse)
 
-	@handler CreateUser
-	post /api/user/create (CreateUserRequest) returns (CreateUserResponse)
-
+	// 获取用户信息
 	@handler GetUserInfo
 	get /api/user/info (GetUserInfoRequest) returns (GetUserInfoResponse)
 
+	// 验证用户登录
+	@handler AuthenticateUser
+	post /api/user/authenticate (AuthenticateUserRequest) returns (AuthenticateUserResponse)
+}
+
+@server (
+	jwt: Auth
+)
+service user-api {
+	// 创建用户
+	@handler CreateUser
+	post /api/user/create (CreateUserRequest) returns (CreateUserResponse)
+
+	// 更新用户信息
 	@handler UpdateUserInfo
 	put /api/user/update (UpdateUserInfoRequest) returns (UpdateUserInfoResponse)
 
-	@handler AuthenticateUser
-	post /api/user/authenticate (AuthenticateUserRequest) returns (AuthenticateUserResponse)
-
-	@handler GenerateToken
-	post /api/user/token (GenerateTokenRequest) returns (GenerateTokenResponse)
-
-	@handler ChangePassword
-	post /api/user/change-password (ChangePasswordRequest) returns (ChangePasswordResponse)
-
+	// 重置密码
 	@handler ResetPassword
 	post /api/user/reset-password (ResetPasswordRequest) returns (ResetPasswordResponse)
 
+	// 修改密码
+	@handler ChangePassword
+	post /api/user/change-password (ChangePasswordRequest) returns (ChangePasswordResponse)
+
+	// 删除用户
 	@handler DeleteUser
 	delete /api/user/delete (DeleteUserRequest) returns (DeleteUserResponse)
 }

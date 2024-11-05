@@ -1,6 +1,9 @@
 Name: user-api
 Host: 0.0.0.0
-Port: 8888
+Port: 8527
+Auth:
+  AccessSecret: user-api-secret
+  AccessExpire: 86400
 UserService:
   Etcd:
     Hosts:

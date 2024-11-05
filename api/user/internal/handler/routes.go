@@ -20,14 +20,24 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: AuthenticateUserHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPost,
-				Path:    "/api/user/change-password",
-				Handler: ChangePasswordHandler(serverCtx),
-			},
-			{
 				Method:  http.MethodGet,
 				Path:    "/api/user/check-exists",
 				Handler: CheckUserExistsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/api/user/info",
+				Handler: GetUserInfoHandler(serverCtx),
+			},
+		},
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/user/change-password",
+				Handler: ChangePasswordHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
@@ -40,19 +50,9 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: DeleteUserHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
-				Path:    "/api/user/info",
-				Handler: GetUserInfoHandler(serverCtx),
-			},
-			{
 				Method:  http.MethodPost,
 				Path:    "/api/user/reset-password",
 				Handler: ResetPasswordHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/api/user/token",
-				Handler: GenerateTokenHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPut,
@@ -60,5 +60,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: UpdateUserInfoHandler(serverCtx),
 			},
 		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 	)
 }

@@ -25,8 +25,6 @@ func NewCheckUserExistsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 
 // CheckUserExists 检查用户是否存在
 func (l *CheckUserExistsLogic) CheckUserExists(in *user.CheckUserExistsRequest) (*user.CheckUserExistsResponse, error) {
-	// todo: add your logic here and delete this line
-
 	return &user.CheckUserExistsResponse{
 		Exists: true,
 	}, nil

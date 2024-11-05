@@ -23,7 +23,7 @@ func NewChangePasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ch
 	}
 }
 
-// 修改密码
+// ChangePassword 修改密码
 func (l *ChangePasswordLogic) ChangePassword(in *user.ChangePasswordRequest) (*user.ChangePasswordResponse, error) {
 	// todo: add your logic here and delete this line
 
