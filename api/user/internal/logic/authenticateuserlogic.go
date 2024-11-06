@@ -35,7 +35,7 @@ func (l *AuthenticateUserLogic) AuthenticateUser(req *types.AuthenticateUserRequ
 				Code:    0,
 				Message: "fail",
 			},
-			Data: err.Error()}, err
+			Data: err.Error()}, nil
 	}
 	if !exists.Exists {
 		return &types.AuthenticateUserResponse{
@@ -44,7 +44,7 @@ func (l *AuthenticateUserLogic) AuthenticateUser(req *types.AuthenticateUserRequ
 				Message: "fail",
 			},
 			Data: "用户不存在",
-		}, err
+		}, nil
 	}
 
 	UserInfo, err := l.svcCtx.UserService.GetUserInfoByUsername(l.ctx, &user.GetUserInfoByUsernameRequest{Username: req.Username})
@@ -54,7 +54,7 @@ func (l *AuthenticateUserLogic) AuthenticateUser(req *types.AuthenticateUserRequ
 				Code:    0,
 				Message: "fail",
 			},
-			Data: err.Error()}, err
+			Data: err.Error()}, nil
 	}
 
 	authorization, err := token.GenerateAuthorization(UserInfo.UserId)
@@ -64,7 +64,7 @@ func (l *AuthenticateUserLogic) AuthenticateUser(req *types.AuthenticateUserRequ
 				Code:    0,
 				Message: "fail",
 			},
-			Data: err.Error()}, err
+			Data: err.Error()}, nil
 	}
 	return &types.AuthenticateUserResponse{
 		Response: types.Response{

@@ -14,8 +14,6 @@ import (
 )
 
 type (
-	AuthenticateUserRequest      = user.AuthenticateUserRequest
-	AuthenticateUserResponse     = user.AuthenticateUserResponse
 	ChangePasswordRequest        = user.ChangePasswordRequest
 	ChangePasswordResponse       = user.ChangePasswordResponse
 	CheckUserExistsRequest       = user.CheckUserExistsRequest
@@ -44,8 +42,6 @@ type (
 		GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
 		// 更新用户信息
 		UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error)
-		// 验证用户登录
-		AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, opts ...grpc.CallOption) (*AuthenticateUserResponse, error)
 		// 修改密码
 		ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 		// 重置密码
@@ -92,12 +88,6 @@ func (m *defaultUserService) GetUserInfoByUsername(ctx context.Context, in *GetU
 func (m *defaultUserService) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error) {
 	client := user.NewUserServiceClient(m.cli.Conn())
 	return client.UpdateUserInfo(ctx, in, opts...)
-}
-
-// 验证用户登录
-func (m *defaultUserService) AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, opts ...grpc.CallOption) (*AuthenticateUserResponse, error) {
-	client := user.NewUserServiceClient(m.cli.Conn())
-	return client.AuthenticateUser(ctx, in, opts...)
 }
 
 // 修改密码

@@ -1,5 +1,4 @@
 // goctl rpc protoc user.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../
-
 syntax = "proto3";
 
 package user;
@@ -19,9 +18,6 @@ service UserService {
 
   // 更新用户信息
   rpc UpdateUserInfo (UpdateUserInfoRequest) returns (UpdateUserInfoResponse);
-
-  // 验证用户登录
-  rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse);
 
   // 修改密码
   rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse);
@@ -65,9 +61,6 @@ message UpdateUserInfoRequest {
 }
 
 message UpdateUserInfoResponse {bool success = 1;}
-
-message AuthenticateUserRequest {string username = 1; string password = 2;}
-message AuthenticateUserResponse {bool authenticated = 1;}
 
 message GenerateTokenRequest {int64 user_id = 1;}
 message GenerateTokenResponse {string token = 1;}

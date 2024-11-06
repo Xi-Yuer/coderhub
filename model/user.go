@@ -6,7 +6,7 @@ import (
 )
 
 type User struct {
-	ID        string  `gorm:"<-:create;primaryKey"`
+	ID        int64   `gorm:"<-:create;primaryKey"`
 	UserName  string  `gorm:"<-:create;unique"`
 	Password  string  `gorm:"not null"`
 	NickName  *string `gorm:"<-:create"`

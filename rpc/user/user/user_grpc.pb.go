@@ -26,7 +26,6 @@ const (
 	UserService_GetUserInfo_FullMethodName           = "/user.UserService/GetUserInfo"
 	UserService_GetUserInfoByUsername_FullMethodName = "/user.UserService/GetUserInfoByUsername"
 	UserService_UpdateUserInfo_FullMethodName        = "/user.UserService/UpdateUserInfo"
-	UserService_AuthenticateUser_FullMethodName      = "/user.UserService/AuthenticateUser"
 	UserService_ChangePassword_FullMethodName        = "/user.UserService/ChangePassword"
 	UserService_ResetPassword_FullMethodName         = "/user.UserService/ResetPassword"
 	UserService_DeleteUser_FullMethodName            = "/user.UserService/DeleteUser"
@@ -45,8 +44,6 @@ type UserServiceClient interface {
 	GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
 	// 更新用户信息
 	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error)
-	// 验证用户登录
-	AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, opts ...grpc.CallOption) (*AuthenticateUserResponse, error)
 	// 修改密码
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 	// 重置密码
@@ -113,16 +110,6 @@ func (c *userServiceClient) UpdateUserInfo(ctx context.Context, in *UpdateUserIn
 	return out, nil
 }
 
-func (c *userServiceClient) AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, opts ...grpc.CallOption) (*AuthenticateUserResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AuthenticateUserResponse)
-	err := c.cc.Invoke(ctx, UserService_AuthenticateUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userServiceClient) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ChangePasswordResponse)
@@ -166,8 +153,6 @@ type UserServiceServer interface {
 	GetUserInfoByUsername(context.Context, *GetUserInfoByUsernameRequest) (*GetUserInfoResponse, error)
 	// 更新用户信息
 	UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*UpdateUserInfoResponse, error)
-	// 验证用户登录
-	AuthenticateUser(context.Context, *AuthenticateUserRequest) (*AuthenticateUserResponse, error)
 	// 修改密码
 	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
 	// 重置密码
@@ -198,9 +183,6 @@ func (UnimplementedUserServiceServer) GetUserInfoByUsername(context.Context, *Ge
 }
 func (UnimplementedUserServiceServer) UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*UpdateUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserInfo not implemented")
-}
-func (UnimplementedUserServiceServer) AuthenticateUser(context.Context, *AuthenticateUserRequest) (*AuthenticateUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AuthenticateUser not implemented")
 }
 func (UnimplementedUserServiceServer) ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
@@ -322,24 +304,6 @@ func _UserService_UpdateUserInfo_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_AuthenticateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthenticateUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).AuthenticateUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_AuthenticateUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).AuthenticateUser(ctx, req.(*AuthenticateUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _UserService_ChangePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ChangePasswordRequest)
 	if err := dec(in); err != nil {
@@ -420,10 +384,6 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUserInfo",
 			Handler:    _UserService_UpdateUserInfo_Handler,
-		},
-		{
-			MethodName: "AuthenticateUser",
-			Handler:    _UserService_AuthenticateUser_Handler,
 		},
 		{
 			MethodName: "ChangePassword",

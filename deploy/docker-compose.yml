@@ -56,11 +56,11 @@ services:
   #  Api 服务
   user-api:
     build:
-      context: .
+      context: ..
       dockerfile: ./api/user/Dockerfile
     container_name: user-api
     ports:
-      - "8527"
+      - "8527:8527"
     depends_on:
       - etcd
       - mysql
@@ -79,11 +79,11 @@ services:
   # RPC 服务
   user-service:
     build:
-      context: .
+      context: ..
       dockerfile: ./rpc/user/Dockerfile
     container_name: user-service
     ports:
-      - "9527"
+      - "9527:9527"
     depends_on:
       - mysql
       - redis

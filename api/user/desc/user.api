@@ -17,7 +17,7 @@ type (
 	}
 	CreateUserResponse {
 		Response
-		Data bool `json:"data"`
+        Data int64 `json:"data"`
 	}
 	GetUserInfoRequest {
 		UserId int64 `json:"user_id"`

@@ -52,12 +52,6 @@ func (s *UserServiceServer) UpdateUserInfo(ctx context.Context, in *user.UpdateU
 	return l.UpdateUserInfo(in)
 }
 
-// 验证用户登录
-func (s *UserServiceServer) AuthenticateUser(ctx context.Context, in *user.AuthenticateUserRequest) (*user.AuthenticateUserResponse, error) {
-	l := logic.NewAuthenticateUserLogic(ctx, s.svcCtx)
-	return l.AuthenticateUser(in)
-}
-
 // 修改密码
 func (s *UserServiceServer) ChangePassword(ctx context.Context, in *user.ChangePasswordRequest) (*user.ChangePasswordResponse, error) {
 	l := logic.NewChangePasswordLogic(ctx, s.svcCtx)

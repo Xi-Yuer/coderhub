@@ -31,7 +31,7 @@ type CreateUserRequest struct {
 
 type CreateUserResponse struct {
 	Response
-	Data bool `json:"data"`
+	Data int64 `json:"data"`
 }
 
 type DeleteUserRequest struct {
