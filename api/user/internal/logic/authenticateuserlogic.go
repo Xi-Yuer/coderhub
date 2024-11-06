@@ -1,12 +1,12 @@
 package logic
 
 import (
-	"coderhub/rpc/user/user"
-	"coderhub/shared/token"
-	"context"
-
 	"coderhub/api/user/internal/svc"
 	"coderhub/api/user/internal/types"
+	"coderhub/rpc/user/user"
+	"coderhub/shared/bcryptUtil"
+	"coderhub/shared/token"
+	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -55,6 +55,16 @@ func (l *AuthenticateUserLogic) AuthenticateUser(req *types.AuthenticateUserRequ
 				Message: "fail",
 			},
 			Data: err.Error()}, nil
+	}
+
+	if !bcryptUtil.CompareHashAndPassword(UserInfo.Password, req.Password) {
+		return &types.AuthenticateUserResponse{
+			Response: types.Response{
+				Code:    0,
+				Message: "fail",
+			},
+			Data: "密码错误",
+		}, nil
 	}
 
 	authorization, err := token.GenerateAuthorization(UserInfo.UserId)

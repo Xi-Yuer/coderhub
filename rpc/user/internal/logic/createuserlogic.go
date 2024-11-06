@@ -27,15 +27,10 @@ func NewCreateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateUserLogic) CreateUser(in *user.CreateUserRequest) (*user.CreateUserResponse, error) {
-	checkUserExistsLogic := CheckUserExistsLogic{
-		ctx:    l.ctx,
-		svcCtx: l.svcCtx,
-		Logger: l.Logger,
-	}
-	checkUserExists, _ := checkUserExistsLogic.CheckUserExists(&user.CheckUserExistsRequest{
-		Username: in.Username,
-	})
-	if checkUserExists.Exists {
+	// 查看用户是否存在
+	tx := l.svcCtx.SqlDB.First(&model.User{}, "user_name = ?", in.Username)
+
+	if checkUserExists := tx.RowsAffected > 0; checkUserExists {
 		return nil, errors.New("用户已存在")
 	}
 
@@ -46,11 +41,6 @@ func (l *CreateUserLogic) CreateUser(in *user.CreateUserRequest) (*user.CreateUs
 		ID:       ID,
 		UserName: in.Username,
 		Password: Password,
-		NickName: nil,
-		Email:    nil,
-		Avatar:   nil,
-		Status:   false,
-		IsAdmin:  false,
 	}); tx.Error != nil {
 		return nil, tx.Error
 	}

@@ -4,8 +4,8 @@
 package types
 
 type AuthenticateUserRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `form:"username"`
+	Password string `form:"password"`
 }
 
 type AuthenticateUserResponse struct {
@@ -14,9 +14,9 @@ type AuthenticateUserResponse struct {
 }
 
 type ChangePasswordRequest struct {
-	UserId      int64  `json:"user_id"`
-	OldPassword string `json:"old_password"`
-	NewPassword string `json:"new_password"`
+	UserId      int64  `form:"userId"`
+	OldPassword string `form:"oldPassword"`
+	NewPassword string `form:"newPassword"`
 }
 
 type ChangePasswordResponse struct {
@@ -25,8 +25,8 @@ type ChangePasswordResponse struct {
 }
 
 type CreateUserRequest struct {
-	Username     string `json:"username"`
-	PasswordHash string `json:"password_hash"`
+	Username     string `form:"username"`
+	PasswordHash string `form:"passwordHash"`
 }
 
 type CreateUserResponse struct {
@@ -35,7 +35,7 @@ type CreateUserResponse struct {
 }
 
 type DeleteUserRequest struct {
-	UserId int64 `json:"user_id"`
+	UserId int64 `path:"userId"`
 }
 
 type DeleteUserResponse struct {
@@ -44,7 +44,7 @@ type DeleteUserResponse struct {
 }
 
 type GetUserInfoRequest struct {
-	UserId int64 `json:"user_id"`
+	UserId int64 `json:"user_id" path:"userId"`
 }
 
 type GetUserInfoResponse struct {
@@ -53,8 +53,8 @@ type GetUserInfoResponse struct {
 }
 
 type ResetPasswordRequest struct {
-	Email       string `json:"email"`
-	NewPassword string `json:"new_password"`
+	Email       string `form:"email"`
+	NewPassword string `form:"newPassword"`
 }
 
 type ResetPasswordResponse struct {
@@ -68,13 +68,13 @@ type Response struct {
 }
 
 type UpdateUserInfoRequest struct {
-	UserId   int64  `json:"user_id"`
-	Username string `json:"username"`
-	Avatar   string `json:"avatar"`
-	Email    string `json:"email"`
-	Nickname string `json:"nickname"`
-	IsAdmin  string `json:"is_admin"`
-	Status   bool   `json:"status"`
+	UserId   int64  `form:"userId"`
+	Username string `form:"username"`
+	Avatar   string `form:"avatar"`
+	Email    string `form:"email"`
+	Nickname string `form:"nickname"`
+	IsAdmin  string `form:"isAdmin"`
+	Status   bool   `form:"status"`
 }
 
 type UpdateUserInfoResponse struct {

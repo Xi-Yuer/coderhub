@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"coderhub/model"
 	"context"
 
 	"coderhub/rpc/user/internal/svc"
@@ -24,17 +25,21 @@ func NewGetUserInfoByUsernameLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *GetUserInfoByUsernameLogic) GetUserInfoByUsername(in *user.GetUserInfoByUsernameRequest) (*user.GetUserInfoResponse, error) {
-	// todo: add your logic here and delete this line
-
+	var User model.User
+	tx := l.svcCtx.SqlDB.First(&User, "user_name = ?", in.Username)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
 	return &user.GetUserInfoResponse{
-		UserId:    0,
-		Username:  "",
-		Avatar:    "",
-		Email:     "",
-		Nickname:  "",
-		IsAdmin:   "",
-		Status:    false,
-		CreatedAt: 0,
-		UpdatedAt: 0,
+		UserId:    User.ID,
+		Username:  User.UserName,
+		Avatar:    User.Avatar.String,
+		Email:     User.Email.String,
+		Password:  User.Password,
+		Nickname:  User.NickName.String,
+		IsAdmin:   User.IsAdmin,
+		Status:    User.Status,
+		CreatedAt: User.CreatedAt.Unix(),
+		UpdatedAt: User.UpdatedAt.Unix(),
 	}, nil
 }

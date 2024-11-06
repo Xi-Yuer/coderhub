@@ -15,14 +15,19 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				Method:  http.MethodGet,
+				Path:    "/api/user/info/:userId",
+				Handler: GetUserInfoHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/authenticate",
+				Path:    "/api/user/login",
 				Handler: AuthenticateUserHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
-				Path:    "/api/user/info",
-				Handler: GetUserInfoHandler(serverCtx),
+				Method:  http.MethodPost,
+				Path:    "/api/user/register",
+				Handler: CreateUserHandler(serverCtx),
 			},
 		},
 	)
@@ -35,13 +40,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: ChangePasswordHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPost,
-				Path:    "/api/user/create",
-				Handler: CreateUserHandler(serverCtx),
-			},
-			{
 				Method:  http.MethodDelete,
-				Path:    "/api/user/delete",
+				Path:    "/api/user/delete/:userId",
 				Handler: DeleteUserHandler(serverCtx),
 			},
 			{
