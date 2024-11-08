@@ -23,6 +23,12 @@ func NewUserServiceServer(svcCtx *svc.ServiceContext) *UserServiceServer {
 	}
 }
 
+// 授权
+func (s *UserServiceServer) Authorize(ctx context.Context, in *user.AuthorizeRequest) (*user.AuthorizeResponse, error) {
+	l := logic.NewAuthorizeLogic(ctx, s.svcCtx)
+	return l.Authorize(in)
+}
+
 // 检查用户是否存在
 func (s *UserServiceServer) CheckUserExists(ctx context.Context, in *user.CheckUserExistsRequest) (*user.CheckUserExistsResponse, error) {
 	l := logic.NewCheckUserExistsLogic(ctx, s.svcCtx)

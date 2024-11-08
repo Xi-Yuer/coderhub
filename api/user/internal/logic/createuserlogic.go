@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"coderhub/conf"
 	"coderhub/rpc/user/user"
 	"context"
 
@@ -36,7 +37,7 @@ func (l *CreateUserLogic) CreateUser(req *types.CreateUserRequest) (resp *types.
 	); err != nil {
 		return &types.CreateUserResponse{
 			Response: types.Response{
-				Code:    -1,
+				Code:    conf.HttpCode.HttpBadRequest,
 				Message: err.Error(),
 			},
 			Data: 0,
@@ -45,8 +46,8 @@ func (l *CreateUserLogic) CreateUser(req *types.CreateUserRequest) (resp *types.
 
 	return &types.CreateUserResponse{
 		Response: types.Response{
-			Code:    0,
-			Message: "success",
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
 		},
 		Data: createUserResponse.UserId,
 	}, nil

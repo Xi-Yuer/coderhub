@@ -5,7 +5,7 @@ import (
 	"coderhub/rpc/user/internal/svc"
 	"coderhub/rpc/user/user"
 	"coderhub/shared/bcryptUtil"
-	"coderhub/shared/snowflake"
+	"coderhub/shared/snowFlake"
 	"context"
 	"errors"
 
@@ -34,7 +34,7 @@ func (l *CreateUserLogic) CreateUser(in *user.CreateUserRequest) (*user.CreateUs
 		return nil, errors.New("用户已存在")
 	}
 
-	ID := snowflake.GenID()
+	ID := snowFlake.GenID()
 	// 密码加密
 	Password, _ := bcryptUtil.PasswordHash(in.PasswordHash)
 	if tx := l.svcCtx.SqlDB.Create(&model.User{

@@ -2,14 +2,15 @@ package logic
 
 import (
 	"coderhub/model"
-	"coderhub/shared/bcryptUtil"
-	"context"
-	"errors"
-
 	"coderhub/rpc/user/internal/svc"
 	"coderhub/rpc/user/user"
-
+	"coderhub/shared/bcryptUtil"
+	"coderhub/shared/metaData"
+	"context"
+	"errors"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
+	"strconv"
 )
 
 type ChangePasswordLogic struct {
@@ -28,6 +29,19 @@ func NewChangePasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ch
 
 // ChangePassword 修改密码
 func (l *ChangePasswordLogic) ChangePassword(in *user.ChangePasswordRequest) (*user.ChangePasswordResponse, error) {
+	var (
+		userId string
+		err    error
+	)
+	// 从 metadata 中获取 userId
+	if userId, err = metaData.GetMetaData(l.ctx, "userId"); err != nil {
+		return nil, err
+	}
+
+	if userId != strconv.FormatInt(in.UserId, 10) {
+		return nil, fmt.Errorf("非法操作")
+	}
+
 	var userInfo model.User
 	l.svcCtx.SqlDB.First(&userInfo, "id = ?", in.UserId)
 

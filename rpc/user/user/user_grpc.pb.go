@@ -21,6 +21,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	UserService_Authorize_FullMethodName             = "/user.UserService/Authorize"
 	UserService_CheckUserExists_FullMethodName       = "/user.UserService/CheckUserExists"
 	UserService_CreateUser_FullMethodName            = "/user.UserService/CreateUser"
 	UserService_GetUserInfo_FullMethodName           = "/user.UserService/GetUserInfo"
@@ -35,6 +36,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
+	// 授权
+	Authorize(ctx context.Context, in *AuthorizeRequest, opts ...grpc.CallOption) (*AuthorizeResponse, error)
 	// 检查用户是否存在
 	CheckUserExists(ctx context.Context, in *CheckUserExistsRequest, opts ...grpc.CallOption) (*CheckUserExistsResponse, error)
 	// 创建用户
@@ -58,6 +61,16 @@ type userServiceClient struct {
 
 func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
+}
+
+func (c *userServiceClient) Authorize(ctx context.Context, in *AuthorizeRequest, opts ...grpc.CallOption) (*AuthorizeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AuthorizeResponse)
+	err := c.cc.Invoke(ctx, UserService_Authorize_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userServiceClient) CheckUserExists(ctx context.Context, in *CheckUserExistsRequest, opts ...grpc.CallOption) (*CheckUserExistsResponse, error) {
@@ -144,6 +157,8 @@ func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserReques
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
 type UserServiceServer interface {
+	// 授权
+	Authorize(context.Context, *AuthorizeRequest) (*AuthorizeResponse, error)
 	// 检查用户是否存在
 	CheckUserExists(context.Context, *CheckUserExistsRequest) (*CheckUserExistsResponse, error)
 	// 创建用户
@@ -169,6 +184,9 @@ type UserServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserServiceServer struct{}
 
+func (UnimplementedUserServiceServer) Authorize(context.Context, *AuthorizeRequest) (*AuthorizeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Authorize not implemented")
+}
 func (UnimplementedUserServiceServer) CheckUserExists(context.Context, *CheckUserExistsRequest) (*CheckUserExistsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckUserExists not implemented")
 }
@@ -212,6 +230,24 @@ func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&UserService_ServiceDesc, srv)
+}
+
+func _UserService_Authorize_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthorizeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).Authorize(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_Authorize_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).Authorize(ctx, req.(*AuthorizeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserService_CheckUserExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -365,6 +401,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "user.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Authorize",
+			Handler:    _UserService_Authorize_Handler,
+		},
 		{
 			MethodName: "CheckUserExists",
 			Handler:    _UserService_CheckUserExists_Handler,

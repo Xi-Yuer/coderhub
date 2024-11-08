@@ -3,9 +3,8 @@ package logic
 import (
 	"coderhub/api/user/internal/svc"
 	"coderhub/api/user/internal/types"
+	"coderhub/conf"
 	"coderhub/rpc/user/user"
-	"coderhub/shared/bcryptUtil"
-	"coderhub/shared/token"
 	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -26,61 +25,26 @@ func NewAuthenticateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *AuthenticateUserLogic) AuthenticateUser(req *types.AuthenticateUserRequest) (resp *types.AuthenticateUserResponse, err error) {
-	exists, err := l.svcCtx.UserService.CheckUserExists(l.ctx, &user.CheckUserExistsRequest{
+	var authorize *user.AuthorizeResponse
+
+	if authorize, err = l.svcCtx.UserService.Authorize(l.ctx, &user.AuthorizeRequest{
 		Username: req.Username,
-	})
-	if err != nil {
+		Password: req.Password,
+	}); err != nil {
 		return &types.AuthenticateUserResponse{
 			Response: types.Response{
-				Code:    0,
-				Message: "fail",
+				Code:    conf.HttpCode.HttpBadRequest,
+				Message: err.Error(),
 			},
-			Data: err.Error()}, nil
-	}
-	if !exists.Exists {
-		return &types.AuthenticateUserResponse{
-			Response: types.Response{
-				Code:    0,
-				Message: "fail",
-			},
-			Data: "用户不存在",
+			Data: "",
 		}, nil
 	}
 
-	UserInfo, err := l.svcCtx.UserService.GetUserInfoByUsername(l.ctx, &user.GetUserInfoByUsernameRequest{Username: req.Username})
-	if err != nil {
-		return &types.AuthenticateUserResponse{
-			Response: types.Response{
-				Code:    0,
-				Message: "fail",
-			},
-			Data: err.Error()}, nil
-	}
-
-	if !bcryptUtil.CompareHashAndPassword(UserInfo.Password, req.Password) {
-		return &types.AuthenticateUserResponse{
-			Response: types.Response{
-				Code:    0,
-				Message: "fail",
-			},
-			Data: "密码错误",
-		}, nil
-	}
-
-	authorization, err := token.GenerateAuthorization(UserInfo.UserId)
-	if err != nil {
-		return &types.AuthenticateUserResponse{
-			Response: types.Response{
-				Code:    0,
-				Message: "fail",
-			},
-			Data: err.Error()}, nil
-	}
 	return &types.AuthenticateUserResponse{
 		Response: types.Response{
-			Code:    0,
-			Message: "success",
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
 		},
-		Data: authorization,
+		Data: authorize.Token,
 	}, nil
 }

@@ -14,6 +14,8 @@ import (
 )
 
 type (
+	AuthorizeRequest             = user.AuthorizeRequest
+	AuthorizeResponse            = user.AuthorizeResponse
 	ChangePasswordRequest        = user.ChangePasswordRequest
 	ChangePasswordResponse       = user.ChangePasswordResponse
 	CheckUserExistsRequest       = user.CheckUserExistsRequest
@@ -33,6 +35,8 @@ type (
 	UpdateUserInfoResponse       = user.UpdateUserInfoResponse
 
 	UserService interface {
+		// 授权
+		Authorize(ctx context.Context, in *AuthorizeRequest, opts ...grpc.CallOption) (*AuthorizeResponse, error)
 		// 检查用户是否存在
 		CheckUserExists(ctx context.Context, in *CheckUserExistsRequest, opts ...grpc.CallOption) (*CheckUserExistsResponse, error)
 		// 创建用户
@@ -59,6 +63,12 @@ func NewUserService(cli zrpc.Client) UserService {
 	return &defaultUserService{
 		cli: cli,
 	}
+}
+
+// 授权
+func (m *defaultUserService) Authorize(ctx context.Context, in *AuthorizeRequest, opts ...grpc.CallOption) (*AuthorizeResponse, error) {
+	client := user.NewUserServiceClient(m.cli.Conn())
+	return client.Authorize(ctx, in, opts...)
 }
 
 // 检查用户是否存在

@@ -1,11 +1,12 @@
 package logic
 
 import (
-	"coderhub/api/user/internal/types"
-	"coderhub/rpc/user/user"
-	"context"
-
 	"coderhub/api/user/internal/svc"
+	"coderhub/api/user/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/user/user"
+	"coderhub/shared/metaData"
+	"context"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -24,41 +25,18 @@ func NewChangePasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ch
 }
 
 func (l *ChangePasswordLogic) ChangePassword(req *types.ChangePasswordRequest) (resp *types.ChangePasswordResponse, err error) {
-	// 获取用户信息
-	userInfo, err := l.svcCtx.UserService.GetUserInfo(l.ctx, &user.GetUserInfoRequest{
-		UserId: req.UserId,
-	})
-	if err != nil {
-		return &types.ChangePasswordResponse{
-			Response: types.Response{
-				Code:    -1,
-				Message: err.Error(),
-			},
-			Data: false,
-		}, nil
-	}
-
-	// 检查用户ID是否匹配
-	if userInfo.UserId != req.UserId {
-		return &types.ChangePasswordResponse{
-			Response: types.Response{
-				Code:    -1,
-				Message: "非法操作",
-			},
-			Data: false,
-		}, nil
-	}
-
-	// 更新密码
-	_, err = l.svcCtx.UserService.ChangePassword(l.ctx, &user.ChangePasswordRequest{
+	userId := l.ctx.Value("userId")
+	ctx := metaData.SetMetaData(l.ctx, "userId", userId) // 设置元数据
+	response, err := l.svcCtx.UserService.ChangePassword(ctx, &user.ChangePasswordRequest{
 		UserId:      req.UserId,
 		OldPassword: req.OldPassword,
 		NewPassword: req.NewPassword,
 	})
+
 	if err != nil {
 		return &types.ChangePasswordResponse{
 			Response: types.Response{
-				Code:    -1,
+				Code:    conf.HttpCode.HttpBadRequest,
 				Message: err.Error(),
 			},
 			Data: false,
@@ -68,9 +46,9 @@ func (l *ChangePasswordLogic) ChangePassword(req *types.ChangePasswordRequest) (
 	// 返回成功响应
 	return &types.ChangePasswordResponse{
 		Response: types.Response{
-			Code:    0,
-			Message: "success",
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
 		},
-		Data: true,
+		Data: response.Success,
 	}, nil
 }

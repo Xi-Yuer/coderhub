@@ -6,6 +6,9 @@ package user;
 option go_package = "./user";
 
 service UserService {
+  //  授权
+  rpc Authorize (AuthorizeRequest) returns (AuthorizeResponse);
+
   // 检查用户是否存在
   rpc CheckUserExists (CheckUserExistsRequest) returns (CheckUserExistsResponse);
 
@@ -30,6 +33,9 @@ service UserService {
 }
 
 // 以下定义了各个请求和响应的消息类型
+message AuthorizeRequest {string username = 1; string password = 2;}
+message AuthorizeResponse {string token = 1;}
+
 message CheckUserExistsRequest {string username = 1;}
 message CheckUserExistsResponse {bool exists = 1;}
 
