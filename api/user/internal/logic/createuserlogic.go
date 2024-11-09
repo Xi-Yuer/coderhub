@@ -1,12 +1,11 @@
 package logic
 
 import (
+	"coderhub/api/user/internal/svc"
+	"coderhub/api/user/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/user/user"
 	"context"
-
-	"coderhub/api/user/internal/svc"
-	"coderhub/api/user/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

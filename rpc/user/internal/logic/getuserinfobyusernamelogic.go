@@ -3,6 +3,7 @@ package logic
 import (
 	"coderhub/model"
 	"context"
+	"errors"
 
 	"coderhub/rpc/user/internal/svc"
 	"coderhub/rpc/user/user"
@@ -26,17 +27,20 @@ func NewGetUserInfoByUsernameLogic(ctx context.Context, svcCtx *svc.ServiceConte
 
 func (l *GetUserInfoByUsernameLogic) GetUserInfoByUsername(in *user.GetUserInfoByUsernameRequest) (*user.GetUserInfoResponse, error) {
 	var User model.User
-	tx := l.svcCtx.SqlDB.First(&User, "user_name = ?", in.Username)
-	if tx.Error != nil {
-		return nil, tx.Error
+
+	if err := l.svcCtx.SqlDB.First(&User, "user_name = ?", in.Username).Error; err != nil {
+		return nil, err
+	}
+	if User.ID == 0 {
+		return nil, errors.New("用户不存在")
 	}
 	return &user.GetUserInfoResponse{
 		UserId:    User.ID,
-		Username:  User.UserName,
+		UserName:  User.UserName,
 		Avatar:    User.Avatar.String,
 		Email:     User.Email.String,
 		Password:  User.Password,
-		Nickname:  User.NickName.String,
+		NickName:  User.NickName.String,
 		IsAdmin:   User.IsAdmin,
 		Status:    User.Status,
 		CreatedAt: User.CreatedAt.Unix(),

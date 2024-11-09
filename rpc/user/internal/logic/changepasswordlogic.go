@@ -42,8 +42,10 @@ func (l *ChangePasswordLogic) ChangePassword(in *user.ChangePasswordRequest) (*u
 		return nil, fmt.Errorf("非法操作")
 	}
 
-	var userInfo model.User
-	l.svcCtx.SqlDB.First(&userInfo, "id = ?", in.UserId)
+	userInfo, err := NewGetUserInfoLogic(l.ctx, l.svcCtx).GetUserInfo(&user.GetUserInfoRequest{UserId: in.UserId})
+	if err != nil {
+		return nil, err
+	}
 
 	// 验证旧密码是否正确
 	if !bcryptUtil.CompareHashAndPassword(userInfo.Password, in.OldPassword) {
@@ -57,7 +59,7 @@ func (l *ChangePasswordLogic) ChangePassword(in *user.ChangePasswordRequest) (*u
 	}
 
 	// 更新用户密码
-	if tx := l.svcCtx.SqlDB.Model(&userInfo).Update("password", hashedNewPassword); tx.Error != nil {
+	if tx := l.svcCtx.SqlDB.Model(&model.User{}).Where("id = ?", userId).Update("password", hashedNewPassword); tx.Error != nil {
 		return nil, tx.Error
 	}
 

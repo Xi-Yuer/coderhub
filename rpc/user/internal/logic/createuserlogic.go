@@ -8,7 +8,6 @@ import (
 	"coderhub/shared/snowFlake"
 	"context"
 	"errors"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -27,10 +26,8 @@ func NewCreateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateUserLogic) CreateUser(in *user.CreateUserRequest) (*user.CreateUserResponse, error) {
-	// 查看用户是否存在
-	tx := l.svcCtx.SqlDB.First(&model.User{}, "user_name = ?", in.Username)
-
-	if checkUserExists := tx.RowsAffected > 0; checkUserExists {
+	exists, _ := NewCheckUserExistsLogic(l.ctx, l.svcCtx).CheckUserExists(&user.CheckUserExistsRequest{Username: in.Username})
+	if exists.Exists {
 		return nil, errors.New("用户已存在")
 	}
 

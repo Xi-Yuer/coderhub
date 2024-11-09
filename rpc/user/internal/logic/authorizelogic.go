@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"coderhub/model"
 	"coderhub/rpc/user/internal/svc"
 	"coderhub/rpc/user/user"
 	"coderhub/shared/bcryptUtil"
@@ -27,20 +26,16 @@ func NewAuthorizeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Authori
 }
 
 func (l *AuthorizeLogic) Authorize(in *user.AuthorizeRequest) (*user.AuthorizeResponse, error) {
-	var User model.User
-
-	if tx := l.svcCtx.SqlDB.First(&User, "user_name = ?", in.Username); tx.Error != nil {
-		return nil, tx.Error
-	}
-	if User.UserName == "" {
-		return nil, errors.New("用户不存在")
+	UserInfo, err := NewGetUserInfoByUsernameLogic(l.ctx, l.svcCtx).GetUserInfoByUsername(&user.GetUserInfoByUsernameRequest{Username: in.Username})
+	if err != nil {
+		return nil, err
 	}
 
-	if !bcryptUtil.CompareHashAndPassword(User.Password, in.Password) {
+	if !bcryptUtil.CompareHashAndPassword(UserInfo.Password, in.Password) {
 		return nil, errors.New("密码错误")
 	}
 
-	if authorization, err := token.GenerateAuthorization(User.ID); err != nil {
+	if authorization, err := token.GenerateAuthorization(UserInfo.UserId); err != nil {
 		return nil, err
 	} else {
 		return &user.AuthorizeResponse{

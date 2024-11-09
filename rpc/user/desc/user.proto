@@ -46,11 +46,11 @@ message GetUserInfoRequest {int64 user_id = 1;}
 message GetUserInfoByUsernameRequest {string username = 1;}
 message GetUserInfoResponse {
   int64 user_id = 1;
-  string username = 2;
+  string user_name = 2;
   string avatar = 3;
   string email = 4;
   string password = 5;
-  string nickname = 6;
+  string nick_name = 6;
   bool is_admin = 7;
   bool status = 8;
   int64 created_at = 9;

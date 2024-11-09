@@ -1,11 +1,9 @@
 package logic
 
 import (
-	"coderhub/model"
-	"context"
-
 	"coderhub/rpc/user/internal/svc"
 	"coderhub/rpc/user/user"
+	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +23,9 @@ func NewCheckUserExistsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 }
 
 func (l *CheckUserExistsLogic) CheckUserExists(in *user.CheckUserExistsRequest) (*user.CheckUserExistsResponse, error) {
-	if tx := l.svcCtx.SqlDB.First(&model.User{}, "user_name = ?", in.Username); tx.RowsAffected == 0 {
+	UserInfo, err := NewGetUserInfoByUsernameLogic(l.ctx, l.svcCtx).GetUserInfoByUsername(&user.GetUserInfoByUsernameRequest{Username: in.Username})
+
+	if UserInfo == nil || err != nil {
 		return &user.CheckUserExistsResponse{
 			Exists: false,
 		}, nil
