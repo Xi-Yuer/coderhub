@@ -27,7 +27,7 @@ COPY --from=builder /app/bin/cmd /app/bin/cmd
 COPY --from=builder /app/rpc/user/etc /app/bin/etc
 
 # 暴露服务的端口
-EXPOSE 9527
+EXPOSE 8888
 
 # 定义容器启动时运行的命令
 CMD ["/app/bin/cmd", "-f", "/app/bin/etc/user.yaml"]
