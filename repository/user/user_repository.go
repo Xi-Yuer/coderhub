@@ -2,6 +2,9 @@ package repository
 
 import (
 	"coderhub/model"
+	"coderhub/shared/cacheDB"
+	"encoding/json"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -14,14 +17,16 @@ type UserRepository interface {
 	DeleteUser(id int64) error
 }
 
-func NewUserRepositoryImpl(db *gorm.DB) *UserRepositoryImpl {
+func NewUserRepositoryImpl(db *gorm.DB, rdb cacheDB.RedisDB) *UserRepositoryImpl {
 	return &UserRepositoryImpl{
-		DB: db,
+		DB:    db,
+		Redis: rdb,
 	}
 }
 
 type UserRepositoryImpl struct {
-	DB *gorm.DB
+	DB    *gorm.DB
+	Redis cacheDB.RedisDB
 }
 
 func (r *UserRepositoryImpl) CreateUser(user *model.User) error {
@@ -30,17 +35,52 @@ func (r *UserRepositoryImpl) CreateUser(user *model.User) error {
 
 func (r *UserRepositoryImpl) GetUserByName(name string) (*model.User, error) {
 	var user model.User
+	// 先从 Redis 获取
+	key := fmt.Sprintf("user:%s", name)
+	data, err := r.Redis.Get(key)
+	if err == nil {
+		if err := json.Unmarshal([]byte(data), &user); err == nil {
+			return &user, nil
+		}
+	}
 	if err := r.DB.Where("user_name = ?", name).First(&user).Error; err != nil {
 		return nil, err
+	}
+	// 写入 Redis 缓存
+	if data, err := json.Marshal(user); err == nil {
+		err := r.Redis.Set(key, string(data))
+		if err != nil {
+			return nil, err
+		}
 	}
 	return &user, nil
 }
 
 func (r *UserRepositoryImpl) GetUserByID(id int64) (*model.User, error) {
+	// 先从 Redis 获取
+	key := fmt.Sprintf("user:%d", id)
+	data, err := r.Redis.Get(key)
+	if err == nil {
+		var user model.User
+		if err := json.Unmarshal([]byte(data), &user); err == nil {
+			return &user, nil
+		}
+	}
+
+	// Redis 未命中,从数据库获取
 	var user model.User
 	if err := r.DB.Where("id = ?", id).First(&user).Error; err != nil {
 		return nil, err
 	}
+
+	// 写入 Redis 缓存
+	if data, err := json.Marshal(user); err == nil {
+		err := r.Redis.Set(key, string(data))
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return &user, nil
 }
 
