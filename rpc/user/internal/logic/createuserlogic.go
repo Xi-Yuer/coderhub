@@ -6,8 +6,10 @@ import (
 	"coderhub/rpc/user/user"
 	"coderhub/shared/bcryptUtil"
 	"coderhub/shared/snowFlake"
+	"coderhub/shared/validator"
 	"context"
 	"errors"
+
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -26,6 +28,10 @@ func NewCreateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateUserLogic) CreateUser(in *user.CreateUserRequest) (*user.CreateUserResponse, error) {
+	if err := validator.New().Username(in.Username).Password(in.PasswordHash).Check(); err != nil {
+		return nil, err
+	}
+
 	exists, _ := NewCheckUserExistsLogic(l.ctx, l.svcCtx).CheckUserExists(&user.CheckUserExistsRequest{Username: in.Username})
 	if exists.Exists {
 		return nil, errors.New("用户已存在")

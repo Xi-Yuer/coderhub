@@ -5,6 +5,7 @@ import (
 
 	"coderhub/rpc/user/internal/svc"
 	"coderhub/rpc/user/user"
+	"coderhub/shared/validator"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,9 +24,10 @@ func NewResetPasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Res
 	}
 }
 
-// 重置密码
 func (l *ResetPasswordLogic) ResetPassword(in *user.ResetPasswordRequest) (*user.ResetPasswordResponse, error) {
-	// todo: add your logic here and delete this line
+	if err := validator.New().Password(in.NewPassword).Check(); err != nil {
+		return nil, err
+	}
 
 	return &user.ResetPasswordResponse{}, nil
 }

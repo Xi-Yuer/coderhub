@@ -6,6 +6,7 @@ import (
 	"coderhub/rpc/user/user"
 	"coderhub/shared/bcryptUtil"
 	"coderhub/shared/metaData"
+	"coderhub/shared/validator"
 	"context"
 	"errors"
 	"fmt"
@@ -30,6 +31,10 @@ func NewChangePasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ch
 
 // ChangePassword 修改密码
 func (l *ChangePasswordLogic) ChangePassword(in *user.ChangePasswordRequest) (*user.ChangePasswordResponse, error) {
+	if err := validator.New().Password(in.OldPassword).Password(in.NewPassword).Check(); err != nil {
+		return nil, err
+	}
+
 	var (
 		userId string
 		err    error

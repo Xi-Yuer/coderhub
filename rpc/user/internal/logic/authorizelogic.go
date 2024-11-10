@@ -5,6 +5,7 @@ import (
 	"coderhub/rpc/user/user"
 	"coderhub/shared/bcryptUtil"
 	"coderhub/shared/token"
+	"coderhub/shared/validator"
 	"context"
 	"errors"
 
@@ -26,6 +27,10 @@ func NewAuthorizeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Authori
 }
 
 func (l *AuthorizeLogic) Authorize(in *user.AuthorizeRequest) (*user.AuthorizeResponse, error) {
+	if err := validator.New().Username(in.Username).Password(in.Password).Check(); err != nil {
+		return nil, err
+	}
+
 	UserInfo, err := NewGetUserInfoByUsernameLogic(l.ctx, l.svcCtx).GetUserInfoByUsername(&user.GetUserInfoByUsernameRequest{Username: in.Username})
 	if err != nil {
 		return nil, err

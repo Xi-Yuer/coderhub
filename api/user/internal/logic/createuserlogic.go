@@ -5,6 +5,7 @@ import (
 	"coderhub/api/user/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/user/user"
+	"coderhub/shared/validator"
 	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -25,6 +26,16 @@ func NewCreateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateUserLogic) CreateUser(req *types.CreateUserRequest) (resp *types.CreateUserResponse, err error) {
+	if err := validator.New().Username(req.Username).Password(req.PasswordHash).Check(); err != nil {
+		return &types.CreateUserResponse{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpBadRequest,
+				Message: err.Error(),
+			},
+			Data: 0,
+		}, nil
+	}
+
 	var createUserResponse *user.CreateUserResponse
 
 	if createUserResponse, err = l.svcCtx.UserService.CreateUser(
