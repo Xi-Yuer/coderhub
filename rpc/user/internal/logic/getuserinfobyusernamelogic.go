@@ -2,11 +2,9 @@ package logic
 
 import (
 	"coderhub/model"
-	"context"
-	"errors"
-
 	"coderhub/rpc/user/internal/svc"
 	"coderhub/rpc/user/user"
+	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,13 +24,10 @@ func NewGetUserInfoByUsernameLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *GetUserInfoByUsernameLogic) GetUserInfoByUsername(in *user.GetUserInfoByUsernameRequest) (*user.GetUserInfoResponse, error) {
-	var User model.User
-
-	if err := l.svcCtx.SqlDB.First(&User, "user_name = ?", in.Username).Error; err != nil {
+	var User *model.User
+	User, err := l.svcCtx.UserRepository.GetUserByName(in.Username)
+	if err != nil {
 		return nil, err
-	}
-	if User.ID == 0 {
-		return nil, errors.New("用户不存在")
 	}
 	return &user.GetUserInfoResponse{
 		UserId:    User.ID,

@@ -1,19 +1,19 @@
 package svc
 
 import (
+	repository "coderhub/repository/user"
 	"coderhub/rpc/user/internal/config"
 	"coderhub/shared/sqlDB"
-	"gorm.io/gorm"
 )
 
 type ServiceContext struct {
-	Config config.Config
-	SqlDB  *gorm.DB
+	Config         config.Config
+	UserRepository repository.UserRepository
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
-		Config: c,
-		SqlDB:  sqlDB.NewGorm(),
+		Config:         c,
+		UserRepository: repository.NewUserRepositoryImpl(sqlDB.NewGorm()),
 	}
 }

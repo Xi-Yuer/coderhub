@@ -25,9 +25,9 @@ func NewGetUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 }
 
 func (l *GetUserInfoLogic) GetUserInfo(in *user.GetUserInfoRequest) (*user.GetUserInfoResponse, error) {
-	var User model.User
-
-	if err := l.svcCtx.SqlDB.First(&User, "id = ?", in.UserId).Error; err != nil {
+	var User *model.User
+	User, err := l.svcCtx.UserRepository.GetUserByID(in.UserId)
+	if err != nil {
 		return nil, err
 	}
 

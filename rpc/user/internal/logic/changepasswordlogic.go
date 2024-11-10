@@ -9,8 +9,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/zeromicro/go-zero/core/logx"
 	"strconv"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type ChangePasswordLogic struct {
@@ -59,8 +60,8 @@ func (l *ChangePasswordLogic) ChangePassword(in *user.ChangePasswordRequest) (*u
 	}
 
 	// 更新用户密码
-	if tx := l.svcCtx.SqlDB.Model(&model.User{}).Where("id = ?", userId).Update("password", hashedNewPassword); tx.Error != nil {
-		return nil, tx.Error
+	if err := l.svcCtx.UserRepository.UpdateUser(&model.User{ID: in.UserId, Password: hashedNewPassword}); err != nil {
+		return nil, err
 	}
 
 	// 返回成功响应

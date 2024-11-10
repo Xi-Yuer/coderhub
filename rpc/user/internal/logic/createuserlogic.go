@@ -32,14 +32,13 @@ func (l *CreateUserLogic) CreateUser(in *user.CreateUserRequest) (*user.CreateUs
 	}
 
 	ID := snowFlake.GenID()
-	// 密码加密
 	Password, _ := bcryptUtil.PasswordHash(in.PasswordHash)
-	if tx := l.svcCtx.SqlDB.Create(&model.User{
+	if err := l.svcCtx.UserRepository.CreateUser(&model.User{
 		ID:       ID,
 		UserName: in.Username,
 		Password: Password,
-	}); tx.Error != nil {
-		return nil, tx.Error
+	}); err != nil {
+		return nil, err
 	}
 
 	return &user.CreateUserResponse{
