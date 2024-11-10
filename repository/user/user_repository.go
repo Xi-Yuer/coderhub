@@ -48,8 +48,7 @@ func (r *UserRepositoryImpl) GetUserByName(name string) (*model.User, error) {
 	}
 	// 写入 Redis 缓存
 	if data, err := json.Marshal(user); err == nil {
-		err := r.Redis.Set(key, string(data))
-		if err != nil {
+		if err := r.Redis.Set(key, string(data)); err != nil {
 			return nil, err
 		}
 	}
