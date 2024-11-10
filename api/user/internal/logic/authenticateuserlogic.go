@@ -25,7 +25,6 @@ func NewAuthenticateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *AuthenticateUserLogic) AuthenticateUser(req *types.AuthenticateUserRequest) (resp *types.AuthenticateUserResponse, err error) {
-	// 用户名：3-32位字母、数字、下划线；密码：6-32位字母、数字
 	if err := validator.New().Username(req.Username).Password(req.Password).Check(); err != nil {
 		return &types.AuthenticateUserResponse{
 			Response: types.Response{
