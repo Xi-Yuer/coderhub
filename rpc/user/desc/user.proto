@@ -59,12 +59,8 @@ message GetUserInfoResponse {
 
 message UpdateUserInfoRequest {
   int64 user_id = 1;
-  string username = 2;
-  string avatar = 3;
-  string email = 4;
-  string nickname = 5;
-  string is_admin = 6;
-  bool status = 7;
+  string email = 2;
+  string nickname = 3;
 }
 
 message UpdateUserInfoResponse {bool success = 1;}

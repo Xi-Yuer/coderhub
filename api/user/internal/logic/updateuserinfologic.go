@@ -1,6 +1,8 @@
 package logic
 
 import (
+	"coderhub/rpc/user/user"
+	"coderhub/shared/metaData"
 	"context"
 
 	"coderhub/api/user/internal/svc"
@@ -24,7 +26,11 @@ func NewUpdateUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 }
 
 func (l *UpdateUserInfoLogic) UpdateUserInfo(req *types.UpdateUserInfoRequest) (resp *types.UpdateUserInfoResponse, err error) {
-	// todo: add your logic here and delete this line
-
+	ctx := metaData.SetUserMetaData(l.ctx)
+	_, err = l.svcCtx.UserService.UpdateUserInfo(ctx, &user.UpdateUserInfoRequest{
+		UserId:   req.UserId,
+		Email:    req.Email,
+		Nickname: req.Nickname,
+	})
 	return
 }

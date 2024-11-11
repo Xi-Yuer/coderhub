@@ -1,6 +1,8 @@
 package logic
 
 import (
+	"coderhub/conf"
+	"coderhub/rpc/user/user"
 	"context"
 
 	"coderhub/api/user/internal/svc"
@@ -24,7 +26,31 @@ func NewGetUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 }
 
 func (l *GetUserInfoLogic) GetUserInfo(req *types.GetUserInfoRequest) (resp *types.GetUserInfoResponse, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	UserInfo, err := l.svcCtx.UserService.GetUserInfo(l.ctx, &user.GetUserInfoRequest{UserId: req.UserId})
+	if err != nil {
+		return &types.GetUserInfoResponse{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpBadRequest,
+				Message: err.Error(),
+			},
+			Data: nil,
+		}, nil
+	}
+	return &types.GetUserInfoResponse{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: &types.UserInfo{
+			UserId:    UserInfo.UserId,
+			Username:  UserInfo.UserName,
+			Avatar:    UserInfo.Avatar,
+			Email:     UserInfo.Email,
+			Nickname:  UserInfo.NickName,
+			IsAdmin:   UserInfo.IsAdmin,
+			Status:    UserInfo.Status,
+			CreatedAt: UserInfo.CreatedAt,
+			UpdatedAt: UserInfo.UpdatedAt,
+		},
+	}, nil
 }

@@ -44,12 +44,12 @@ type DeleteUserResponse struct {
 }
 
 type GetUserInfoRequest struct {
-	UserId int64 `json:"user_id" path:"userId"`
+	UserId int64 `path:"userId"`
 }
 
 type GetUserInfoResponse struct {
 	Response
-	Data UserInfo `json:"data"`
+	Data *UserInfo `json:"data"`
 }
 
 type ResetPasswordRequest struct {
@@ -69,12 +69,8 @@ type Response struct {
 
 type UpdateUserInfoRequest struct {
 	UserId   int64  `form:"userId"`
-	Username string `form:"username"`
-	Avatar   string `form:"avatar"`
 	Email    string `form:"email"`
 	Nickname string `form:"nickname"`
-	IsAdmin  string `form:"isAdmin"`
-	Status   bool   `form:"status"`
 }
 
 type UpdateUserInfoResponse struct {
@@ -88,7 +84,7 @@ type UserInfo struct {
 	Avatar    string `json:"avatar"`
 	Email     string `json:"email"`
 	Nickname  string `json:"nickname"`
-	IsAdmin   string `json:"is_admin"`
+	IsAdmin   bool   `json:"is_admin"`
 	Status    bool   `json:"status"`
 	CreatedAt int64  `json:"created_at"`
 	UpdatedAt int64  `json:"updated_at"`

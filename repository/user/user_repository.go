@@ -84,9 +84,27 @@ func (r *UserRepositoryImpl) GetUserByID(id int64) (*model.User, error) {
 }
 
 func (r *UserRepositoryImpl) UpdateUser(user *model.User) error {
-	return r.DB.Model(user).Updates(user).Error
+	// 更新 Redis 缓存
+	key := fmt.Sprintf("user:%d", user.ID)
+	if err := r.Redis.Del(key); err != nil {
+		return err
+	}
+	return r.DB.Model(user).Where("id = ?", user.ID).Updates(user).Error
 }
 
 func (r *UserRepositoryImpl) DeleteUser(id int64) error {
-	return r.DB.Delete(&model.User{}, id).Error
+	UserInfo, err := r.GetUserByID(id)
+	if err != nil {
+		return err
+	}
+	// 先从 Redis 删除
+	key := fmt.Sprintf("user:%d", id)
+	if err := r.Redis.Del(key); err != nil {
+		return err
+	}
+	// 根据用户名删除
+	if err := r.Redis.Del(fmt.Sprintf("user:%s", UserInfo.UserName)); err != nil {
+		return err
+	}
+	return r.DB.Where("id = ?", id).Delete(&model.User{}).Error
 }

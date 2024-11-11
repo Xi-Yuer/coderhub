@@ -5,6 +5,7 @@ import (
 	"coderhub/rpc/user/internal/svc"
 	"coderhub/rpc/user/user"
 	"context"
+	"errors"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,6 +29,9 @@ func (l *GetUserInfoByUsernameLogic) GetUserInfoByUsername(in *user.GetUserInfoB
 	User, err := l.svcCtx.UserRepository.GetUserByName(in.Username)
 	if err != nil {
 		return nil, err
+	}
+	if User == nil {
+		return nil, errors.New("用户不存在")
 	}
 	return &user.GetUserInfoResponse{
 		UserId:    User.ID,

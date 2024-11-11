@@ -1,6 +1,8 @@
 package logic
 
 import (
+	"coderhub/conf"
+	"coderhub/rpc/user/user"
 	"context"
 
 	"coderhub/api/user/internal/svc"
@@ -24,7 +26,22 @@ func NewDeleteUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 }
 
 func (l *DeleteUserLogic) DeleteUser(req *types.DeleteUserRequest) (resp *types.DeleteUserResponse, err error) {
-	// todo: add your logic here and delete this line
+	_, err = l.svcCtx.UserService.DeleteUser(l.ctx, &user.DeleteUserRequest{UserId: req.UserId})
+	if err != nil {
+		return &types.DeleteUserResponse{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpBadRequest,
+				Message: err.Error(),
+			},
+			Data: false,
+		}, nil
+	}
 
-	return
+	return &types.DeleteUserResponse{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: true,
+	}, nil
 }

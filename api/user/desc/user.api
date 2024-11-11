@@ -12,7 +12,7 @@ type (
 		Message string `json:"message"` // 提示信息
 	}
 	CreateUserRequest {
-		Username string `form:"username"`
+        Username string `form:"username"`
 		PasswordHash string `form:"passwordHash"`
 	}
 	CreateUserResponse {
@@ -20,7 +20,7 @@ type (
 		Data int64 `json:"data"`
 	}
 	GetUserInfoRequest {
-		UserId int64 `json:"user_id" path:"userId"`
+        UserId int64 `path:"userId"`
 	}
 	UserInfo {
 		UserId    int64  `json:"user_id"`
@@ -28,23 +28,19 @@ type (
 		Avatar    string `json:"avatar"`
 		Email     string `json:"email"`
 		Nickname  string `json:"nickname"`
-		IsAdmin   string `json:"is_admin"`
+        IsAdmin bool `json:"is_admin"`
 		Status    bool   `json:"status"`
 		CreatedAt int64  `json:"created_at"`
 		UpdatedAt int64  `json:"updated_at"`
 	}
 	GetUserInfoResponse {
 		Response
-		Data UserInfo `json:"data"`
+        Data *UserInfo `json:"data"`
 	}
 	UpdateUserInfoRequest {
-		UserId int64 `form:"userId"`
-		Username string `form:"username"`
-		Avatar string `form:"avatar"`
-		Email string `form:"email"`
+        UserId int64 `form:"userId"`
+        Email string `form:"email"`
 		Nickname string `form:"nickname"`
-		IsAdmin string `form:"isAdmin"`
-		Status bool `form:"status"`
 	}
 	UpdateUserInfoResponse {
 		Response
@@ -59,7 +55,7 @@ type (
 		Data string `json:"data"`
 	}
 	ChangePasswordRequest {
-		UserId int64 `form:"userId"`
+        UserId int64 `form:"userId"`
 		OldPassword string `form:"oldPassword"`
 		NewPassword string `form:"newPassword"`
 	}
@@ -68,7 +64,7 @@ type (
 		Data bool `json:"data"`
 	}
 	ResetPasswordRequest {
-		Email string `form:"email"`
+        Email string `form:"email"`
 		NewPassword string `form:"newPassword"`
 	}
 	ResetPasswordResponse {
@@ -91,11 +87,11 @@ service user-api {
 
 	// 获取用户信息
 	@handler GetUserInfo
-		get /api/user/info/:userId (GetUserInfoRequest) returns (GetUserInfoResponse)
+        get /api/user/info/:userId returns (GetUserInfoResponse)
 
 	// 用户登录
 	@handler AuthenticateUser
-		post /api/user/login (AuthenticateUserRequest) returns (AuthenticateUserResponse)
+        post /api/user/login (AuthenticateUserRequest) returns (AuthenticateUserResponse)
 }
 
 @server (
@@ -116,6 +112,6 @@ service user-api {
 
 	// 删除用户
 	@handler DeleteUser
-		delete /api/user/delete/:userId (DeleteUserRequest) returns (DeleteUserResponse)
+        delete /api/user/delete/:userId (DeleteUserRequest) returns (DeleteUserResponse)
 }
 

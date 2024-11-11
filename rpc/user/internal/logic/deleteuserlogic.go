@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"errors"
 
 	"coderhub/rpc/user/internal/svc"
 	"coderhub/rpc/user/user"
@@ -24,7 +25,20 @@ func NewDeleteUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 }
 
 func (l *DeleteUserLogic) DeleteUser(in *user.DeleteUserRequest) (*user.DeleteUserResponse, error) {
-	// todo: add your logic here and delete this line
+	UserInfo, err := NewGetUserInfoLogic(l.ctx, l.svcCtx).GetUserInfo(&user.GetUserInfoRequest{
+		UserId: in.UserId,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if UserInfo.UserId == 0 {
+		return nil, errors.New("用户不存在")
+	}
+	if err := l.svcCtx.UserRepository.DeleteUser(in.UserId); err != nil {
+		return nil, err
+	}
 
-	return &user.DeleteUserResponse{}, nil
+	return &user.DeleteUserResponse{
+		Success: true,
+	}, nil
 }
