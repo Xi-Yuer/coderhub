@@ -6,20 +6,21 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func SetMetaData(ctx context.Context, key string, value interface{}) context.Context {
+func SetUserMetaData(ctx context.Context) context.Context {
+	value := ctx.Value("userId")
 	md := metadata.New(
 		map[string]string{
-			key: fmt.Sprintf("%v", value), // 将 json.Number 转换为 string
+			"userId": fmt.Sprintf("%v", value), // 将 json.Number 转换为 string
 		})
 	return metadata.NewOutgoingContext(ctx, md)
 }
 
-func GetMetaData(ctx context.Context, key string) (string, error) {
+func GetUserMetaData(ctx context.Context) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return "", fmt.Errorf("metadata not found")
 	}
-	value := md.Get(key)
+	value := md.Get("userId")
 	if len(value) == 0 {
 		return "", fmt.Errorf("key not found")
 	}

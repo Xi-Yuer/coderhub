@@ -40,7 +40,7 @@ func (l *ChangePasswordLogic) ChangePassword(in *user.ChangePasswordRequest) (*u
 		err    error
 	)
 	// 从 metadata 中获取 userId
-	if userId, err = metaData.GetMetaData(l.ctx, "userId"); err != nil {
+	if userId, err = metaData.GetUserMetaData(l.ctx); err != nil {
 		return nil, err
 	}
 
