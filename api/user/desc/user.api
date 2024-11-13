@@ -91,11 +91,11 @@ service user-api {
 
 	// 获取用户信息
 	@handler GetUserInfo
-        get /api/user/info/:userId returns (GetUserInfoResponse)
+	get /api/user/info/:userId returns (GetUserInfoResponse)
 
 	// 用户登录
 	@handler AuthenticateUser
-        post /api/user/login (AuthenticateUserRequest) returns (AuthenticateUserResponse)
+	post /api/user/login (AuthenticateUserRequest) returns (AuthenticateUserResponse)
 
 	// 健康检查
 	@handler HealthCheck
@@ -120,6 +120,6 @@ service user-api {
 
 	// 删除用户
 	@handler DeleteUser
-        delete /api/user/delete/:userId (DeleteUserRequest) returns (DeleteUserResponse)
+	delete /api/user/delete/:userId (DeleteUserRequest) returns (DeleteUserResponse)
 }
 
