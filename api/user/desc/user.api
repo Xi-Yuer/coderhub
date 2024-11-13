@@ -12,7 +12,7 @@ type (
 		Message string `json:"message"` // 提示信息
 	}
 	CreateUserRequest {
-        Username string `form:"username"`
+		Username string `form:"username"`
 		PasswordHash string `form:"passwordHash"`
 	}
 	CreateUserResponse {
@@ -20,7 +20,7 @@ type (
 		Data int64 `json:"data"`
 	}
 	GetUserInfoRequest {
-        UserId int64 `path:"userId"`
+		UserId int64 `path:"userId"`
 	}
 	UserInfo {
 		UserId    int64  `json:"user_id"`
@@ -28,18 +28,18 @@ type (
 		Avatar    string `json:"avatar"`
 		Email     string `json:"email"`
 		Nickname  string `json:"nickname"`
-        IsAdmin bool `json:"is_admin"`
+		IsAdmin bool `json:"is_admin"`
 		Status    bool   `json:"status"`
 		CreatedAt int64  `json:"created_at"`
 		UpdatedAt int64  `json:"updated_at"`
 	}
 	GetUserInfoResponse {
 		Response
-        Data *UserInfo `json:"data"`
+		Data *UserInfo `json:"data"`
 	}
 	UpdateUserInfoRequest {
-        UserId int64 `form:"userId"`
-        Email string `form:"email"`
+		UserId int64 `form:"userId"`
+		Email string `form:"email"`
 		Nickname string `form:"nickname"`
 	}
 	UpdateUserInfoResponse {
@@ -55,7 +55,7 @@ type (
 		Data string `json:"data"`
 	}
 	ChangePasswordRequest {
-        UserId int64 `form:"userId"`
+		UserId int64 `form:"userId"`
 		OldPassword string `form:"oldPassword"`
 		NewPassword string `form:"newPassword"`
 	}
@@ -64,7 +64,7 @@ type (
 		Data bool `json:"data"`
 	}
 	ResetPasswordRequest {
-        Email string `form:"email"`
+		Email string `form:"email"`
 		NewPassword string `form:"newPassword"`
 	}
 	ResetPasswordResponse {
@@ -75,6 +75,10 @@ type (
 		UserId int64 `path:"userId"`
 	}
 	DeleteUserResponse {
+		Response
+		Data bool `json:"data"`
+	}
+	HealthCheckResponse {
 		Response
 		Data bool `json:"data"`
 	}
@@ -92,6 +96,10 @@ service user-api {
 	// 用户登录
 	@handler AuthenticateUser
         post /api/user/login (AuthenticateUserRequest) returns (AuthenticateUserResponse)
+
+	// 健康检查
+	@handler HealthCheck
+	get /health returns (HealthCheckResponse)
 }
 
 @server (

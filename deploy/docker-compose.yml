@@ -40,9 +40,9 @@ services:
       - "80:80"
     depends_on:
       user-service:
-        condition: service_started
+        condition: service_healthy
       user-api:
-        condition: service_started
+        condition: service_healthy
     networks:
       - coderhub-network
     volumes:
@@ -66,7 +66,7 @@ services:
     networks:
       - coderhub-network
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8527" ]  # 健康检查命令
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/health" ]  # 修改为实际的健康检查端点
       interval: 10s
       retries: 10
       start_period: 30s
@@ -93,7 +93,7 @@ services:
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9527" ]  # 健康检查命令
+      test: [ "CMD", "nc", "-z", "localhost", "8888" ]  # 使用netcat检查端口是否开放
       interval: 10s
       retries: 10
       start_period: 30s

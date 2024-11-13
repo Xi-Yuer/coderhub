@@ -52,6 +52,11 @@ type GetUserInfoResponse struct {
 	Data *UserInfo `json:"data"`
 }
 
+type HealthCheckResponse struct {
+	Response
+	Data bool `json:"data"`
+}
+
 type ResetPasswordRequest struct {
 	Email       string `form:"email"`
 	NewPassword string `form:"newPassword"`

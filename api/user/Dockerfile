@@ -18,6 +18,8 @@ RUN go build -o /app/bin/cmd ./api/user/user.go
 # 第 2 阶段：运行阶段（轻量级）
 FROM alpine:3.18
 
+RUN apk add --no-cache curl
+
 # 设置工作目录
 WORKDIR /app
 
