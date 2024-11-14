@@ -1,13 +1,13 @@
 package main
 
 import (
-	"coderhub/shared/bcryptUtil"
+	"coderhub/shared/BcryptUtil"
 	"fmt"
 )
 
 func main() {
-	passwordHash, _ := bcryptUtil.PasswordHash("123")
-	err := bcryptUtil.CompareHashAndPassword("123", passwordHash)
+	passwordHash, _ := BcryptUtil.PasswordHash("123")
+	err := BcryptUtil.CompareHashAndPassword("123", passwordHash)
 	if err {
 		fmt.Println(err)
 		return

@@ -56,8 +56,8 @@ services:
   user-api:
     build:
       context: ..
-      dockerfile: ./api/user/Dockerfile
-    container_name: user-api
+      dockerfile: ./api/User/Dockerfile
+    container_name: User-api
     depends_on:
       - etcd
       - mysql
@@ -77,8 +77,8 @@ services:
   user-service:
     build:
       context: ..
-      dockerfile: ./rpc/user/Dockerfile
-    container_name: user-service
+      dockerfile: ./rpc/User/Dockerfile
+    container_name: User-service
     depends_on:
       - mysql
       - redis

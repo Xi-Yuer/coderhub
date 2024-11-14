@@ -1,6 +1,6 @@
 package conf
 
-var JWTSecret = "user-api-secret"
+var JWTSecret = "User-api-secret"
 
 var HttpCode = struct {
 	HttpStatusOK      int32
