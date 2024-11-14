@@ -4,7 +4,7 @@ import (
 	"coderhub/rpc/user/internal/svc"
 	"coderhub/rpc/user/user"
 	"coderhub/shared/bcryptUtil"
-	"coderhub/shared/token"
+	"coderhub/shared/jwt"
 	"coderhub/shared/validator"
 	"context"
 	"errors"
@@ -40,7 +40,7 @@ func (l *AuthorizeLogic) Authorize(in *user.AuthorizeRequest) (*user.AuthorizeRe
 		return nil, errors.New("密码错误")
 	}
 
-	if authorization, err := token.GenerateAuthorization(UserInfo.UserId); err != nil {
+	if authorization, err := jwt.GenerateAuthorization(UserInfo.UserId); err != nil {
 		return nil, err
 	} else {
 		return &user.AuthorizeResponse{
