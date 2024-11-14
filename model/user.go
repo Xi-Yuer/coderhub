@@ -2,8 +2,10 @@ package model
 
 import (
 	"database/sql"
-	"gorm.io/gorm"
+	"fmt"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type User struct {
@@ -18,4 +20,12 @@ type User struct {
 	CreatedAt time.Time      `gorm:"<-:create" json:"CreatedAt"`
 	UpdatedAt time.Time      `gorm:"<-:update" json:"UpdatedAt"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"DeletedAt"`
+}
+
+func (u *User) CacheKeyByID(id int64) string {
+	return fmt.Sprintf("user:id:%d", id)
+}
+
+func (u *User) CacheKeyByName(name string) string {
+	return fmt.Sprintf("user:name:%s", name)
 }

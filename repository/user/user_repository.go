@@ -4,7 +4,6 @@ import (
 	"coderhub/model"
 	"coderhub/shared/cacheDB"
 	"encoding/json"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -35,49 +34,43 @@ func (r *UserRepositoryImpl) CreateUser(user *model.User) error {
 
 func (r *UserRepositoryImpl) GetUserByName(name string) (*model.User, error) {
 	var user model.User
-	// 先从 Redis 获取
-	key := fmt.Sprintf("user:%s", name)
-	data, err := r.Redis.Get(key)
-	if err == nil {
-		if err := json.Unmarshal([]byte(data), &user); err == nil {
-			return &user, nil
-		}
+	key := user.CacheKeyByName(name)
+
+	// 尝试从缓存获取
+	if cached, err := r.getCache(key); err == nil {
+		return cached, nil
 	}
+
+	// 从数据库获取
 	if err := r.DB.Where("user_name = ?", name).First(&user).Error; err != nil {
 		return nil, err
 	}
-	// 写入 Redis 缓存
-	if data, err := json.Marshal(user); err == nil {
-		if err := r.Redis.Set(key, string(data)); err != nil {
-			return nil, err
-		}
+
+	// 设置缓存
+	if err := r.setCache(key, &user); err != nil {
+		return nil, err
 	}
+
 	return &user, nil
 }
 
 func (r *UserRepositoryImpl) GetUserByID(id int64) (*model.User, error) {
-	// 先从 Redis 获取
-	key := fmt.Sprintf("user:%d", id)
-	data, err := r.Redis.Get(key)
-	if err == nil {
-		var user model.User
-		if err := json.Unmarshal([]byte(data), &user); err == nil {
-			return &user, nil
-		}
+	var user model.User
+	key := user.CacheKeyByID(id)
+
+	// 尝试从缓存获取
+	if cached, err := r.getCache(key); err == nil {
+		return cached, nil
 	}
 
-	// Redis 未命中,从数据库获取
-	var user model.User
+	// 从数据库获取
 	if err := r.DB.Where("id = ?", id).First(&user).Error; err != nil {
 		return nil, err
 	}
 
-	// 写入 Redis 缓存
-	if data, err := json.Marshal(user); err == nil {
-		err := r.Redis.Set(key, string(data))
-		if err != nil {
-			return nil, err
-		}
+	// 设置缓存
+	if err := r.setCache(key, &user); err != nil {
+		return nil, err
 	}
 
 	return &user, nil
@@ -85,7 +78,7 @@ func (r *UserRepositoryImpl) GetUserByID(id int64) (*model.User, error) {
 
 func (r *UserRepositoryImpl) UpdateUser(user *model.User) error {
 	// 更新 Redis 缓存
-	key := fmt.Sprintf("user:%d", user.ID)
+	key := user.CacheKeyByID(user.ID)
 	if err := r.Redis.Del(key); err != nil {
 		return err
 	}
@@ -93,18 +86,45 @@ func (r *UserRepositoryImpl) UpdateUser(user *model.User) error {
 }
 
 func (r *UserRepositoryImpl) DeleteUser(id int64) error {
+	var user model.User
 	UserInfo, err := r.GetUserByID(id)
 	if err != nil {
 		return err
 	}
 	// 先从 Redis 删除
-	key := fmt.Sprintf("user:%d", id)
-	if err := r.Redis.Del(key); err != nil {
+	CacheIdKey := user.CacheKeyByID(id)
+	CacheUserNameIdKey := user.CacheKeyByName(UserInfo.UserName)
+	// 根据 id 删除
+	if err := r.delCache(CacheIdKey); err != nil {
 		return err
 	}
 	// 根据用户名删除
-	if err := r.Redis.Del(fmt.Sprintf("user:%s", UserInfo.UserName)); err != nil {
+	if err := r.delCache(CacheUserNameIdKey); err != nil {
 		return err
 	}
 	return r.DB.Where("id = ?", id).Delete(&model.User{}).Error
+}
+
+func (r *UserRepositoryImpl) getCache(key string) (*model.User, error) {
+	var user model.User
+	data, err := r.Redis.Get(key)
+	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal([]byte(data), &user); err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *UserRepositoryImpl) setCache(key string, user *model.User) error {
+	data, err := json.Marshal(user)
+	if err != nil {
+		return err
+	}
+	return r.Redis.Set(key, string(data))
+}
+
+func (r *UserRepositoryImpl) delCache(key string) error {
+	return r.Redis.Del(key)
 }
