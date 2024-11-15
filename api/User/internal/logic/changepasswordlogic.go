@@ -37,9 +37,18 @@ func (l *ChangePasswordLogic) ChangePassword(req *types.ChangePasswordRequest) (
 		}, nil
 	}
 
+	userID, err := MetaData.GetUserID(l.ctx)
+	if err != nil {
+		return &types.ChangePasswordResponse{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpBadRequest,
+				Message: err.Error(),
+			},
+		}, nil
+	}
 	ctx := MetaData.SetUserMetaData(l.ctx) // 设置元数据
 	response, err := l.svcCtx.UserService.ChangePassword(ctx, &user.ChangePasswordRequest{
-		UserId:      req.UserId,
+		UserId:      userID,
 		OldPassword: req.OldPassword,
 		NewPassword: req.NewPassword,
 	})
@@ -50,7 +59,6 @@ func (l *ChangePasswordLogic) ChangePassword(req *types.ChangePasswordRequest) (
 				Code:    conf.HttpCode.HttpBadRequest,
 				Message: err.Error(),
 			},
-			Data: false,
 		}, nil
 	}
 

@@ -1,0 +1,264 @@
+openapi: 3.0.0
+info:
+  title: Articles API
+  version: "1.0.0"
+paths:
+  /articles/{id}:
+    get:
+      summary: 获取文章详情
+      operationId: GetArticle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetArticleResp'
+  /articles/health:
+    get:
+      summary: 健康检查
+      operationId: Health
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResp'
+  /articles:
+    post:
+      summary: 创建文章
+      operationId: CreateArticle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateArticleReq'
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateArticleResp'
+    put:
+      summary: 更新文章
+      operationId: UpdateArticle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateArticleReq'
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateArticleResp'
+    delete:
+      summary: 删除文章
+      operationId: DeleteArticle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteArticleResp'
+components:
+  schemas:
+    Response:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 状态码
+        message:
+          type: string
+          description: 提示信息
+    Article:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 主键 ID
+        type:
+          type: string
+          description: 内容类型：长文或短文
+        title:
+          type: string
+          description: 标题
+        content:
+          type: string
+          description: 内容
+        summary:
+          type: string
+          description: 摘要
+        imageUrls:
+          type: array
+          items:
+            type: string
+          description: 图片 URL 列表
+        coverImage:
+          type: string
+          description: 封面图片 URL
+        authorId:
+          type: integer
+          description: 作者 ID
+        tags:
+          type: array
+          items:
+            type: string
+          description: 标签列表
+        viewCount:
+          type: integer
+          description: 阅读次数
+        likeCount:
+          type: integer
+          description: 点赞次数
+        commentCount:
+          type: integer
+          description: 评论数
+        status:
+          type: string
+          description: 文章状态
+        createdAt:
+          type: integer
+          description: 创建时间
+        updatedAt:
+          type: integer
+          description: 更新时间
+        deletedAt:
+          type: integer
+          description: 删除时间
+    GetArticleReq:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 文章 ID
+    GetArticleResp:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Article'
+    CreateArticleReq:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [ article, micro_post ]
+          description: 内容类型
+        title:
+          type: string
+          description: 标题
+        content:
+          type: string
+          description: 内容
+        summary:
+          type: string
+          description: 摘要
+        imageUrls:
+          type: array
+          items:
+            type: string
+          description: 图片 URL 列表
+        coverImage:
+          type: string
+          description: 封面图片 URL
+        tags:
+          type: array
+          items:
+            type: string
+          description: 标签列表
+        status:
+          type: string
+          enum: [ draft, published ]
+          description: 文章状态
+    CreateArticleResp:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              type: integer
+              description: 文章 ID
+    UpdateArticleReq:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 文章 ID
+        title:
+          type: string
+          description: 标题
+        content:
+          type: string
+          description: 内容
+        summary:
+          type: string
+          description: 摘要
+        imageUrls:
+          type: array
+          items:
+            type: string
+          description: 图片 URL 列表
+        coverImage:
+          type: string
+          description: 封面图片 URL
+        tags:
+          type: array
+          items:
+            type: string
+          description: 标签列表
+        status:
+          type: string
+          description: 文章状态
+    UpdateArticleResp:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              type: boolean
+              description: 是否更新成功
+    DeleteArticleReq:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 文章 ID
+    DeleteArticleResp:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              type: boolean
+              description: 是否删除成功
+    HealthResp:
+      allOf:
+        - $ref: '#/components/schemas/Response'

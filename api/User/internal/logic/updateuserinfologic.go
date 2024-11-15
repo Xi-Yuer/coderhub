@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"coderhub/conf"
 	"coderhub/rpc/User/user"
 	"coderhub/shared/MetaData"
 	"context"
@@ -27,10 +28,33 @@ func NewUpdateUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 
 func (l *UpdateUserInfoLogic) UpdateUserInfo(req *types.UpdateUserInfoRequest) (resp *types.UpdateUserInfoResponse, err error) {
 	ctx := MetaData.SetUserMetaData(l.ctx)
-	_, err = l.svcCtx.UserService.UpdateUserInfo(ctx, &user.UpdateUserInfoRequest{
-		UserId:   req.UserId,
+	userID, err := MetaData.GetUserID(l.ctx)
+	if err != nil {
+		return &types.UpdateUserInfoResponse{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpBadRequest,
+				Message: err.Error(),
+			},
+		}, nil
+	}
+
+	if _, err = l.svcCtx.UserService.UpdateUserInfo(ctx, &user.UpdateUserInfoRequest{
+		UserId:   userID,
 		Email:    req.Email,
 		Nickname: req.Nickname,
-	})
-	return
+	}); err != nil {
+		return &types.UpdateUserInfoResponse{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpBadRequest,
+				Message: err.Error(),
+			},
+		}, nil
+	}
+
+	return &types.UpdateUserInfoResponse{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpBadRequest,
+			Message: conf.HttpMessage.MsgOK,
+		},
+	}, nil
 }

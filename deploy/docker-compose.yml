@@ -57,7 +57,7 @@ services:
     build:
       context: ..
       dockerfile: ./api/User/Dockerfile
-    container_name: User-api
+    container_name: user-api
     depends_on:
       - etcd
       - mysql
@@ -66,7 +66,27 @@ services:
     networks:
       - coderhub-network
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8888/health" ]  # 修改为实际的健康检查端点
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/api/user/health" ]  # 修改为实际的健康检查端点
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    restart: always
+
+  articles-api:
+    build:
+      context: ..
+      dockerfile: ./api/TechSphere/Articles/Dockerfile
+    container_name: articles-api
+    depends_on:
+      - etcd
+      - mysql
+      - redis
+      - articles-service
+    networks:
+      - coderhub-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/api/articles/health" ]  # 修改为实际的健康检查端点
       interval: 10s
       retries: 10
       start_period: 30s
@@ -78,7 +98,7 @@ services:
     build:
       context: ..
       dockerfile: ./rpc/User/Dockerfile
-    container_name: User-service
+    container_name: user-service
     depends_on:
       - mysql
       - redis
@@ -99,6 +119,32 @@ services:
       start_period: 30s
       timeout: 10s
     restart: always
+
+  articles-service:
+    build:
+      context: ..
+      dockerfile: ./rpc/TechSphere/Articles/Dockerfile
+    container_name: articles-service
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "8888" ]  # 使用netcat检查端口是否开放
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    restart: always
+    environment:
+      REDIS_HOST: redis  # 使用服务名称作为主机名
+      REDIS_PORT: 6379
+      ETCD_HOST: etcd
+      ETCD_PORT: 2379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+    networks:
+      - coderhub-network
 
 networks:
   coderhub-network:

@@ -38,7 +38,6 @@ type (
 		Data *UserInfo `json:"data"`
 	}
 	UpdateUserInfoRequest {
-		UserId   int64  `form:"userId"`
 		Email    string `form:"email"`
 		Nickname string `form:"nickname"`
 	}
@@ -55,7 +54,6 @@ type (
 		Data string `json:"data"`
 	}
 	ChangePasswordRequest {
-		UserId      int64  `form:"userId"`
 		OldPassword string `form:"oldPassword"`
 		NewPassword string `form:"newPassword"`
 	}
@@ -99,7 +97,7 @@ service user-api {
 
 	// 健康检查
 	@handler HealthCheck
-	get /health returns (HealthCheckResponse)
+        get /api/user/health returns (HealthCheckResponse)
 }
 
 @server (
@@ -120,6 +118,6 @@ service user-api {
 
 	// 删除用户
 	@handler DeleteUser
-	delete /api/user/delete/:userId (DeleteUserRequest) returns (DeleteUserResponse)
+        delete /api/user/delete/:userId returns (DeleteUserResponse)
 }
 

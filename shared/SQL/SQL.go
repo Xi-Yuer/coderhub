@@ -55,7 +55,7 @@ func NewGorm() *gorm.DB {
 		}
 
 		// Automatically migrate the schema
-		if err := db.AutoMigrate(&model.User{}); err != nil {
+		if err := db.AutoMigrate(&model.User{}, &model.Articles{}); err != nil {
 			log.Fatalf("数据库迁移失败: %v", err)
 		}
 

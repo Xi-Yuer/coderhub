@@ -5,7 +5,7 @@ echo "Removing all dangling <none> images..."
 docker images -f "dangling=true" -q | xargs -r docker rmi
 
 # 定义需要重新构建的服务名称
-SERVICES=("user-api" "user-service")
+SERVICES=("user-api" "user-service","articles-service","articles-api")
 
 # 停止并删除旧的容器
 for SERVICE in "${SERVICES[@]}"; do

@@ -14,7 +14,6 @@ type AuthenticateUserResponse struct {
 }
 
 type ChangePasswordRequest struct {
-	UserId      int64  `form:"userId"`
 	OldPassword string `form:"oldPassword"`
 	NewPassword string `form:"newPassword"`
 }
@@ -73,7 +72,6 @@ type Response struct {
 }
 
 type UpdateUserInfoRequest struct {
-	UserId   int64  `form:"userId"`
 	Email    string `form:"email"`
 	Nickname string `form:"nickname"`
 }
