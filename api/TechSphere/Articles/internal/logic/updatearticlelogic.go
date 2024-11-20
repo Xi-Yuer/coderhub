@@ -89,6 +89,7 @@ func (l *UpdateArticleLogic) getArticle(articleId int64) (*articles.GetArticleRe
 func (l *UpdateArticleLogic) updateArticle(req *types.UpdateArticleReq) (*articles.UpdateArticleResponse, error) {
 	ctx := MetaData.SetUserMetaData(l.ctx)
 	return l.svcCtx.ArticleService.UpdateArticle(ctx, &articles.UpdateArticleRequest{
+		Id:         req.Id,
 		Title:      req.Title,
 		Content:    req.Content,
 		Summary:    l.generateSummary(req.Summary, req.Content),

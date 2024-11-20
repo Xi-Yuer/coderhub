@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -43,6 +44,10 @@ func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.
 		return nil, fmt.Errorf("文章不存在")
 	}
 
+	var imageUrls []string
+	if err := json.Unmarshal([]byte(article.ImageURLs), &imageUrls); err != nil {
+		return nil, err
+	}
 	// 转换为响应格式
 	response := &articles.GetArticleResponse{
 		Article: &articles.Article{
@@ -51,7 +56,7 @@ func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.
 			Title:        article.Title,
 			Content:      article.Content,
 			Summary:      article.Summary,
-			ImageUrls:    strings.Split(article.ImageURLs, ","),
+			ImageUrls:    imageUrls,
 			CoverImage:   article.CoverImage,
 			AuthorId:     article.AuthorID,
 			Tags:         strings.Split(article.Tags, ","),

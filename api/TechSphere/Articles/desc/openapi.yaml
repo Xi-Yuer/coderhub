@@ -31,7 +31,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HealthResp'
-  /articles:
+  /articles/create:
     post:
       summary: 创建文章
       operationId: CreateArticle
@@ -142,6 +142,7 @@ components:
           description: 评论数
         status:
           type: string
+          enum: [ draft, published ]
           description: 文章状态
         createdAt:
           type: integer
@@ -236,6 +237,7 @@ components:
           description: 标签列表
         status:
           type: string
+          enum: [ draft, published ]
           description: 文章状态
     UpdateArticleResp:
       allOf:

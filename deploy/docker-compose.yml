@@ -9,6 +9,8 @@ services:
       - "3306:3306"
     networks:
       - coderhub-network
+    volumes:
+      - mysql-data:/var/lib/mysql
 
   redis:
     image: redis:latest
@@ -17,6 +19,8 @@ services:
       - "6379:6379"
     networks:
       - coderhub-network
+    volumes:
+      - redis-data:/data
 
   etcd:
     image: quay.io/coreos/etcd:v3.5.0
@@ -152,3 +156,5 @@ networks:
 
 volumes:
   etcd-data:
+  mysql-data:
+  redis-data:

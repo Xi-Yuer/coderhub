@@ -89,7 +89,7 @@
 	)
 	service Articles {
 		@handler CreateArticle
-		post /api/articles (CreateArticleReq) returns (CreateArticleResp)
+		post /api/articles/create (CreateArticleReq) returns (CreateArticleResp)
 
 		@handler UpdateArticle
 		put /api/articles/:id (UpdateArticleReq) returns (UpdateArticleResp)

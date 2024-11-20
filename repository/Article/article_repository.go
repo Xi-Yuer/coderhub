@@ -5,6 +5,7 @@ import (
 	"coderhub/shared/CacheDB"
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -40,7 +41,8 @@ func (r *ArticleRepositoryImpl) GetArticleByID(id int64) (*model.Articles, error
 		return cached, nil
 	} else {
 		// 从数据库获取
-		if err := r.DB.Where("id = ?", id).First(&article).Error; err != nil {
+		fmt.Printf("获取的文章ID: %v\n", id)
+		if err := r.DB.Model(&model.Articles{}).Where("id = ?", id).First(&article).Error; err != nil {
 			return nil, err
 		}
 		// 缓存结果
