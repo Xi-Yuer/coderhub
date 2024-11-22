@@ -69,11 +69,11 @@ func (r *ArticleRepositoryImpl) UpdateArticle(article *model.Articles) error {
 	// 使用事务确保数据一致性
 	return r.DB.Transaction(func(tx *gorm.DB) error {
 		// 检查文章是否存在
-		var exists bool
-		if err := tx.Model(&model.Articles{}).Select("id").Where("id = ?", article.ID).Scan(&exists).Error; err != nil {
+		var count int64
+		if err := tx.Model(&model.Articles{}).Select("id").Where("id = ?", article.ID).Count(&count).Error; err != nil {
 			return err
 		}
-		if !exists {
+		if count == 0 {
 			return errors.New("文章不存在")
 		}
 
