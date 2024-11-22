@@ -4,6 +4,8 @@ import (
 	"coderhub/model"
 	"coderhub/shared/CacheDB"
 	"encoding/json"
+	"errors"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -29,7 +31,14 @@ type UserRepositoryImpl struct {
 }
 
 func (r *UserRepositoryImpl) CreateUser(user *model.User) error {
-	return r.DB.Create(user).Error
+	// 使用事务确保数据一致性
+	return r.DB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Create(user).Error; err != nil {
+			return err
+		}
+		// 创建后设置缓存
+		return r.setCache(user.CacheKeyByID(user.ID), user)
+	})
 }
 
 func (r *UserRepositoryImpl) GetUserByName(name string) (*model.User, error) {
@@ -41,15 +50,20 @@ func (r *UserRepositoryImpl) GetUserByName(name string) (*model.User, error) {
 		return cached, nil
 	}
 
-	// 从数据库获取
-	if err := r.DB.Where("user_name = ?", name).First(&user).Error; err != nil {
+	// 简化数据库查询
+	if err := r.DB.First(&user, "user_name = ?", name).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("用户不存在: %s", name)
+		}
 		return nil, err
 	}
 
-	// 设置缓存
-	if err := r.setCache(key, &user); err != nil {
-		return nil, err
-	}
+	// 异步设置缓存
+	go func() {
+		_ = r.setCache(key, &user)
+		// 同时设置ID缓存
+		_ = r.setCache(user.CacheKeyByID(user.ID), &user)
+	}()
 
 	return &user, nil
 }
@@ -63,46 +77,85 @@ func (r *UserRepositoryImpl) GetUserByID(id int64) (*model.User, error) {
 		return cached, nil
 	}
 
-	// 从数据库获取
-	if err := r.DB.Where("id = ?", id).First(&user).Error; err != nil {
+	// 简化数据库查询
+	if err := r.DB.First(&user, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("用户不存在: %d", id)
+		}
 		return nil, err
 	}
 
-	// 设置缓存
-	if err := r.setCache(key, &user); err != nil {
-		return nil, err
-	}
+	// 异步设置缓存
+	go func() {
+		_ = r.setCache(key, &user)
+		// 同时设置用户名缓存
+		_ = r.setCache(user.CacheKeyByName(user.UserName), &user)
+	}()
 
 	return &user, nil
 }
 
 func (r *UserRepositoryImpl) UpdateUser(user *model.User) error {
-	// 更新 Redis 缓存
-	key := user.CacheKeyByID(user.ID)
-	if err := r.Redis.Del(key); err != nil {
-		return err
+	if user.ID <= 0 {
+		return errors.New("无效的用户ID")
 	}
-	return r.DB.Model(user).Where("id = ?", user.ID).Updates(user).Error
+
+	return r.DB.Transaction(func(tx *gorm.DB) error {
+		// 获取旧数据用于清理缓存
+		var oldUser model.User
+		if err := tx.First(&oldUser, user.ID).Error; err != nil {
+			return err
+		}
+
+		// 更新数据
+		if err := tx.Model(user).Updates(user).Error; err != nil {
+			return err
+		}
+
+		// 清理所有相关缓存
+		keys := []string{
+			oldUser.CacheKeyByID(oldUser.ID),
+			oldUser.CacheKeyByName(oldUser.UserName),
+			user.CacheKeyByName(user.UserName),
+		}
+
+		for _, key := range keys {
+			if err := r.delCache(key); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 }
 
 func (r *UserRepositoryImpl) DeleteUser(id int64) error {
-	var user model.User
-	UserInfo, err := r.GetUserByID(id)
-	if err != nil {
-		return err
-	}
-	// 先从 Redis 删除
-	CacheIdKey := user.CacheKeyByID(id)
-	CacheUserNameIdKey := user.CacheKeyByName(UserInfo.UserName)
-	// 根据 id 删除
-	if err := r.delCache(CacheIdKey); err != nil {
-		return err
-	}
-	// 根据用户名删除
-	if err := r.delCache(CacheUserNameIdKey); err != nil {
-		return err
-	}
-	return r.DB.Where("id = ?", id).Delete(&model.User{}).Error
+	return r.DB.Transaction(func(tx *gorm.DB) error {
+		// 获取用户信息用于清理缓存
+		var user model.User
+		if err := tx.First(&user, id).Error; err != nil {
+			return err
+		}
+
+		// 删除用户
+		if err := tx.Delete(&user).Error; err != nil {
+			return err
+		}
+
+		// 清理所有相关缓存
+		keys := []string{
+			user.CacheKeyByID(id),
+			user.CacheKeyByName(user.UserName),
+		}
+
+		for _, key := range keys {
+			if err := r.delCache(key); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 }
 
 func (r *UserRepositoryImpl) getCache(key string) (*model.User, error) {

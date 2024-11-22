@@ -13,8 +13,13 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
+	redisDB, err := CacheDB.NewRedisDB(CacheDB.DefaultConfig())
+	if err != nil {
+		panic(err)
+	}
+
 	return &ServiceContext{
 		Config:            c,
-		ArticleRepository: repository.NewArticleRepositoryImpl(SQL.NewGorm(), CacheDB.NewRedisDB()),
+		ArticleRepository: repository.NewArticleRepositoryImpl(SQL.NewGorm(), redisDB),
 	}
 }

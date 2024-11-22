@@ -54,6 +54,17 @@ func NewGorm() *gorm.DB {
 			log.Fatalf("数据库连接失败: %v", err)
 		}
 
+		// 添加连接池配置
+		sqlDB, err := db.DB()
+		if err != nil {
+			log.Fatalf("获取数据库实例失败: %v", err)
+		}
+
+		// 设置连接池参数
+		sqlDB.SetMaxIdleConns(10)           // 设置空闲连接池的最大连接数
+		sqlDB.SetMaxOpenConns(100)          // 设置数据库的最大打开连接数
+		sqlDB.SetConnMaxLifetime(time.Hour) // 设置连接的最大可复用时间
+
 		// Automatically migrate the schema
 		if err := db.AutoMigrate(&model.User{}, &model.Articles{}); err != nil {
 			log.Fatalf("数据库迁移失败: %v", err)

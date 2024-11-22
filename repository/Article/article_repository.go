@@ -29,7 +29,11 @@ func NewArticleRepositoryImpl(db *gorm.DB, rdb CacheDB.RedisDB) *ArticleReposito
 }
 
 func (r *ArticleRepositoryImpl) CreateArticle(article *model.Articles) error {
-	return r.DB.Create(article).Error
+	if err := r.DB.Create(article).Error; err != nil {
+		return err
+	}
+	// 创建后设置缓存
+	return r.setCache(article.CacheKeyByID(article.ID), article)
 }
 
 func (r *ArticleRepositoryImpl) GetArticleByID(id int64) (*model.Articles, error) {
@@ -39,42 +43,52 @@ func (r *ArticleRepositoryImpl) GetArticleByID(id int64) (*model.Articles, error
 	// 尝试从缓存获取
 	if cached, err := r.getCache(key); err == nil {
 		return cached, nil
-	} else {
-		// 从数据库获取
-		fmt.Printf("获取的文章ID: %v\n", id)
-		if err := r.DB.Model(&model.Articles{}).Where("id = ?", id).First(&article).Error; err != nil {
-			return nil, err
-		}
-		// 缓存结果
-		err := r.setCache(key, &article)
-		if err != nil {
-			return nil, err
-		}
-		return &article, nil
 	}
+
+	// 简化数据库查询
+	if err := r.DB.First(&article, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("文章不存在: %v", id)
+		}
+		return nil, err
+	}
+
+	// 异步设置缓存，避免影响主流程
+	go func() {
+		_ = r.setCache(key, &article)
+	}()
+
+	return &article, nil
 }
 
 func (r *ArticleRepositoryImpl) UpdateArticle(article *model.Articles) error {
-	oldArticle, err := r.GetArticleByID(article.ID)
-	if err != nil {
-		return err
-	}
-	if oldArticle.ID != article.ID {
-		return errors.New("非法操作")
-	}
-	err = r.delCache(oldArticle.CacheKeyByID(oldArticle.ID))
-	if err != nil {
-		return err
-	}
-	if err := r.DB.Model(&model.Articles{}).Where("id = ?", article.ID).Updates(article).Error; err != nil {
-		return err
+	if article.ID <= 0 {
+		return errors.New("无效的文章ID")
 	}
 
-	err = r.setCache(article.CacheKeyByID(article.ID), article)
-	if err != nil {
-		return err
-	}
-	return nil
+	// 使用事务确保数据一致性
+	return r.DB.Transaction(func(tx *gorm.DB) error {
+		// 检查文章是否存在
+		var exists bool
+		if err := tx.Model(&model.Articles{}).Select("id").Where("id = ?", article.ID).Scan(&exists).Error; err != nil {
+			return err
+		}
+		if !exists {
+			return errors.New("文章不存在")
+		}
+
+		// 更新数据库
+		if err := tx.Model(article).Updates(article).Error; err != nil {
+			return err
+		}
+
+		// 删除旧缓存并设置新缓存
+		key := article.CacheKeyByID(article.ID)
+		if err := r.delCache(key); err != nil {
+			return err
+		}
+		return r.setCache(key, article)
+	})
 }
 
 func (r *ArticleRepositoryImpl) DeleteArticle(id int64) error {
