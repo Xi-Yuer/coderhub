@@ -5,8 +5,6 @@ services:
     environment:
       MYSQL_DATABASE: coderhub
       MYSQL_ROOT_PASSWORD: 2214380963Wx!!
-      MYSQL_USER: canal
-      MYSQL_PASSWORD: canal
     ports:
       - "3306:3306"
     networks:
@@ -15,38 +13,6 @@ services:
       - type: volume
         source: mysql-data
         target: /var/lib/mysql
-      - type: bind
-        source: ./mysql/conf.d
-        target: /etc/mysql/conf.d
-        read_only: true
-        consistency: consistent
-      - type: bind
-        source: ./mysql/init.sql
-        target: /docker-entrypoint-initdb.d/init.sql
-        read_only: true
-        consistency: consistent
-  canal:
-    image: canal/canal-server:latest
-    container_name: canal
-    depends_on:
-      - mysql
-    environment:
-      CANAL_IP: canal
-      CANAL_PORT: 11111
-      CANAL_DESTINATIONS: example
-      CANAL_INSTANCE_MASTER_ADDRESS: mysql:3306
-      CANAL_INSTANCE_DBUSERNAME: canal
-      CANAL_INSTANCE_DBPASSWORD: canal
-      CANAL_INSTANCE_FILTER_REGEX: "coderhub\\..*"  # 监听 coderhub 数据库下的所有表
-      CANAL_INSTANCE_PARSER_PARALLEL: 1
-      CANAL_INSTANCE_PARSER_PARALLELTHREADSIZE: 256
-    ports:
-      - "11111:11111"
-    networks:
-      - coderhub-network
-    volumes:
-      - canal-data:/home/admin/canal-server/logs
-      - ./canal-adapter/conf:/opt/canal-adapter/conf
   elasticsearch:
     image: elasticsearch:8.11.3
     container_name: elasticsearch
@@ -56,7 +22,6 @@ services:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - xpack.security.enabled=true
       - ELASTIC_PASSWORD=2214380963Wx!!  # 设置明确的密码
     volumes:
       - type: volume
@@ -216,5 +181,4 @@ volumes:
   etcd-data:
   mysql-data:
   redis-data:
-  canal-data:
   es-data:
