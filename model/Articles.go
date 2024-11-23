@@ -8,7 +8,7 @@ import (
 )
 
 type Articles struct {
-	ID           int64          `gorm:"primaryKey" json:"id"`                                         // 主键 ID
+	ID           int64          `gorm:"<-:create;primaryKey" json:"id"`                               // 主键 ID
 	Type         string         `gorm:"type:enum('article','micro_post');not null" json:"type"`       // 内容类型：长文(article) 或 短文(micro_post)
 	Title        string         `gorm:"size:255" json:"title"`                                        // 长文标题，短文可为空
 	Content      string         `gorm:"type:longtext;not null" json:"content"`                        // 内容（长文或短文）
@@ -21,9 +21,9 @@ type Articles struct {
 	LikeCount    int64          `gorm:"default:0" json:"like_count"`                                  // 点赞次数
 	CommentCount int64          `gorm:"default:0" json:"comment_count"`                               // 评论数
 	Status       string         `gorm:"type:enum('draft','published');default:'draft'" json:"status"` // 内容状态
-	CreatedAt    time.Time      `gorm:"autoCreateTime" json:"created_at"`                             // 创建时间
-	UpdatedAt    time.Time      `gorm:"autoUpdateTime" json:"updated_at"`                             // 更新时间
-	DeletedAt    gorm.DeletedAt `gorm:"index" json:"DeletedAt"`                                       // 删除时间
+	CreatedAt    time.Time      `gorm:"<-:create" json:"created_at"`                                  // 创建时间
+	UpdatedAt    time.Time      `gorm:"<-:update" json:"updated_at"`                                  // 更新时间
+	DeletedAt    gorm.DeletedAt `gorm:"index" json:"deleted_at"`                                      // 删除时间
 }
 
 func (a *Articles) CacheKeyByID(id int64) string {
