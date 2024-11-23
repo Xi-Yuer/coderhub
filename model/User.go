@@ -13,7 +13,7 @@ type User struct {
 	// 用户唯一标识符，自动生成且只能创建时设置
 	ID int64 `gorm:"<-:create;primaryKey" json:"id"`
 	// 用户名，唯一且只能创建时设置
-	UserName string `gorm:"<-:create;unique;not null;type:varchar(32)" json:"user_name" validate:"required,min=3,max=32"`
+	UserName string `gorm:"<-:create;unique;type:varchar(32)" json:"user_name" validate:"required,min=3,max=32"`
 	// 用户密码，建议存储加密后的哈希值
 	Password string `gorm:"not null;type:varchar(255)" json:"password" validate:"required,min=6,max=32"`
 	// 用户昵称，可为空
@@ -28,8 +28,8 @@ type User struct {
 	IsAdmin bool `gorm:"default:false;not null" json:"is_admin"`
 	// 记录创建时间
 	CreatedAt time.Time `gorm:"<-:create;not null" json:"created_at"`
-	// 记录更新时间 - 修改标签使其在创建时也能设置值
-	UpdatedAt time.Time `gorm:"autoCreateTime;autoUpdateTime;not null" json:"updated_at"`
+	// 记录更新时间
+	UpdatedAt time.Time `gorm:"<-:update;not null" json:"updated_at"`
 	// 软删除时间戳
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 }

@@ -22,7 +22,7 @@ type Articles struct {
 	CommentCount int64          `gorm:"default:0" json:"comment_count"`                               // 评论数
 	Status       string         `gorm:"type:enum('draft','published');default:'draft'" json:"status"` // 内容状态
 	CreatedAt    time.Time      `gorm:"<-:create" json:"created_at"`                                  // 创建时间
-	UpdatedAt    time.Time      `gorm:"autoCreateTime;autoUpdateTime" json:"updated_at"`              // 更新时间
+	UpdatedAt    time.Time      `gorm:"<-:update" json:"updated_at"`                                  // 更新时间
 	DeletedAt    gorm.DeletedAt `gorm:"index" json:"deleted_at"`                                      // 删除时间
 }
 
