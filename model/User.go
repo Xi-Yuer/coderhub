@@ -27,11 +27,9 @@ type User struct {
 	// 是否为管理员
 	IsAdmin bool `gorm:"default:false;not null" json:"is_admin"`
 	// 记录创建时间
-	CreatedAt time.Time `gorm:"<-:create;not null" json:"created_at"`
-	// 记录更新时间
-	UpdatedAt time.Time `gorm:"<-:update;not null" json:"updated_at"`
-	// 软删除时间戳
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
+	CreatedAt time.Time      `gorm:"<-:create" json:"created_at"` // 创建时间
+	UpdatedAt time.Time      `gorm:"<-:update" json:"updated_at"` // 更新时间
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`     // 软删除时间戳
 }
 
 // CacheKeyByID 根据用户ID生成缓存键
