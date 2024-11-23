@@ -27,7 +27,6 @@
 			Status string `json:"status" form:"status"`                  // 文章状态
 			CreatedAt int64 `json:"createdAt" form:"createdAt"`          // 创建时间
 			UpdatedAt int64 `json:"updatedAt" form:"updatedAt"`          // 更新时间
-			DeletedAt int64 `json:"deletedAt" form:"deletedAt"`          // 删除时间
 		}
 		GetArticleReq {
 			Id int64 `path:"id"` // 文章 ID

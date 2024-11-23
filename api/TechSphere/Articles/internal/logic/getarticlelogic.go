@@ -84,7 +84,6 @@ func (l *GetArticleLogic) convertToArticleType(article *articles.Article) *types
 		Status:       article.Status,
 		CreatedAt:    article.CreatedAt,
 		UpdatedAt:    article.UpdatedAt,
-		DeletedAt:    article.DeletedAt,
 	}
 }
 
