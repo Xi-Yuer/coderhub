@@ -1,0 +1,53 @@
+dataSourceKey: defaultDS
+destination: example
+groupId: g1
+esMapping:
+  _index: articles
+  _id: id
+  sql: "SELECT 
+          a.id AS id,
+          a.title,
+          a.content,
+          a.status,
+          a.view_count,
+          a.like_count,
+          a.comment_count,
+          a.created_at,
+          a.updated_at,
+          u.username AS author_name,
+          u.avatar AS author_avatar
+        FROM articles a
+        LEFT JOIN users u ON a.user_id = u.id"
+  etlCondition: "where a.updated_at > #{@param:start_time}"
+  commitBatch: 3000
+  relations:
+    - name: user_id
+      parent: users
+      cardinality: one
+  properties:
+    id:
+      type: long
+    title:
+      type: text
+      analyzer: ik_max_word
+      search_analyzer: ik_smart
+    content:
+      type: text
+      analyzer: ik_max_word
+      search_analyzer: ik_smart
+    status:
+      type: integer
+    view_count:
+      type: long
+    like_count:
+      type: long
+    comment_count:
+      type: long
+    created_at:
+      type: date
+    updated_at:
+      type: date
+    author_name:
+      type: keyword
+    author_avatar:
+      type: keyword 
