@@ -210,9 +210,6 @@ components:
     UpdateArticleReq:
       type: object
       properties:
-        id:
-          type: integer
-          description: 文章 ID
         title:
           type: string
           description: 标题
