@@ -21,6 +21,7 @@ services:
       - cluster.name=es-docker-cluster
       - discovery.type=single-node
       - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - ELASTIC_PASSWORD=2214380963Wx!!  # 设置明确的密码
     volumes:
@@ -35,6 +36,30 @@ services:
       memlock:
         soft: -1
         hard: -1
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.3-arm64
+    platform: linux/arm64
+    container_name: logstash
+    depends_on:
+      - elasticsearch
+      - mysql
+    environment:
+      - XPACK_MONITORING_ENABLED=false
+      - "LS_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - type: bind
+        source: ./logstash/config/logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+      - type: bind
+        source: ./logstash/pipeline
+        target: /usr/share/logstash/pipeline
+      - type: bind
+        source: ./logstash/lib/mysql-connector-java-8.0.28.jar
+        target: /usr/share/logstash/mysql-connector-java-8.0.28.jar
+    networks:
+      - coderhub-network
+
   redis:
     image: redis:latest
     container_name: redis
