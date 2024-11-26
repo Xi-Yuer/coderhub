@@ -1,0 +1,94 @@
+// goctl rpc protoc comment.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../
+syntax = "proto3";
+
+package comment;
+option go_package = "./comment";
+
+// 评论服务定义
+service CommentService {
+  // 创建评论
+  rpc CreateComment(CreateCommentRequest) returns (CreateCommentResponse) {}
+  // 获取评论列表
+  rpc GetComments(GetCommentsRequest) returns (GetCommentsResponse) {}
+  // 获取单个评论详情
+  rpc GetComment(GetCommentRequest) returns (GetCommentResponse) {}
+  // 更新评论
+  rpc UpdateComment(UpdateCommentRequest) returns (UpdateCommentResponse) {}
+  // 删除评论
+  rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentResponse) {}
+}
+
+// 评论实体
+message Comment {
+  int64 id = 1;                    // 评论ID
+  int64 article_id = 2;            // 文章ID
+  string content = 3;              // 评论内容
+  int64 parent_id = 4;             // 父评论ID，用于嵌套评论
+  int64 user_id = 5;               // 评论者ID
+  int64 created_at = 6;            // 创建时间
+  int64 updated_at = 7;            // 更新时间
+  repeated Comment replies = 8;     // 子评论列表
+  int32 like_count = 9;            // 点赞数
+  repeated CommentImage images = 10;  // 评论包含的图片列表
+}
+
+// 创建评论请求
+message CreateCommentRequest {
+  int64 article_id = 1;            // 文章ID
+  string content = 2;              // 评论内容
+  int64 parent_id = 3;             // 父评论ID（可选）
+  repeated string image_ids = 4;      // 图片ID列表
+}
+
+message CreateCommentResponse {
+  Comment comment = 1;             // 创建的评论
+}
+
+// 获取评论列表请求
+message GetCommentsRequest {
+  int64 article_id = 1;            // 文章ID
+  int32 page = 2;                  // 页码
+  int32 page_size = 3;             // 每页数量
+}
+
+message GetCommentsResponse {
+  repeated Comment comments = 1;    // 评论列表
+  int32 total = 2;                 // 总评论数
+}
+
+// 获取单个评论请求
+message GetCommentRequest {
+  int64 comment_id = 1;            // 评论ID
+}
+
+message GetCommentResponse {
+  Comment comment = 1;             // 评论详情
+}
+
+// 更新评论请求
+message UpdateCommentRequest {
+  int64 comment_id = 1;            // 评论ID
+  string content = 2;              // 更新的内容
+}
+
+message UpdateCommentResponse {
+  Comment comment = 1;             // 更新后的评论
+}
+
+// 删除评论请求
+message DeleteCommentRequest {
+  int64 comment_id = 1;            // 评论ID
+}
+
+message DeleteCommentResponse {
+  bool success = 1;                // 删除是否成功
+}
+
+// 评论图片
+message CommentImage {
+  string image_id = 1;             // 图片ID（关联到图片服务）
+  string url = 2;                  // 图片URL
+  string thumbnail_url = 3;        // 缩略图URL
+}
+
+

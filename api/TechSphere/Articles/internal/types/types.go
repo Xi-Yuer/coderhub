@@ -4,7 +4,7 @@
 package types
 
 type Article struct {
-	Id           int64    `json:"id",form:"id"`                     // 主键 ID
+	Id           int64    `json:"id" form:"id"`                     // 主键 ID
 	Type         string   `json:"type" form:"type"`                 // 内容类型：长文或短文
 	Title        string   `json:"title" form:"title"`               // 标题
 	Content      string   `json:"content" form:"content"`           // 内容
@@ -22,14 +22,14 @@ type Article struct {
 }
 
 type CreateArticleReq struct {
-	Type       string   `json:"type",options=article|micro_post"` // 内容类型
-	Title      string   `json:"title"`                            // 标题
-	Content    string   `json:"content"`                          // 内容
-	Summary    string   `json:"summary"`                          // 摘要
-	ImageUrls  []string `json:"imageUrls"`                        // 图片 URL 列表
-	CoverImage string   `json:"coverImage"`                       // 封面图片 URL
-	Tags       []string `json:"tags"`                             // 标签列表
-	Status     string   `json:"status",options=draft|published`   // 文章状态
+	Type         string   `json:"type,options=draft|published"`   // 内容类型
+	Title        string   `json:"title"`                          // 标题
+	Content      string   `json:"content"`                        // 内容
+	Summary      string   `json:"summary"`                        // 摘要
+	ImageIds     []string `json:"imageIds"`                       // 图片 URL 列表
+	CoverImageID string   `json:"coverImageID"`                   // 封面图片 URL
+	Tags         []string `json:"tags"`                           // 标签列表
+	Status       string   `json:"status,options=draft|published"` // 文章状态
 }
 
 type CreateArticleResp struct {
@@ -65,14 +65,14 @@ type Response struct {
 }
 
 type UpdateArticleReq struct {
-	Id         int64    `path:"id"`         // 文章 ID
-	Title      string   `json:"title"`      // 标题
-	Content    string   `json:"content"`    // 内容
-	Summary    string   `json:"summary"`    // 摘要
-	ImageUrls  []string `json:"imageUrls"`  // 图片 URL 列表
-	CoverImage string   `json:"coverImage"` // 封面图片 URL
-	Tags       []string `json:"tags"`       // 标签列表
-	Status     string   `json:"status"`     // 文章状态
+	Id           int64    `path:"id"`           // 文章 ID
+	Title        string   `json:"title"`        // 标题
+	Content      string   `json:"content"`      // 内容
+	Summary      string   `json:"summary"`      // 摘要
+	ImageIds     []string `json:"imageIds"`     // 图片 URL 列表
+	CoverImageID string   `json:"coverImageID"` // 封面图片 URL
+	Tags         []string `json:"tags"`         // 标签列表
+	Status       string   `json:"status"`       // 文章状态
 }
 
 type UpdateArticleResp struct {

@@ -83,15 +83,15 @@ func (l *CreateArticleLogic) validateArticleData(req *types.CreateArticleReq) er
 func (l *CreateArticleLogic) prepareArticleData(req *types.CreateArticleReq, userId int64) *articles.CreateArticleRequest {
 
 	return &articles.CreateArticleRequest{
-		Type:       req.Type,
-		Title:      req.Title,
-		Content:    req.Content,
-		Summary:    l.generateSummary(req.Summary, req.Content),
-		ImageUrls:  req.ImageUrls,
-		CoverImage: req.CoverImage,
-		AuthorId:   userId,
-		Tags:       req.Tags,
-		Status:     req.Status,
+		Type:         req.Type,
+		Title:        req.Title,
+		Content:      req.Content,
+		Summary:      l.generateSummary(req.Summary, req.Content),
+		ImageIds:     nil,
+		CoverImageId: "",
+		AuthorId:     userId,
+		Tags:         req.Tags,
+		Status:       req.Status,
 	}
 }
 

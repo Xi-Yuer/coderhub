@@ -21,6 +21,7 @@ type (
 	DeleteArticleResponse = articles.DeleteArticleResponse
 	GetArticleRequest     = articles.GetArticleRequest
 	GetArticleResponse    = articles.GetArticleResponse
+	Image                 = articles.Image
 	UpdateArticleRequest  = articles.UpdateArticleRequest
 	UpdateArticleResponse = articles.UpdateArticleResponse
 

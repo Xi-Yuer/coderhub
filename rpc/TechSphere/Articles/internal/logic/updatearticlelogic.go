@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -106,20 +105,8 @@ func (l *UpdateArticleLogic) validateArticleUpdate(req *articles.UpdateArticleRe
 	}
 
 	// 验证图片数量
-	if len(req.ImageUrls) > maxImageCount {
+	if len(req.ImageIds) > maxImageCount {
 		return fmt.Errorf(ErrImageCountExceeded, maxImageCount)
-	}
-
-	// 验证图片URL
-	for _, url := range req.ImageUrls {
-		if !validateImageURL(url) {
-			return errors.New(ErrInvalidImageURL)
-		}
-	}
-
-	// 验证封面图
-	if req.CoverImage != "" && !validateImageURL(req.CoverImage) {
-		return errors.New(ErrInvalidCoverURL)
 	}
 
 	return nil
@@ -163,13 +150,9 @@ func (l *UpdateArticleLogic) checkArticlePermission(articleID int64, userID int6
 
 // updateArticleFields 更新文章字段
 func (l *UpdateArticleLogic) updateArticleFields(article *model.Articles, in *articles.UpdateArticleRequest) {
-	imageURLsJSON, _ := json.Marshal(in.ImageUrls)
-
 	article.Title = in.Title
 	article.Content = in.Content
 	article.Summary = in.Summary
-	article.ImageURLs = string(imageURLsJSON)
-	article.CoverImage = in.CoverImage
 	article.Tags = strings.Join(in.Tags, ",")
 	article.Status = string(in.Status)
 }
