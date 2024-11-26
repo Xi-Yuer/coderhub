@@ -24,6 +24,8 @@ services:
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - ELASTIC_PASSWORD=2214380963Wx!!  # 设置明确的密码
+    depends_on:
+      - mysql
     volumes:
       - type: volume
         source: es-data
@@ -155,6 +157,7 @@ services:
       - mysql
       - redis
       - etcd
+      - elasticsearch
     networks:
       - coderhub-network
     environment:
@@ -181,6 +184,7 @@ services:
       - mysql
       - redis
       - etcd
+      - elasticsearch
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "8888" ]  # 使用netcat检查端口是否开放
       interval: 10s
