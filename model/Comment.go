@@ -18,6 +18,7 @@ type Comment struct {
 	CreatedAt time.Time      `gorm:"<-:create" json:"created_at"`                     // 创建时间
 	UpdatedAt time.Time      `gorm:"autoCreateTime;autoUpdateTime" json:"updated_at"` // 更新时间
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`                         // 删除时间
+	Version   int32          `gorm:"default:0" json:"version"`                        // 版本号:乐观锁
 
 	// gorm:"-" 标签的含义是告诉 GORM 忽略这个字段，即这个字段不会被映射到数据库表中。
 	// 这些图片ID可能存储在另一个关联表中，而不是直接存储在评论表里

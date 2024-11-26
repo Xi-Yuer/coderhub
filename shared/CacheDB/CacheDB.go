@@ -3,8 +3,9 @@ package CacheDB
 import (
 	"context"
 	"fmt"
-	"github.com/redis/go-redis/v9"
 	"time"
+
+	"github.com/redis/go-redis/v9"
 )
 
 // RedisConfig Redis配置结构
@@ -27,6 +28,7 @@ type RedisDB interface {
 	Del(key ...string) error
 	Expire(key string, expiration time.Duration) error
 	Exists(key string) (bool, error)
+	NewScript(script string) *redis.Script
 	Close() error
 	Pipeline() redis.Pipeliner
 }
@@ -120,6 +122,10 @@ func (r *RedisDBImpl) Exists(key string) (bool, error) {
 
 func (r *RedisDBImpl) Pipeline() redis.Pipeliner {
 	return r.Client.Pipeline()
+}
+
+func (r *RedisDBImpl) NewScript(script string) *redis.Script {
+	return redis.NewScript(script)
 }
 
 func (r *RedisDBImpl) Close() error {
