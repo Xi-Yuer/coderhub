@@ -1,0 +1,93 @@
+syntax = "v1"
+
+info(
+    title: "图片关联服务接口"
+    desc: "提供图片关联服务"
+    author: "Xi-Yuer"
+    version: "1.0.0"
+)
+
+type (
+    ImageRelation {
+        Id int64 `json:"id"`                    // 关系ID
+        ImageId int64 `json:"imageId"`          // 图片ID
+        EntityId int64 `json:"entityId"`        // 关联实体ID
+        EntityType string `json:"entityType"`   // 关联实体类型
+        Sort int32 `json:"sort"`                // 排序号
+        CreatedAt string `json:"createdAt"`     // 创建时间
+    }
+
+    ImageInfo {
+        ImageId int64 `json:"imageId"`             // 图片ID
+        Url string `json:"url"`                    // 图片URL
+        ThumbnailUrl string `json:"thumbnailUrl"`  // 缩略图URL
+        Width int32 `json:"width"`                 // 宽度
+        Height int32 `json:"height"`               // 高度
+        Sort int32 `json:"sort"`                   // 排序号
+    }
+
+    EntityInfo {
+        EntityType string `json:"entityType"`   // 实体类型
+        EntityId int64 `json:"entityId"`        // 实体ID
+        CreatedAt int64 `json:"createdAt"`      // 关联创建时间
+    }
+
+    CreateRelationReq {
+        ImageId int64 `json:"imageId"`          // 图片ID
+        EntityId int64 `json:"entityId"`        // 关联实体ID
+        EntityType string `json:"entityType"`   // 关联实体类型
+        Sort int32 `json:"sort"`                // 排序号
+    }
+
+    CreateRelationResp {
+        Relation ImageRelation `json:"relation"` // 创建的关系
+    }
+
+    BatchCreateRelationReq {
+        Relations []CreateRelationReq `json:"relations"` // 关系列表
+    }
+
+    BatchCreateRelationResp {
+        Relations []ImageRelation `json:"relations"` // 创建的关系列表
+    }
+
+    GetImagesByEntityReq {
+        EntityId int64 `json:"entityId"`        // 关联实体ID
+        EntityType string `json:"entityType"`   // 关联实体类型
+    }
+
+    GetImagesByEntityResp {
+        Images []ImageInfo `json:"images"` // 图片列表
+    }
+
+    GetEntitiesByImageReq {
+        ImageId int64 `json:"imageId"`                 // 图片ID
+        EntityType string `json:"entityType,optional"` // 关联实体类型（可选）
+    }
+
+    GetEntitiesByImageResp {
+        Entities []EntityInfo `json:"entities"` // 实体列表
+    }
+)
+
+@server(
+    jwt: Auth
+    prefix: /api
+)
+service ImageRelation {
+    @doc "创建图片关联"
+    @handler CreateRelation
+    post /image/relation/create (CreateRelationReq) returns (CreateRelationResp)
+
+    @doc "批量创建图片关联"
+    @handler BatchCreateRelation
+    post /image/relation/batchCreate (BatchCreateRelationReq) returns (BatchCreateRelationResp)
+
+    @doc "根据实体获取图片"
+    @handler GetImagesByEntity
+    post /image/relation/getImagesByEntity (GetImagesByEntityReq) returns (GetImagesByEntityResp)
+
+    @doc "根据图片获取实体"
+    @handler GetEntitiesByImage
+    post /image/relation/getEntitiesByImage (GetEntitiesByImageReq) returns (GetEntitiesByImageResp)
+}

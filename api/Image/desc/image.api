@@ -1,0 +1,83 @@
+syntax = "v1"
+
+info(
+    title: "图片服务接口"
+    desc: "提供图片上传、删除、查询等功能"
+    author: "Xi-Yuer"
+    version: "1.0.0"
+)
+
+type (
+    ImageInfo {
+        ImageId int64 `json:"image_id"`            // 图片ID
+        BucketName string `json:"bucket_name"`     // MinIO bucket名称
+        ObjectName string `json:"object_name"`     // MinIO中的对象名称
+        Url string `json:"url"`                    // 完整的访问URL
+        ThumbnailUrl string `json:"thumbnail_url"` // 缩略图URL
+        ContentType string `json:"content_type"`   // 文件MIME类型
+        Size int64 `json:"size"`                   // 文件大小(bytes)
+        Width int32 `json:"width"`                 // 图片宽度(px)
+        Height int32 `json:"height"`               // 图片高度(px)
+        UploadIp string `json:"upload_ip"`         // 上传者IP
+        UserId int64 `json:"user_id"`              // 上传者ID
+        Status string `json:"status"`              // 状态
+        CreatedAt string `json:"created_at"`       // 创建时间
+    }
+
+    UploadRequest {
+        File []byte `json:"file"`                 // 图片文件数据
+        Filename string `json:"filename"`         // 文件名
+        UserId int64 `json:"user_id"`             // 用户ID
+        ContentType string `json:"content_type"`  // 文件类型
+    }
+
+    DeleteRequest {
+        ImageId int64 `json:"image_id"`     // 图片ID
+        UserId int64 `json:"user_id"`       // 用户ID（用于权限验证）
+    }
+
+    DeleteResponse {
+        Success bool `json:"success"`       // 是否成功
+    }
+
+    GetRequest {
+        ImageId int64 `json:"image_id"`    // 图片ID
+    }
+
+    ListByUserRequest {
+        UserId int64 `json:"user_id"`      // 用户ID
+        Page int32 `json:"page"`           // 页码
+        PageSize int32 `json:"page_size"`  // 每页数量
+    }
+
+    ListByUserResponse {
+        Images []ImageInfo `json:"images"` // 图片列表
+        Total int64 `json:"total"`         // 总数量
+    }
+)
+
+
+@server(
+    prefix : /api
+)
+
+service Image {
+    @handler Get
+    get /image/get (GetRequest) returns (ImageInfo)
+}
+
+@server(
+    jwt: Auth
+    prefix : /api
+)
+
+service Image {
+    @handler Upload
+    post /image/upload (UploadRequest) returns (ImageInfo)
+
+    @handler Delete
+    post /image/delete (DeleteRequest) returns (DeleteResponse)
+
+    @handler ListByUser
+    get /image/list (ListByUserRequest) returns (ListByUserResponse)
+}
