@@ -24,8 +24,6 @@ type (
 	GetCommentResponse    = comment.GetCommentResponse
 	GetCommentsRequest    = comment.GetCommentsRequest
 	GetCommentsResponse   = comment.GetCommentsResponse
-	UpdateCommentRequest  = comment.UpdateCommentRequest
-	UpdateCommentResponse = comment.UpdateCommentResponse
 
 	CommentService interface {
 		// 创建评论
@@ -34,8 +32,6 @@ type (
 		GetComments(ctx context.Context, in *GetCommentsRequest, opts ...grpc.CallOption) (*GetCommentsResponse, error)
 		// 获取单个评论详情
 		GetComment(ctx context.Context, in *GetCommentRequest, opts ...grpc.CallOption) (*GetCommentResponse, error)
-		// 更新评论
-		UpdateComment(ctx context.Context, in *UpdateCommentRequest, opts ...grpc.CallOption) (*UpdateCommentResponse, error)
 		// 删除评论
 		DeleteComment(ctx context.Context, in *DeleteCommentRequest, opts ...grpc.CallOption) (*DeleteCommentResponse, error)
 	}
@@ -67,12 +63,6 @@ func (m *defaultCommentService) GetComments(ctx context.Context, in *GetComments
 func (m *defaultCommentService) GetComment(ctx context.Context, in *GetCommentRequest, opts ...grpc.CallOption) (*GetCommentResponse, error) {
 	client := comment.NewCommentServiceClient(m.cli.Conn())
 	return client.GetComment(ctx, in, opts...)
-}
-
-// 更新评论
-func (m *defaultCommentService) UpdateComment(ctx context.Context, in *UpdateCommentRequest, opts ...grpc.CallOption) (*UpdateCommentResponse, error) {
-	client := comment.NewCommentServiceClient(m.cli.Conn())
-	return client.UpdateComment(ctx, in, opts...)
 }
 
 // 删除评论

@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"coderhub/model"
 	"context"
 
 	"coderhub/rpc/ImageRelation/imageRelation"
@@ -23,9 +24,29 @@ func NewBatchCreateRelationLogic(ctx context.Context, svcCtx *svc.ServiceContext
 	}
 }
 
-// 批量创建图片关系
+// BatchCreateRelation 批量创建图片关系
 func (l *BatchCreateRelationLogic) BatchCreateRelation(in *imageRelation.BatchCreateRelationRequest) (*imageRelation.BatchCreateRelationResponse, error) {
-	// todo: add your logic here and delete this line
-
-	return &imageRelation.BatchCreateRelationResponse{}, nil
+	imageRelations := make([]*model.ImageRelation, len(in.Relations))
+	for i, relation := range in.Relations {
+		imageRelations[i] = &model.ImageRelation{
+			ImageID:    relation.ImageId,
+			EntityID:   relation.EntityId,
+			EntityType: relation.EntityType,
+		}
+	}
+	err := l.svcCtx.ImageRelationRepository.BatchCreate(l.ctx, imageRelations)
+	if err != nil {
+		return nil, err
+	}
+	relations := make([]*imageRelation.ImageRelation, len(imageRelations))
+	for i, relation := range imageRelations {
+		relations[i] = &imageRelation.ImageRelation{
+			ImageId:    relation.ImageID,
+			EntityId:   relation.EntityID,
+			EntityType: relation.EntityType,
+		}
+	}
+	return &imageRelation.BatchCreateRelationResponse{
+		Relations: relations,
+	}, nil
 }

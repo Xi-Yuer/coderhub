@@ -14,7 +14,7 @@ COPY . .
 RUN go mod download
 
 # 编译 Go 程序
-RUN go build -o /app/bin/cmd ./rpc/ImageRelation/imageRelation.go
+RUN go build -o /app/bin/cmd ./rpc/ImageRelation/imagerelation.go
 
 # 第 2 阶段：运行阶段（轻量级）
 FROM alpine:3.18
@@ -30,4 +30,4 @@ COPY --from=builder /app/rpc/ImageRelation/etc /app/bin/etc
 EXPOSE 8888
 
 # 定义容器启动时运行的命令
-CMD ["/app/bin/cmd", "-f", "/app/bin/etc/user.yaml"]
+CMD ["/app/bin/cmd", "-f", "/app/bin/etc/imagerelation.yaml"]

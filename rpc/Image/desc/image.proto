@@ -26,7 +26,7 @@ message UploadRequest {
 
 // 删除请求
 message DeleteRequest {
-  string image_id = 1;     // 图片ID
+  int64 image_id = 1;     // 图片ID
   int64 user_id = 2;       // 用户ID（用于权限验证）
 }
 
@@ -37,7 +37,7 @@ message DeleteResponse {
 
 // 获取图片请求
 message GetRequest {
-  string image_id = 1;     // 图片ID
+  int64 image_id = 1;     // 图片ID
 }
 
 // 获取用户图片列表请求
@@ -55,7 +55,7 @@ message ListByUserResponse {
 
 // 图片信息
 message ImageInfo {
-  string image_id = 1;      // 图片ID
+  int64 image_id = 1;      // 图片ID
   string bucket_name = 2;   // MinIO bucket名称
   string object_name = 3;   // MinIO中的对象名称
   string url = 4;          // 完整的访问URL

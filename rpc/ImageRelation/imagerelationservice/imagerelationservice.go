@@ -18,8 +18,6 @@ type (
 	BatchCreateRelationResponse = imageRelation.BatchCreateRelationResponse
 	CreateRelationRequest       = imageRelation.CreateRelationRequest
 	CreateRelationResponse      = imageRelation.CreateRelationResponse
-	DeleteRelationRequest       = imageRelation.DeleteRelationRequest
-	DeleteRelationResponse      = imageRelation.DeleteRelationResponse
 	EntityInfo                  = imageRelation.EntityInfo
 	GetEntitiesByImageRequest   = imageRelation.GetEntitiesByImageRequest
 	GetEntitiesByImageResponse  = imageRelation.GetEntitiesByImageResponse
@@ -33,8 +31,6 @@ type (
 		CreateRelation(ctx context.Context, in *CreateRelationRequest, opts ...grpc.CallOption) (*CreateRelationResponse, error)
 		// 批量创建图片关系
 		BatchCreateRelation(ctx context.Context, in *BatchCreateRelationRequest, opts ...grpc.CallOption) (*BatchCreateRelationResponse, error)
-		// 删除图片关系
-		DeleteRelation(ctx context.Context, in *DeleteRelationRequest, opts ...grpc.CallOption) (*DeleteRelationResponse, error)
 		// 获取实体关联的图片列表
 		GetImagesByEntity(ctx context.Context, in *GetImagesByEntityRequest, opts ...grpc.CallOption) (*GetImagesByEntityResponse, error)
 		// 获取图片关联的实体列表
@@ -62,12 +58,6 @@ func (m *defaultImageRelationService) CreateRelation(ctx context.Context, in *Cr
 func (m *defaultImageRelationService) BatchCreateRelation(ctx context.Context, in *BatchCreateRelationRequest, opts ...grpc.CallOption) (*BatchCreateRelationResponse, error) {
 	client := imageRelation.NewImageRelationServiceClient(m.cli.Conn())
 	return client.BatchCreateRelation(ctx, in, opts...)
-}
-
-// 删除图片关系
-func (m *defaultImageRelationService) DeleteRelation(ctx context.Context, in *DeleteRelationRequest, opts ...grpc.CallOption) (*DeleteRelationResponse, error) {
-	client := imageRelation.NewImageRelationServiceClient(m.cli.Conn())
-	return client.DeleteRelation(ctx, in, opts...)
 }
 
 // 获取实体关联的图片列表

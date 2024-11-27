@@ -14,7 +14,7 @@ COPY . .
 RUN go mod download
 
 # 编译 Go 程序
-RUN go build -o /app/bin/cmd ./rpc/ImageRelation/imageRelation.go
+RUN go build -o /app/bin/cmd ./rpc/Image/image.go
 
 # 第 2 阶段：运行阶段（轻量级）
 FROM alpine:3.18
@@ -24,10 +24,10 @@ WORKDIR /app
 
 # 复制编译后的二进制文件和配置文件到最终镜像中
 COPY --from=builder /app/bin/cmd /app/bin/cmd
-COPY --from=builder /app/rpc/ImageRelation/etc /app/bin/etc
+COPY --from=builder /app/rpc/Image/etc /app/bin/etc
 
 # 暴露服务的端口
 EXPOSE 8888
 
 # 定义容器启动时运行的命令
-CMD ["/app/bin/cmd", "-f", "/app/bin/etc/user.yaml"]
+CMD ["/app/bin/cmd", "-f", "/app/bin/etc/image.yaml"]

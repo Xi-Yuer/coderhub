@@ -8,7 +8,7 @@ import (
 
 // Image 通用图片模型
 type Image struct {
-	ID           string         `gorm:"primaryKey;size:50" json:"image_id"`     // 图片ID，使用uuid或其他唯一标识
+	ID           int64          `gorm:"primaryKey;size:50" json:"image_id"`     // 图片ID，使用uuid或其他唯一标识
 	BucketName   string         `gorm:"size:100;not null" json:"bucket_name"`   // MinIO bucket名称
 	ObjectName   string         `gorm:"size:100;not null" json:"object_name"`   // MinIO中的对象名称
 	URL          string         `gorm:"size:2083;not null" json:"url"`          // 完整的访问URL
@@ -23,3 +23,8 @@ type Image struct {
 	CreatedAt    time.Time      `gorm:"<-:create" json:"created_at"`            // 创建时间
 	DeletedAt    gorm.DeletedAt `gorm:"index" json:"deleted_at"`                // 删除时间
 }
+
+const (
+	ImageStatusActive = "active"
+	ImageStatusDeleted = "deleted"
+)

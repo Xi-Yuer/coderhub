@@ -25,7 +25,10 @@ func NewDeleteCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Del
 
 // DeleteComment 删除评论
 func (l *DeleteCommentLogic) DeleteComment(in *comment.DeleteCommentRequest) (*comment.DeleteCommentResponse, error) {
-	// todo: add your logic here and delete this line
-
-	return &comment.DeleteCommentResponse{}, nil
+	if err := l.svcCtx.CommentRepository.Delete(l.ctx, in.CommentId); err != nil {
+		return nil, err
+	}
+	return &comment.DeleteCommentResponse{
+		Success: true,
+	}, nil
 }

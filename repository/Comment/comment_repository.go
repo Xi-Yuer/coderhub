@@ -18,7 +18,7 @@ type CommentRepository interface {
 	Create(ctx context.Context, comment *model.Comment) error
 	GetByID(ctx context.Context, id int64) (*model.Comment, error)
 	Delete(ctx context.Context, id int64) error
-	ListByArticleID(ctx context.Context, articleID int64) ([]model.Comment, error)
+	ListByArticleID(ctx context.Context, articleID int64, page int64, pageSize int64) ([]model.Comment, int64, error)
 	ListReplies(ctx context.Context, parentID int64) ([]model.Comment, error)
 	UpdateLikeCount(ctx context.Context, id int64, increment int32) error
 }
@@ -68,7 +68,12 @@ func (r *commentRepository) GetByID(ctx context.Context, id int64) (*model.Comme
 
 	// 热门评论写入缓存
 	if comment.LikeCount >= r.minLikes {
-		go r.cacheComment(comment)
+		go func() {
+			err := r.cacheComment(comment)
+			if err != nil {
+
+			}
+		}()
 	}
 
 	return comment, nil
@@ -80,7 +85,12 @@ func (r *commentRepository) Delete(ctx context.Context, id int64) error {
 	if err != nil {
 		return err
 	}
-	go r.deleteCache(id)
+	go func() {
+		err := r.deleteCache(id)
+		if err != nil {
+
+		}
+	}()
 	return nil
 }
 
@@ -89,21 +99,21 @@ func (r *commentRepository) UpdateLikeCount(ctx context.Context, id int64, incre
 	// 重试相关配置
 	maxRetries := 3
 	retryDelay := 100 * time.Millisecond
-	
+
 	// 锁相关的配置
 	lockKey := fmt.Sprintf("comment_lock:%d", id)
 	lockTTL := 3 * time.Second
-	
+
 	// 重试循环
 	for i := 0; i < maxRetries; i++ {
 		lockValue := fmt.Sprintf("%d:%d", id, time.Now().UnixNano())
-		
+
 		// 获取分布式锁
 		acquired, err := r.Redis.SetNX(lockKey, lockValue, lockTTL)
 		if err != nil {
 			return fmt.Errorf("获取分布式锁失败: %w", err)
 		}
-		
+
 		if !acquired {
 			// 如果是最后一次重试，则返回错误
 			if i == maxRetries-1 {
@@ -113,7 +123,7 @@ func (r *commentRepository) UpdateLikeCount(ctx context.Context, id int64, incre
 			time.Sleep(retryDelay)
 			continue
 		}
-		
+
 		// 获取到锁后的处理逻辑...
 		defer func() {
 			// 使用Lua脚本确保安全释放锁
@@ -128,7 +138,7 @@ func (r *commentRepository) UpdateLikeCount(ctx context.Context, id int64, incre
 				fmt.Printf("释放锁失败: %v\n", releaseErr)
 			}
 		}()
-		
+
 		// 更新逻辑
 		err = r.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 			var comment model.Comment
@@ -167,21 +177,31 @@ func (r *commentRepository) UpdateLikeCount(ctx context.Context, id int64, incre
 
 			return nil
 		})
-		
+
 		return err
 	}
-	
+
 	return fmt.Errorf("更新失败，请稍后重试")
 }
 
 // ListByArticleID 获取文章的评论列表
-func (r *commentRepository) ListByArticleID(ctx context.Context, articleID int64) ([]model.Comment, error) {
+func (r *commentRepository) ListByArticleID(ctx context.Context, articleID int64, page int64, pageSize int64) ([]model.Comment, int64, error) {
 	var comments []model.Comment
+	var total int64
 	err := r.DB.WithContext(ctx).
 		Where("article_id = ? AND parent_id = 0", articleID).
 		Order("created_at DESC").
+		Offset(int((page - 1) * pageSize)).
+		Limit(int(pageSize)).
 		Find(&comments).Error
-	return comments, err
+	if err != nil {
+		return nil, 0, err
+	}
+	err = r.DB.WithContext(ctx).Model(&model.Comment{}).Where("article_id = ? AND parent_id = 0", articleID).Count(&total).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	return comments, total, nil
 }
 
 // ListReplies 获取评论的回复列表

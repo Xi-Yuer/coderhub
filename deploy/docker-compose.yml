@@ -185,6 +185,7 @@ services:
       - redis
       - etcd
       - elasticsearch
+      - user-service
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "8888" ]  # 使用netcat检查端口是否开放
       interval: 10s
@@ -201,6 +202,89 @@ services:
       MYSQL_PORT: 3306
     networks:
       - coderhub-network
+
+  image-service:
+    build:
+      context: ..
+      dockerfile: ./rpc/Image/Dockerfile
+    container_name: image-service
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+      - user-service
+      - articles-service
+    networks:
+      - coderhub-network
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "8888" ]  # 使用netcat检查端口是否开放
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    restart: always
+    environment:
+      REDIS_HOST: redis  # 使用服务名称作为主机名
+      REDIS_PORT: 6379
+      ETCD_HOST: etcd
+      ETCD_PORT: 2379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+
+  image-relation-service:
+    build:
+      context: ..
+      dockerfile: ./rpc/ImageRelation/Dockerfile
+    container_name: image-relation-service
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+      - image-service
+    networks:
+      - coderhub-network
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "8888" ]  # 使用netcat检查端口是否开放
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    restart: always
+    environment:
+      REDIS_HOST: redis  # 使用服务名称作为主机名
+      REDIS_PORT: 6379
+      ETCD_HOST: etcd
+      ETCD_PORT: 2379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+
+  comment-service:
+    build:
+      context: ..
+      dockerfile: ./rpc/TechSphere/Comment/Dockerfile
+    container_name: comment-service
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+      - user-service
+      - articles-service
+    networks:
+      - coderhub-network
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "8888" ]  # 使用netcat检查端口是否开放
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    restart: always
+    environment:
+      REDIS_HOST: redis  # 使用服务名称作为主机名
+      REDIS_PORT: 6379
+      ETCD_HOST: etcd
+      ETCD_PORT: 2379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
 
 networks:
   coderhub-network:

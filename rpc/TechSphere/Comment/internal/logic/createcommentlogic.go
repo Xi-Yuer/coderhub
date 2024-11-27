@@ -1,8 +1,13 @@
 package logic
 
 import (
+	"coderhub/shared/MetaData"
+	"coderhub/shared/SnowFlake"
 	"context"
+	"gorm.io/gorm"
+	"time"
 
+	"coderhub/model"
 	"coderhub/rpc/TechSphere/Comment/comment"
 	"coderhub/rpc/TechSphere/Comment/internal/svc"
 
@@ -23,9 +28,41 @@ func NewCreateCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 	}
 }
 
-// 创建评论
+// CreateComment 创建评论
 func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*comment.CreateCommentResponse, error) {
-	// todo: add your logic here and delete this line
-
-	return &comment.CreateCommentResponse{}, nil
+	CommentID := SnowFlake.GenID()
+	userID, err := MetaData.GetUserID(l.ctx)
+	if err != nil {
+		return nil, err
+	}
+	commentModel := &model.Comment{
+		ID:        CommentID,
+		ArticleID: in.ArticleId,
+		Content:   in.Content,
+		ParentID:  in.ParentId,
+		UserID:    userID,
+		LikeCount: 0,
+		CreatedAt: time.Time{},
+		UpdatedAt: time.Time{},
+		DeletedAt: gorm.DeletedAt{},
+		Version:   0,
+	}
+	// 创建评论
+	if err := l.svcCtx.CommentRepository.Create(l.ctx, commentModel); err != nil {
+		return nil, err
+	}
+	return &comment.CreateCommentResponse{
+		Comment: &comment.Comment{
+			Id:        commentModel.ID,
+			ArticleId: commentModel.ArticleID,
+			Content:   commentModel.Content,
+			ParentId:  commentModel.ParentID,
+			UserId:    commentModel.UserID,
+			CreatedAt: commentModel.CreatedAt.Unix(),
+			UpdatedAt: commentModel.UpdatedAt.Unix(),
+			Replies:   nil,
+			LikeCount: 0,
+			Images:    nil,
+		},
+	}, nil
 }

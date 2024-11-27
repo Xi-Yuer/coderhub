@@ -12,8 +12,6 @@ service CommentService {
   rpc GetComments(GetCommentsRequest) returns (GetCommentsResponse) {}
   // 获取单个评论详情
   rpc GetComment(GetCommentRequest) returns (GetCommentResponse) {}
-  // 更新评论
-  rpc UpdateComment(UpdateCommentRequest) returns (UpdateCommentResponse) {}
   // 删除评论
   rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentResponse) {}
 }
@@ -63,16 +61,6 @@ message GetCommentRequest {
 
 message GetCommentResponse {
   Comment comment = 1;             // 评论详情
-}
-
-// 更新评论请求
-message UpdateCommentRequest {
-  int64 comment_id = 1;            // 评论ID
-  string content = 2;              // 更新的内容
-}
-
-message UpdateCommentResponse {
-  Comment comment = 1;             // 更新后的评论
 }
 
 // 删除评论请求

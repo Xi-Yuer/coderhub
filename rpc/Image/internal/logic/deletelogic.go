@@ -25,7 +25,11 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 
 // 删除图片
 func (l *DeleteLogic) Delete(in *image.DeleteRequest) (*image.DeleteResponse, error) {
-	// todo: add your logic here and delete this line
-
-	return &image.DeleteResponse{}, nil
+	err := l.svcCtx.ImageRepository.Delete(l.ctx, in.ImageId)
+	if err != nil {
+		return nil, err
+	}
+	return &image.DeleteResponse{
+		Success: true,
+	}, nil
 }

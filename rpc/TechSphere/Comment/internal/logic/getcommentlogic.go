@@ -25,7 +25,19 @@ func NewGetCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCom
 
 // 获取单个评论详情
 func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.GetCommentResponse, error) {
-	// todo: add your logic here and delete this line
-
-	return &comment.GetCommentResponse{}, nil
+	commentModel, err := l.svcCtx.CommentRepository.GetByID(l.ctx, in.CommentId)
+	if err != nil {
+		return nil, err
+	}
+	return &comment.GetCommentResponse{
+		Comment: &comment.Comment{
+			Id:        commentModel.ID,
+			ArticleId: commentModel.ArticleID,
+			Content:   commentModel.Content,
+			ParentId:  commentModel.ParentID,
+			UserId:    commentModel.UserID,
+			CreatedAt: commentModel.CreatedAt.Unix(),
+			UpdatedAt: commentModel.UpdatedAt.Unix(),
+		},
+	}, nil
 }

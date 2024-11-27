@@ -23,9 +23,31 @@ func NewGetEntitiesByImageLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 	}
 }
 
-// 获取图片关联的实体列表
+// GetEntitiesByImage 获取图片关联的实体列表
 func (l *GetEntitiesByImageLogic) GetEntitiesByImage(in *imageRelation.GetEntitiesByImageRequest) (*imageRelation.GetEntitiesByImageResponse, error) {
-	// todo: add your logic here and delete this line
+	imageRelations, err := l.svcCtx.ImageRelationRepository.ListByImageID(l.ctx, in.ImageId)
+	if err != nil {
+		return nil, err
+	}
 
-	return &imageRelation.GetEntitiesByImageResponse{}, nil
+	entities := make([]*imageRelation.ImageRelation, len(imageRelations))
+	for i, relation := range imageRelations {
+		entities[i] = &imageRelation.ImageRelation{
+			Id:         relation.ID,
+			ImageId:    relation.ImageID,
+			EntityId:   relation.EntityID,
+			EntityType: relation.EntityType,
+		}
+	}
+	entityInfos := make([]*imageRelation.EntityInfo, 0)
+	for _, relation := range imageRelations {
+		entityInfos = append(entityInfos, &imageRelation.EntityInfo{
+			EntityType: relation.EntityType,
+			EntityId:   relation.EntityID,
+			CreatedAt:  relation.CreatedAt.Unix(),
+		})
+	}
+	return &imageRelation.GetEntitiesByImageResponse{
+		Entities: entityInfos,
+	}, nil
 }

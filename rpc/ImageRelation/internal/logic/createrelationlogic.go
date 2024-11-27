@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 
+	"coderhub/model"
 	"coderhub/rpc/ImageRelation/imageRelation"
 	"coderhub/rpc/ImageRelation/internal/svc"
 
@@ -25,7 +26,21 @@ func NewCreateRelationLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cr
 
 // 创建图片关系
 func (l *CreateRelationLogic) CreateRelation(in *imageRelation.CreateRelationRequest) (*imageRelation.CreateRelationResponse, error) {
-	// todo: add your logic here and delete this line
+	err := l.svcCtx.ImageRelationRepository.Create(l.ctx, &model.ImageRelation{
+		ImageID:    in.ImageId,
+		EntityID:   in.EntityId,
+		EntityType: in.EntityType,
+	})
+	if err != nil {
+		return nil, err
+	}
 
-	return &imageRelation.CreateRelationResponse{}, nil
+	return &imageRelation.CreateRelationResponse{
+		Relation: &imageRelation.ImageRelation{
+			ImageId:    in.ImageId,
+			EntityId:   in.EntityId,
+			EntityType: in.EntityType,
+			Sort:       0,
+		},
+	}, nil
 }

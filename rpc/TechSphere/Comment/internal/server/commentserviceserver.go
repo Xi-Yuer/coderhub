@@ -41,12 +41,6 @@ func (s *CommentServiceServer) GetComment(ctx context.Context, in *comment.GetCo
 	return l.GetComment(in)
 }
 
-// 更新评论
-func (s *CommentServiceServer) UpdateComment(ctx context.Context, in *comment.UpdateCommentRequest) (*comment.UpdateCommentResponse, error) {
-	l := logic.NewUpdateCommentLogic(ctx, s.svcCtx)
-	return l.UpdateComment(in)
-}
-
 // 删除评论
 func (s *CommentServiceServer) DeleteComment(ctx context.Context, in *comment.DeleteCommentRequest) (*comment.DeleteCommentResponse, error) {
 	l := logic.NewDeleteCommentLogic(ctx, s.svcCtx)
