@@ -2,18 +2,18 @@ package svc
 
 import (
 	"coderhub/api/Image/internal/config"
-	"coderhub/rpc/Image/image"
+	"coderhub/rpc/Image/imageservice"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {
 	Config       config.Config
-	ImageService image.Image
+	ImageService imageservice.ImageService
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:       c,
-		ImageService: image.NewImage(zrpc.MustNewClient(c.ImageService)),
+		ImageService: imageservice.NewImageService(zrpc.MustNewClient(c.ImageService)),
 	}
 }

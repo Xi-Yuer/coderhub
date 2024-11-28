@@ -66,7 +66,7 @@ func (l *ListByUserLogic) successResp(response *imageservice.ListByUserResponse)
 			Code:    conf.HttpCode.HttpStatusOK,
 			Message: conf.HttpMessage.MsgOK,
 		},
-		Data: list,
+		Data: &list,
 	}, nil
 }
 func (l *ListByUserLogic) errorResp(err error) (*types.ListByUserResponse, error) {

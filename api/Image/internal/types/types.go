@@ -55,7 +55,7 @@ type ListByUserRequest struct {
 
 type ListByUserResponse struct {
 	Response
-	Data List `json:"data"`
+	Data *List `json:"data"`
 }
 
 type Response struct {
@@ -63,14 +63,7 @@ type Response struct {
 	Message string `json:"message"` // 提示信息
 }
 
-type UploadRequest struct {
-	File        []byte `json:"file"`         // 图片文件数据
-	Filename    string `json:"filename"`     // 文件名
-	UserId      int64  `json:"user_id"`      // 用户ID
-	ContentType string `json:"content_type"` // 文件类型
-}
-
 type UploadResponse struct {
 	Response
-	Data ImageInfo `json:"data"` // 上传的图片信息
+	Data *ImageInfo `json:"data"` // 上传的图片信息
 }

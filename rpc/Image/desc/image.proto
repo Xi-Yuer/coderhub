@@ -1,11 +1,11 @@
 // goctl rpc protoc image.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../
 syntax = "proto3";
 
-package imageservice;
-option go_package = "./imageservice";
+package image;
+option go_package = "./image";
 
 // 图片服务
-service Image {
+service ImageService {
   // 上传图片
   rpc Upload(UploadRequest) returns (ImageInfo);
   // 删除图片

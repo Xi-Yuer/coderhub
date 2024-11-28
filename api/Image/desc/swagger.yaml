@@ -85,29 +85,6 @@ components:
         - status
         - created_at
 
-    UploadRequest:
-      type: object
-      properties:
-        file:
-          type: string
-          format: binary
-          description: 图片文件数据
-        filename:
-          type: string
-          description: 文件名
-        user_id:
-          type: integer
-          format: int64
-          description: 用户ID
-        content_type:
-          type: string
-          description: 文件类型
-      required:
-        - file
-        - filename
-        - user_id
-        - content_type
-
     UploadResponse:
       type: object
       allOf:
