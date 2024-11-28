@@ -39,41 +39,7 @@ func (l *GetCommentsLogic) GetComments(req *types.GetCommentsReq) (resp *types.G
 }
 
 func (l *GetCommentsLogic) successResp(comments *commentservice.GetCommentsResponse) (*types.GetCommentsResp, error) {
-	// 创建一个map用于存储所有评论
-	commentMap := make(map[int64]*types.Comment)
-	// 用于存储顶级评论
-	var rootComments []*types.Comment
-
-	// 第一步：将所有评论放入map中
-	for _, comment := range comments.Comments {
-		commentObj := &types.Comment{
-			Id:        comment.Id,
-			ArticleId: comment.ArticleId,
-			Content:   comment.Content,
-			ParentId:  comment.ParentId,
-			UserId:    comment.UserId,
-			Replies:   make([]*types.Comment, 0),
-			CreatedAt: comment.CreatedAt,
-			UpdatedAt: comment.UpdatedAt,
-		}
-		commentMap[comment.Id] = commentObj
-
-		// 如果是顶级评论（ParentId为0），加入rootComments
-		if comment.ParentId == 0 {
-			rootComments = append(rootComments, commentObj)
-		}
-	}
-
-	// 第二步：建立父子关系
-	for _, comment := range comments.Comments {
-		if comment.ParentId != 0 {
-			// 找到父评论，将当前评论添加到父评论的replies中
-			if parent, exists := commentMap[comment.ParentId]; exists {
-				parent.Replies = append(parent.Replies, commentMap[comment.Id])
-			}
-		}
-	}
-
+	rootComments := l.buildTree(comments.Comments)
 	return &types.GetCommentsResp{
 		Response: types.Response{
 			Code:    conf.HttpCode.HttpStatusOK,
@@ -93,4 +59,26 @@ func (l *GetCommentsLogic) errorResp(err error) (*types.GetCommentsResp, error) 
 			Message: err.Error(),
 		},
 	}, nil
+}
+
+// buildTree 构建树形结构
+func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*types.Comment {
+	rootComments := make([]*types.Comment, len(comments))
+	for i, val := range comments {
+		if val.ParentId == 0 {
+			rootComments[i] = &types.Comment{
+				Id:        val.Id,
+				ArticleId: val.ArticleId,
+				Content:   val.Content,
+				ParentId:  val.ParentId,
+				UserId:    val.UserId,
+				CreatedAt: val.CreatedAt,
+				UpdatedAt: val.UpdatedAt,
+				Replies:   l.buildTree(val.Replies),
+				LikeCount: val.LikeCount,
+				Images:    nil,
+			}
+		}
+	}
+	return rootComments
 }

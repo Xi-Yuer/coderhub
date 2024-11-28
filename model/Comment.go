@@ -19,12 +19,12 @@ type Comment struct {
 	UpdatedAt  time.Time      `gorm:"autoCreateTime;autoUpdateTime" json:"updated_at"` // 更新时间
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"deleted_at"`                         // 删除时间
 	Version    int32          `gorm:"default:0" json:"version"`                        // 版本号:乐观锁
-	ReplyToID  int64          `gorm:"index" json:"reply_to_id"`                        // 回复目标评论ID
 	ReplyToUID int64          `gorm:"index" json:"reply_to_uid"`                       // 回复目标用户ID
 	// gorm:"-" 标签的含义是告诉 GORM 忽略这个字段，即这个字段不会被映射到数据库表中。
 	// 这些图片ID可能存储在另一个关联表中，而不是直接存储在评论表里
-	ImageIDs []string  `gorm:"-" json:"image_ids"` // 评论图片ID列表
-	Replies  []Comment `gorm:"-" json:"replies"`   // 子评论列表
+	ImageIDs   []string  `gorm:"-" json:"image_ids"`   // 评论图片ID列表
+	Replies    []Comment `gorm:"-" json:"replies"`     // 子评论列表
+	ReplyCount int64     `gorm:"-" json:"reply_count"` // 回复数量
 }
 
 // CacheKeyByID 生成评论缓存键

@@ -36,7 +36,8 @@ message CreateCommentRequest {
   string content = 2;              // 评论内容
   int64 parent_id = 3;             // 父评论ID（可选）
   int64 user_id = 4;               // 评论者ID
-  repeated string image_ids = 5;      // 图片ID列表
+  int64 reply_to_uid = 5;         // 被回复的用户ID（可选）
+  repeated string image_ids = 6;      // 图片ID列表
 }
 
 message CreateCommentResponse {

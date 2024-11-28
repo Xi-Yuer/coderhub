@@ -34,11 +34,12 @@ func (l *CreateCommentLogic) CreateComment(req *types.CreateCommentReq) (resp *t
 		return nil, err
 	}
 	comment, err := l.svcCtx.CommentService.CreateComment(ctx, &commentservice.CreateCommentRequest{
-		ArticleId: req.ArticleId,
-		Content:   req.Content,
-		ParentId:  req.ParentId,
-		UserId:    userID,
-		ImageIds:  req.ImageIds,
+		ArticleId:  req.ArticleId,
+		Content:    req.Content,
+		ParentId:   req.ParentId,
+		UserId:     userID,
+		ReplyToUid: req.ReplyToUID,
+		ImageIds:   req.ImageIds,
 	})
 	if err != nil {
 		return l.errorResp(err)

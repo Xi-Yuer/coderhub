@@ -188,82 +188,39 @@ func (r *commentRepository) UpdateLikeCount(ctx context.Context, id int64, incre
 func (r *commentRepository) ListByArticleID(ctx context.Context, articleID int64, page int64, pageSize int64) ([]model.Comment, int64, error) {
 	var comments []model.Comment
 	var total int64
-
-	// 1. 只查询顶级评论（parent_id = 0）并分页
-	err := r.DB.WithContext(ctx).
-		Where("article_id = ? AND parent_id = 0", articleID).
-		Order("like_count DESC, created_at DESC").
-		Offset(int((page - 1) * pageSize)).
-		Limit(int(pageSize)).
-		Find(&comments).Error
-	if err != nil {
-		return nil, 0, err
-	}
-
-	// 2. 获取评论总数
-	err = r.DB.WithContext(ctx).
-		Model(&model.Comment{}).
-		Count(&total).Error
-	if err != nil {
-		return nil, 0, err
-	}
-
-	// 3. 为每个顶级评论获取前三条回复
+	// 查询评论列表 parent_id = 0 为顶级评论，此外还要额外查询顶级下三条回复评论,并且构建树形结构
+	r.DB.WithContext(ctx).Where("article_id = ? AND parent_id = 0", articleID).Order("like_count DESC, created_at DESC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&comments)
+	// 查询总数
+	r.DB.WithContext(ctx).Model(&model.Comment{}).Where("article_id = ?", articleID).Count(&total)
+	// 构建树形结构并获取回复数量
 	for i := range comments {
-		var replies []model.Comment
-		err := r.DB.WithContext(ctx).
-			Where("parent_id = ?", comments[i].ID).
-			Order("created_at ASC").
-			Limit(3).
-			Find(&replies).Error
-		if err != nil {
-			return nil, 0, err
+		if comments[i].ParentID == 0 {
+			// 获取回复总数
+			var replyCount int64
+			if err := r.DB.WithContext(ctx).Model(&model.Comment{}).
+				Where("reply_to_id = ?", comments[i].ID).
+				Count(&replyCount).Error; err != nil {
+				return nil, 0, err
+			}
+			comments[i].ReplyCount = replyCount // 假设 Comment 结构体中有 ReplyCount 字段
+
+			// 获取前三条回复
+			replies, _, err := r.ListReplies(ctx, comments[i].ID, 1, 3)
+			if err != nil {
+				return nil, 0, err
+			}
+			comments[i].Replies = replies
 		}
-		comments[i].Replies = replies
 	}
 
 	return comments, total, nil
 }
 
-// ListReplies 获取评论的回复列表(分页)，支持多层级回复
+// ListReplies 获取评论的回复列表(分页)，
 func (r *commentRepository) ListReplies(ctx context.Context, parentID int64, page int64, pageSize int64) ([]model.Comment, int64, error) {
 	var replies []model.Comment
 	var total int64
-
-	// 1. 查询直接回复并分页
-	err := r.DB.WithContext(ctx).
-		Where("parent_id = ?", parentID).
-		Order("like_count DESC, created_at ASC").
-		Offset(int((page - 1) * pageSize)).
-		Limit(int(pageSize)).
-		Find(&replies).Error
-	if err != nil {
-		return nil, 0, err
-	}
-
-	// 2. 获取回复评论总数
-	err = r.DB.WithContext(ctx).
-		Model(&model.Comment{}).
-		Where("parent_id = ?", parentID).
-		Count(&total).Error
-	if err != nil {
-		return nil, 0, err
-	}
-
-	// 3. 为每条回复获取其子回复（默认获取前3条）
-	for i := range replies {
-		var childReplies []model.Comment
-		err := r.DB.WithContext(ctx).
-			Where("parent_id = ?", replies[i].ID).
-			Order("created_at ASC").
-			Limit(3).
-			Find(&childReplies).Error
-		if err != nil {
-			return nil, 0, err
-		}
-		replies[i].Replies = childReplies
-	}
-
+	r.DB.WithContext(ctx).Where("reply_to_id = ?", parentID).Order("like_count DESC, created_at DESC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&replies)
 	return replies, total, nil
 }
 

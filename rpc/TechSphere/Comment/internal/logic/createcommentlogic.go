@@ -6,7 +6,6 @@ import (
 	"coderhub/rpc/TechSphere/Comment/internal/svc"
 	"coderhub/shared/SnowFlake"
 	"context"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -28,13 +27,12 @@ func NewCreateCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*comment.CreateCommentResponse, error) {
 	CommentID := SnowFlake.GenID()
 	commentModel := &model.Comment{
-		ID:        CommentID,
-		ArticleID: in.ArticleId,
-		Content:   in.Content,
-		ParentID:  in.ParentId,
-		UserID:    in.UserId,
-		LikeCount: 0,
-		Version:   0,
+		ID:         CommentID,
+		ArticleID:  in.ArticleId,
+		Content:    in.Content,
+		ParentID:   in.ParentId,
+		UserID:     in.UserId,
+		ReplyToUID: in.ReplyToUid,
 	}
 	// 创建评论
 	if err := l.svcCtx.CommentRepository.Create(l.ctx, commentModel); err != nil {
@@ -47,8 +45,6 @@ func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*c
 			Content:   commentModel.Content,
 			ParentId:  commentModel.ParentID,
 			UserId:    commentModel.UserID,
-			LikeCount: 0,
-			Images:    nil,
 		},
 	}, nil
 }

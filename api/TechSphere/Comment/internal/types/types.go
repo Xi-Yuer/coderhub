@@ -23,10 +23,11 @@ type CommentImage struct {
 }
 
 type CreateCommentReq struct {
-	ArticleId int64    `json:"article_id"` // 文章ID
-	Content   string   `json:"content"`    // 评论内容
-	ParentId  int64    `json:"parent_id"`  // 父评论ID（可选）
-	ImageIds  []string `json:"image_ids"`  // 图片ID列表
+	ArticleId  int64    `json:"article_id"`   // 文章ID
+	Content    string   `json:"content"`      // 评论内容
+	ParentId   int64    `json:"parent_id"`    // 父评论ID（可选）
+	ReplyToUID int64    `json:"reply_to_uid"` // 回复的目标评论ID（可选）
+	ImageIds   []string `json:"image_ids"`    // 图片ID列表
 }
 
 type CreateCommentResp struct {
