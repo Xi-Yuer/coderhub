@@ -58,16 +58,26 @@ func (r *commentRepository) GetByID(ctx context.Context, id int64) (*model.Comme
 
 // Delete 删除评论并清除缓存
 func (r *commentRepository) Delete(ctx context.Context, id int64) error {
+	// 判断该评论是否有子级评论
+	var count int64
+	r.DB.WithContext(ctx).Model(&model.Comment{}).Where("parent_id = ?", id).Count(&count)
+	if count > 0 {
+		// 获取原始评论
+		originalComment, err := r.GetByID(ctx, id)
+		if err != nil {
+			return err
+		}
+		// 更新评论内容
+		originalComment.Content = "该评论已被删除"
+		if err := r.UpdateByID(ctx, id, originalComment); err != nil {
+			return err
+		}
+		return nil
+	}
 	err := r.DB.WithContext(ctx).Delete(&model.Comment{}, id).Error
 	if err != nil {
 		return err
 	}
-	go func() {
-		err := r.deleteCache(id)
-		if err != nil {
-			fmt.Printf("删除缓存失败: %v\n", err)
-		}
-	}()
 	return nil
 }
 
@@ -202,6 +212,11 @@ func (r *commentRepository) ListReplies(ctx context.Context, parentID int64, pag
 	var total int64
 	r.DB.WithContext(ctx).Where("parent_id = ?", parentID).Order("like_count DESC, created_at DESC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&replies)
 	return replies, total, nil
+}
+
+// UpdateByID 更新评论
+func (r *commentRepository) UpdateByID(ctx context.Context, id int64, comment *model.Comment) error {
+	return r.DB.WithContext(ctx).Model(&model.Comment{}).Where("id = ?", id).Updates(comment).Error
 }
 
 // 内部辅助方法

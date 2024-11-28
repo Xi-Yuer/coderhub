@@ -17,7 +17,7 @@ type GetCommentLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 获取单个评论
+// NewGetCommentLogic 获取单个评论
 func NewGetCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCommentLogic {
 	return &GetCommentLogic{
 		Logger: logx.WithContext(ctx),
@@ -44,7 +44,16 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 			Message: conf.HttpMessage.MsgOK,
 		},
 		Data: types.Comment{
-			Id: comment.Comment.Id,
+			Id:        comment.Comment.Id,
+			ArticleId: comment.Comment.ArticleId,
+			Content:   comment.Comment.Content,
+			ParentId:  comment.Comment.ParentId,
+			UserId:    comment.Comment.UserId,
+			CreatedAt: comment.Comment.CreatedAt,
+			UpdatedAt: comment.Comment.UpdatedAt,
+			Replies:   nil,
+			LikeCount: comment.Comment.LikeCount,
+			Images:    nil,
 		},
 	}, nil
 }
