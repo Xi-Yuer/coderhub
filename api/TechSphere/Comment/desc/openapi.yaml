@@ -6,9 +6,6 @@ info:
   contact:
     name: Xi-Yuer
 
-servers:
-  - url: /api
-
 components:
   schemas:
     Response:
@@ -21,7 +18,7 @@ components:
         message:
           type: string
           description: 提示信息
-
+    
     CommentImage:
       type: object
       properties:
@@ -34,7 +31,7 @@ components:
         thumbnail_url:
           type: string
           description: 缩略图URL
-
+    
     Comment:
       type: object
       properties:
@@ -80,19 +77,23 @@ components:
             $ref: '#/components/schemas/CommentImage'
           description: 评论图片列表
 
-  securitySchemes:
-    Auth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-
-security:
-  - Auth: []
-
 paths:
-  /comments:
+  /comments/health:
+    get:
+      summary: 健康检查
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /comments/create:
     post:
       summary: 创建评论
+      security:
+        - Auth: []
       requestBody:
         required: true
         content:
@@ -118,7 +119,7 @@ paths:
                   description: 图片ID列表
       responses:
         '200':
-          description: 成功创建评论
+          description: 成功
           content:
             application/json:
               schema:
@@ -129,9 +130,11 @@ paths:
                       data:
                         $ref: '#/components/schemas/Comment'
 
-  /articles/{article_id}/comments:
+  /comments/article/{article_id}:
     get:
       summary: 获取评论列表
+      security:
+        - Auth: []
       parameters:
         - name: article_id
           in: path
@@ -151,7 +154,7 @@ paths:
             format: int32
       responses:
         '200':
-          description: 成功获取评论列表
+          description: 成功
           content:
             application/json:
               schema:
@@ -173,6 +176,8 @@ paths:
   /comments/{comment_id}:
     get:
       summary: 获取单个评论
+      security:
+        - Auth: []
       parameters:
         - name: comment_id
           in: path
@@ -182,7 +187,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: 成功获取评论
+          description: 成功
           content:
             application/json:
               schema:
@@ -192,9 +197,11 @@ paths:
                     properties:
                       data:
                         $ref: '#/components/schemas/Comment'
-
+    
     delete:
       summary: 删除评论
+      security:
+        - Auth: []
       parameters:
         - name: comment_id
           in: path
@@ -204,7 +211,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: 成功删除评论
+          description: 成功
           content:
             application/json:
               schema:
@@ -213,4 +220,4 @@ paths:
                   - type: object
                     properties:
                       data:
-                        type: boolean 
+                        type: boolean

@@ -82,42 +82,46 @@ type (
 	}
 )
 
+@server (
+	prefix: /api/user
+)
 service user-api {
 	// 创建用户
 	@handler CreateUser
-	post /api/user/register (CreateUserRequest) returns (CreateUserResponse)
+	post /register (CreateUserRequest) returns (CreateUserResponse)
 
 	// 获取用户信息
 	@handler GetUserInfo
-	get /api/user/info/:userId returns (GetUserInfoResponse)
+	get /info/:userId returns (GetUserInfoResponse)
 
 	// 用户登录
 	@handler AuthenticateUser
-	post /api/user/login (AuthenticateUserRequest) returns (AuthenticateUserResponse)
+	post /login (AuthenticateUserRequest) returns (AuthenticateUserResponse)
 
 	// 健康检查
 	@handler HealthCheck
-        get /api/user/health returns (HealthCheckResponse)
+	get /health returns (HealthCheckResponse)
 }
 
 @server (
-	jwt: Auth
+	jwt:    Auth
+	prefix: /api/user
 )
 service user-api {
 	// 更新用户信息
 	@handler UpdateUserInfo
-	put /api/user/update (UpdateUserInfoRequest) returns (UpdateUserInfoResponse)
+	put /update (UpdateUserInfoRequest) returns (UpdateUserInfoResponse)
 
 	// 重置密码
 	@handler ResetPassword
-	post /api/user/reset-password (ResetPasswordRequest) returns (ResetPasswordResponse)
+	post /reset-password (ResetPasswordRequest) returns (ResetPasswordResponse)
 
 	// 修改密码
 	@handler ChangePassword
-	post /api/user/change-password (ChangePasswordRequest) returns (ChangePasswordResponse)
+	post /change-password (ChangePasswordRequest) returns (ChangePasswordResponse)
 
 	// 删除用户
 	@handler DeleteUser
-        delete /api/user/delete/:userId returns (DeleteUserResponse)
+	delete /delete/:userId returns (DeleteUserResponse)
 }
 

@@ -5,6 +5,7 @@ import (
 
 	"coderhub/api/TechSphere/Comment/internal/svc"
 	"coderhub/api/TechSphere/Comment/internal/types"
+	"coderhub/conf"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -15,7 +16,7 @@ type HealthLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 健康检查
+// NewHealthLogic 健康检查
 func NewHealthLogic(ctx context.Context, svcCtx *svc.ServiceContext) *HealthLogic {
 	return &HealthLogic{
 		Logger: logx.WithContext(ctx),
@@ -25,7 +26,10 @@ func NewHealthLogic(ctx context.Context, svcCtx *svc.ServiceContext) *HealthLogi
 }
 
 func (l *HealthLogic) Health() (resp *types.HealthResp, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	return &types.HealthResp{
+		Response: types.Response{
+			Message: conf.HttpMessage.MsgOK,
+			Code:    conf.HttpCode.HttpStatusOK,
+		},
+	}, nil
 }

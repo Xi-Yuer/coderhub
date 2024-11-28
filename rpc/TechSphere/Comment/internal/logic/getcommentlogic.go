@@ -23,7 +23,7 @@ func NewGetCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCom
 	}
 }
 
-// 获取单个评论详情
+// GetComment 获取单个评论详情
 func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.GetCommentResponse, error) {
 	commentModel, err := l.svcCtx.CommentRepository.GetByID(l.ctx, in.CommentId)
 	if err != nil {

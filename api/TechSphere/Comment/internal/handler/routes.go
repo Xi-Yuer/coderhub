@@ -15,31 +15,42 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				// 获取评论列表
+				// 健康检查
 				Method:  http.MethodGet,
-				Path:    "/articles/:article_id/comments",
-				Handler: GetCommentsHandler(serverCtx),
+				Path:    "/api/comments/health",
+				Handler: HealthHandler(serverCtx),
 			},
-			{
-				// 创建评论
-				Method:  http.MethodPost,
-				Path:    "/comments",
-				Handler: CreateCommentHandler(serverCtx),
-			},
+		},
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
 			{
 				// 获取单个评论
 				Method:  http.MethodGet,
-				Path:    "/comments/:comment_id",
+				Path:    "/:comment_id",
 				Handler: GetCommentHandler(serverCtx),
 			},
 			{
 				// 删除评论
 				Method:  http.MethodDelete,
-				Path:    "/comments/:comment_id",
+				Path:    "/:comment_id",
 				Handler: DeleteCommentHandler(serverCtx),
+			},
+			{
+				// 获取评论列表
+				Method:  http.MethodGet,
+				Path:    "/article/:article_id",
+				Handler: GetCommentsHandler(serverCtx),
+			},
+			{
+				// 创建评论
+				Method:  http.MethodPost,
+				Path:    "/create",
+				Handler: CreateCommentHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/api/comments"),
 	)
 }

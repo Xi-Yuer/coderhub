@@ -16,50 +16,52 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/api/user/health",
+				Path:    "/health",
 				Handler: HealthCheckHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/api/user/info/:userId",
+				Path:    "/info/:userId",
 				Handler: GetUserInfoHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/login",
+				Path:    "/login",
 				Handler: AuthenticateUserHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/register",
+				Path:    "/register",
 				Handler: CreateUserHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/api/user"),
 	)
 
 	server.AddRoutes(
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/change-password",
+				Path:    "/change-password",
 				Handler: ChangePasswordHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodDelete,
-				Path:    "/api/user/delete/:userId",
+				Path:    "/delete/:userId",
 				Handler: DeleteUserHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/reset-password",
+				Path:    "/reset-password",
 				Handler: ResetPasswordHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPut,
-				Path:    "/api/user/update",
+				Path:    "/update",
 				Handler: UpdateUserInfoHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/user"),
 	)
 }

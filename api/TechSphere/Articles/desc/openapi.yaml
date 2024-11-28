@@ -182,12 +182,12 @@ components:
         summary:
           type: string
           description: 摘要
-        imageUrls:
+        imageIds:
           type: array
           items:
             type: string
-          description: 图片 URL 列表
-        coverImage:
+          description: 图片 ID 列表
+        coverImageID:
           type: string
           description: 封面图片 URL
         tags:
@@ -219,12 +219,12 @@ components:
         summary:
           type: string
           description: 摘要
-        imageUrls:
+        imageIds:
           type: array
           items:
             type: string
-          description: 图片 URL 列表
-        coverImage:
+          description: 图片 ID 列表
+        coverImageID:
           type: string
           description: 封面图片 URL
         tags:

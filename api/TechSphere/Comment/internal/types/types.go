@@ -53,7 +53,7 @@ type GetCommentResp struct {
 }
 
 type GetCommentsReq struct {
-	ArticleId int64 `form:"article_id"` // 文章ID
+	ArticleId int64 `path:"article_id"` // 文章ID
 	Page      int32 `form:"page"`       // 页码
 	PageSize  int32 `form:"page_size"`  // 每页数量
 }
@@ -61,6 +61,10 @@ type GetCommentsReq struct {
 type GetCommentsResp struct {
 	Response
 	Data List `json:"data"` // 评论列表
+}
+
+type HealthResp struct {
+	Response
 }
 
 type List struct {

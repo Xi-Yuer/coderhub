@@ -22,14 +22,14 @@ type Article struct {
 }
 
 type CreateArticleReq struct {
-	Type         string   `json:"type,options=draft|published"`   // 内容类型
-	Title        string   `json:"title"`                          // 标题
-	Content      string   `json:"content"`                        // 内容
-	Summary      string   `json:"summary"`                        // 摘要
-	ImageIds     []string `json:"imageIds"`                       // 图片 URL 列表
-	CoverImageID string   `json:"coverImageID"`                   // 封面图片 URL
-	Tags         []string `json:"tags"`                           // 标签列表
-	Status       string   `json:"status,options=draft|published"` // 文章状态
+	Type         string   `json:"type,options=article|micro_post"` // 内容类型
+	Title        string   `json:"title"`                           // 标题
+	Content      string   `json:"content"`                         // 内容
+	Summary      string   `json:"summary"`                         // 摘要
+	ImageIds     []string `json:"imageIds"`                        // 图片 URL 列表
+	CoverImageID string   `json:"coverImageID"`                    // 封面图片 URL
+	Tags         []string `json:"tags"`                            // 标签列表
+	Status       string   `json:"status,options=draft|published"`  // 文章状态
 }
 
 type CreateArticleResp struct {

@@ -29,25 +29,10 @@ func (l *GetCommentsLogic) GetComments(in *comment.GetCommentsRequest) (*comment
 	if err != nil {
 		return nil, err
 	}
+
+	// 只保留一次评论转换逻辑
 	comments := make([]*comment.Comment, len(commentModels))
-	for i, model := range commentModels {
-		comments[i] = &comment.Comment{
-			Id:        model.ID,
-			ArticleId: model.ArticleID,
-			Content:   model.Content,
-			ParentId:  model.ParentID,
-			UserId:    model.UserID,
-			Replies:   make([]*comment.Comment, 0),
-			CreatedAt: model.CreatedAt.Unix(),
-			UpdatedAt: model.UpdatedAt.Unix(),
-		}
-	}
-
-	// 构建评论树
 	commentMap := make(map[int64]*comment.Comment)
-	var rootComments []*comment.Comment
-
-	// 第一步：将所有评论放入map中
 	for i, model := range commentModels {
 		comments[i] = &comment.Comment{
 			Id:        model.ID,
@@ -62,18 +47,25 @@ func (l *GetCommentsLogic) GetComments(in *comment.GetCommentsRequest) (*comment
 		commentMap[comments[i].Id] = comments[i]
 	}
 
-	// 第二步：构建树形结构
-	for _, c := range comments {
-		if c.ParentId == 0 {
-			// 根评论
-			rootComments = append(rootComments, c)
-		} else {
-			// 子评论
-			if parent, exists := commentMap[c.ParentId]; exists {
-				parent.Replies = append(parent.Replies, c)
+	// 构建评论树
+	var rootComments []*comment.Comment
+
+	// 递归构建评论树的辅助函数
+	var buildCommentTree func(parentId int64) []*comment.Comment
+	buildCommentTree = func(parentId int64) []*comment.Comment {
+		var children []*comment.Comment
+		for _, c := range comments {
+			if c.ParentId == parentId {
+				// 递归获取子评论
+				c.Replies = buildCommentTree(c.Id)
+				children = append(children, c)
 			}
 		}
+		return children
 	}
+
+	// 获取所有顶级评论（ParentId = 0）及其所有子评论
+	rootComments = buildCommentTree(0)
 
 	return &comment.GetCommentsResponse{
 		Comments: rootComments,

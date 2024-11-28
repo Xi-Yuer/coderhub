@@ -3,6 +3,7 @@ package logic
 import (
 	"coderhub/conf"
 	"coderhub/rpc/TechSphere/Comment/commentservice"
+	"coderhub/shared/MetaData"
 	"context"
 
 	"coderhub/api/TechSphere/Comment/internal/svc"
@@ -27,10 +28,16 @@ func NewCreateCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 }
 
 func (l *CreateCommentLogic) CreateComment(req *types.CreateCommentReq) (resp *types.CreateCommentResp, err error) {
-	comment, err := l.svcCtx.CommentService.CreateComment(l.ctx, &commentservice.CreateCommentRequest{
+	ctx := MetaData.SetUserMetaData(l.ctx)
+	userID, err := MetaData.GetUserID(l.ctx)
+	if err != nil {
+		return nil, err
+	}
+	comment, err := l.svcCtx.CommentService.CreateComment(ctx, &commentservice.CreateCommentRequest{
 		ArticleId: req.ArticleId,
 		Content:   req.Content,
 		ParentId:  req.ParentId,
+		UserId:    userID,
 		ImageIds:  req.ImageIds,
 	})
 	if err != nil {
