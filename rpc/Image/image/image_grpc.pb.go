@@ -6,7 +6,7 @@
 // - protoc             v4.25.3
 // source: image.proto
 
-package imageservice
+package image
 
 import (
 	context "context"
@@ -21,18 +21,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Image_Upload_FullMethodName     = "/imageservice.Image/Upload"
-	Image_Delete_FullMethodName     = "/imageservice.Image/Delete"
-	Image_Get_FullMethodName        = "/imageservice.Image/Get"
-	Image_ListByUser_FullMethodName = "/imageservice.Image/ListByUser"
+	ImageService_Upload_FullMethodName     = "/image.ImageService/Upload"
+	ImageService_Delete_FullMethodName     = "/image.ImageService/Delete"
+	ImageService_Get_FullMethodName        = "/image.ImageService/Get"
+	ImageService_ListByUser_FullMethodName = "/image.ImageService/ListByUser"
 )
 
-// ImageClient is the client API for Image service.
+// ImageServiceClient is the client API for ImageService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // 图片服务
-type ImageClient interface {
+type ImageServiceClient interface {
 	// 上传图片
 	Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*ImageInfo, error)
 	// 删除图片
@@ -43,60 +43,60 @@ type ImageClient interface {
 	ListByUser(ctx context.Context, in *ListByUserRequest, opts ...grpc.CallOption) (*ListByUserResponse, error)
 }
 
-type imageClient struct {
+type imageServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewImageClient(cc grpc.ClientConnInterface) ImageClient {
-	return &imageClient{cc}
+func NewImageServiceClient(cc grpc.ClientConnInterface) ImageServiceClient {
+	return &imageServiceClient{cc}
 }
 
-func (c *imageClient) Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*ImageInfo, error) {
+func (c *imageServiceClient) Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*ImageInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ImageInfo)
-	err := c.cc.Invoke(ctx, Image_Upload_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ImageService_Upload_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *imageClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
+func (c *imageServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeleteResponse)
-	err := c.cc.Invoke(ctx, Image_Delete_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ImageService_Delete_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *imageClient) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*ImageInfo, error) {
+func (c *imageServiceClient) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*ImageInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ImageInfo)
-	err := c.cc.Invoke(ctx, Image_Get_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ImageService_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *imageClient) ListByUser(ctx context.Context, in *ListByUserRequest, opts ...grpc.CallOption) (*ListByUserResponse, error) {
+func (c *imageServiceClient) ListByUser(ctx context.Context, in *ListByUserRequest, opts ...grpc.CallOption) (*ListByUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListByUserResponse)
-	err := c.cc.Invoke(ctx, Image_ListByUser_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ImageService_ListByUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ImageServer is the server API for Image service.
-// All implementations must embed UnimplementedImageServer
+// ImageServiceServer is the server API for ImageService service.
+// All implementations must embed UnimplementedImageServiceServer
 // for forward compatibility.
 //
 // 图片服务
-type ImageServer interface {
+type ImageServiceServer interface {
 	// 上传图片
 	Upload(context.Context, *UploadRequest) (*ImageInfo, error)
 	// 删除图片
@@ -105,143 +105,143 @@ type ImageServer interface {
 	Get(context.Context, *GetRequest) (*ImageInfo, error)
 	// 获取用户图片列表
 	ListByUser(context.Context, *ListByUserRequest) (*ListByUserResponse, error)
-	mustEmbedUnimplementedImageServer()
+	mustEmbedUnimplementedImageServiceServer()
 }
 
-// UnimplementedImageServer must be embedded to have
+// UnimplementedImageServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedImageServer struct{}
+type UnimplementedImageServiceServer struct{}
 
-func (UnimplementedImageServer) Upload(context.Context, *UploadRequest) (*ImageInfo, error) {
+func (UnimplementedImageServiceServer) Upload(context.Context, *UploadRequest) (*ImageInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Upload not implemented")
 }
-func (UnimplementedImageServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
+func (UnimplementedImageServiceServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
-func (UnimplementedImageServer) Get(context.Context, *GetRequest) (*ImageInfo, error) {
+func (UnimplementedImageServiceServer) Get(context.Context, *GetRequest) (*ImageInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedImageServer) ListByUser(context.Context, *ListByUserRequest) (*ListByUserResponse, error) {
+func (UnimplementedImageServiceServer) ListByUser(context.Context, *ListByUserRequest) (*ListByUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListByUser not implemented")
 }
-func (UnimplementedImageServer) mustEmbedUnimplementedImageServer() {}
-func (UnimplementedImageServer) testEmbeddedByValue()               {}
+func (UnimplementedImageServiceServer) mustEmbedUnimplementedImageServiceServer() {}
+func (UnimplementedImageServiceServer) testEmbeddedByValue()                      {}
 
-// UnsafeImageServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ImageServer will
+// UnsafeImageServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ImageServiceServer will
 // result in compilation errors.
-type UnsafeImageServer interface {
-	mustEmbedUnimplementedImageServer()
+type UnsafeImageServiceServer interface {
+	mustEmbedUnimplementedImageServiceServer()
 }
 
-func RegisterImageServer(s grpc.ServiceRegistrar, srv ImageServer) {
-	// If the following call pancis, it indicates UnimplementedImageServer was
+func RegisterImageServiceServer(s grpc.ServiceRegistrar, srv ImageServiceServer) {
+	// If the following call pancis, it indicates UnimplementedImageServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&Image_ServiceDesc, srv)
+	s.RegisterService(&ImageService_ServiceDesc, srv)
 }
 
-func _Image_Upload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ImageService_Upload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UploadRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ImageServer).Upload(ctx, in)
+		return srv.(ImageServiceServer).Upload(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Image_Upload_FullMethodName,
+		FullMethod: ImageService_Upload_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ImageServer).Upload(ctx, req.(*UploadRequest))
+		return srv.(ImageServiceServer).Upload(ctx, req.(*UploadRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Image_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ImageService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ImageServer).Delete(ctx, in)
+		return srv.(ImageServiceServer).Delete(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Image_Delete_FullMethodName,
+		FullMethod: ImageService_Delete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ImageServer).Delete(ctx, req.(*DeleteRequest))
+		return srv.(ImageServiceServer).Delete(ctx, req.(*DeleteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Image_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ImageService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ImageServer).Get(ctx, in)
+		return srv.(ImageServiceServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Image_Get_FullMethodName,
+		FullMethod: ImageService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ImageServer).Get(ctx, req.(*GetRequest))
+		return srv.(ImageServiceServer).Get(ctx, req.(*GetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Image_ListByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ImageService_ListByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListByUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ImageServer).ListByUser(ctx, in)
+		return srv.(ImageServiceServer).ListByUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Image_ListByUser_FullMethodName,
+		FullMethod: ImageService_ListByUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ImageServer).ListByUser(ctx, req.(*ListByUserRequest))
+		return srv.(ImageServiceServer).ListByUser(ctx, req.(*ListByUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Image_ServiceDesc is the grpc.ServiceDesc for Image service.
+// ImageService_ServiceDesc is the grpc.ServiceDesc for ImageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Image_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "imageservice.Image",
-	HandlerType: (*ImageServer)(nil),
+var ImageService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "image.ImageService",
+	HandlerType: (*ImageServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Upload",
-			Handler:    _Image_Upload_Handler,
+			Handler:    _ImageService_Upload_Handler,
 		},
 		{
 			MethodName: "Delete",
-			Handler:    _Image_Delete_Handler,
+			Handler:    _ImageService_Delete_Handler,
 		},
 		{
 			MethodName: "Get",
-			Handler:    _Image_Get_Handler,
+			Handler:    _ImageService_Get_Handler,
 		},
 		{
 			MethodName: "ListByUser",
-			Handler:    _Image_ListByUser_Handler,
+			Handler:    _ImageService_ListByUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
