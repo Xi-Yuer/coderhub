@@ -171,6 +171,26 @@ services:
       timeout: 10s
     restart: always
 
+  image-api:
+    build:
+      context: ..
+      dockerfile: ./api/Image/Dockerfile
+    container_name: image-api
+    depends_on:
+      - etcd
+      - mysql
+      - redis
+      - image-service
+    networks:
+      - coderhub-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/api/image/health" ]  # 修改为实际的健康检查端点
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    restart: always
+
   # RPC 服务
   user-service:
     build:

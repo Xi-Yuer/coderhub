@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"coderhub/rpc/Image/image"
+	"coderhub/rpc/Image/imageservice"
 	"coderhub/rpc/Image/internal/config"
 	"coderhub/rpc/Image/internal/server"
 	"coderhub/rpc/Image/internal/svc"
@@ -26,7 +26,7 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		image.RegisterImageServer(grpcServer, server.NewImageServer(ctx))
+		imageservice.RegisterImageServer(grpcServer, server.NewImageServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

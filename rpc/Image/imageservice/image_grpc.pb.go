@@ -6,7 +6,7 @@
 // - protoc             v4.25.3
 // source: image.proto
 
-package image
+package imageservice
 
 import (
 	context "context"
@@ -21,10 +21,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Image_Upload_FullMethodName     = "/comment.Image/Upload"
-	Image_Delete_FullMethodName     = "/comment.Image/Delete"
-	Image_Get_FullMethodName        = "/comment.Image/Get"
-	Image_ListByUser_FullMethodName = "/comment.Image/ListByUser"
+	Image_Upload_FullMethodName     = "/imageservice.Image/Upload"
+	Image_Delete_FullMethodName     = "/imageservice.Image/Delete"
+	Image_Get_FullMethodName        = "/imageservice.Image/Get"
+	Image_ListByUser_FullMethodName = "/imageservice.Image/ListByUser"
 )
 
 // ImageClient is the client API for Image service.
@@ -224,7 +224,7 @@ func _Image_ListByUser_Handler(srv interface{}, ctx context.Context, dec func(in
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Image_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "comment.Image",
+	ServiceName: "imageservice.Image",
 	HandlerType: (*ImageServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
