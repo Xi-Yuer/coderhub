@@ -26,7 +26,7 @@ func NewGorm() *gorm.DB {
 				SlowThreshold:             time.Second, // Slow SQL threshold
 				LogLevel:                  logger.Warn, // Log level set to Warn for better debugging
 				IgnoreRecordNotFoundError: false,       // Log ErrRecordNotFound errors
-				ParameterizedQueries:      false,       // Include params in SQL log for easier debugging
+				ParameterizedQueries:      true,        // Include params in SQL log for easier debugging
 				Colorful:                  true,        // Enable colored output
 			},
 		)

@@ -28,8 +28,9 @@ func NewGetCommentsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCo
 
 func (l *GetCommentsLogic) GetComments(req *types.GetCommentsReq) (resp *types.GetCommentsResp, err error) {
 	comments, err := l.svcCtx.CommentService.GetComments(l.ctx, &commentservice.GetCommentsRequest{
-		Page:     req.Page,
-		PageSize: req.PageSize,
+		ArticleId: req.ArticleId,
+		Page:      req.Page,
+		PageSize:  req.PageSize,
 	})
 	if err != nil {
 		return l.errorResp(err)
@@ -46,8 +47,8 @@ func (l *GetCommentsLogic) successResp(comments *commentservice.GetCommentsRespo
 			Message: conf.HttpMessage.MsgOK,
 		},
 		Data: types.List{
-			Comments: rootComments, // 只返回顶级评论，子评论在replies字段中
-			Total:    comments.Total,
+			List:  rootComments, // 只返回顶级评论，子评论在replies字段中
+			Total: comments.Total,
 		},
 	}, nil
 }
@@ -65,19 +66,17 @@ func (l *GetCommentsLogic) errorResp(err error) (*types.GetCommentsResp, error) 
 func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*types.Comment {
 	rootComments := make([]*types.Comment, len(comments))
 	for i, val := range comments {
-		if val.ParentId == 0 {
-			rootComments[i] = &types.Comment{
-				Id:        val.Id,
-				ArticleId: val.ArticleId,
-				Content:   val.Content,
-				ParentId:  val.ParentId,
-				UserId:    val.UserId,
-				CreatedAt: val.CreatedAt,
-				UpdatedAt: val.UpdatedAt,
-				Replies:   l.buildTree(val.Replies),
-				LikeCount: val.LikeCount,
-				Images:    nil,
-			}
+		rootComments[i] = &types.Comment{
+			Id:        val.Id,
+			ArticleId: val.ArticleId,
+			Content:   val.Content,
+			ParentId:  val.ParentId,
+			UserId:    val.UserId,
+			CreatedAt: val.CreatedAt,
+			UpdatedAt: val.UpdatedAt,
+			Replies:   l.buildTree(val.Replies),
+			LikeCount: val.LikeCount,
+			Images:    nil,
 		}
 	}
 	return rootComments

@@ -7,6 +7,12 @@ info:
     name: Xi-Yuer
 
 components:
+  securitySchemes:
+    Auth:
+      type: apiKey
+      name: Authorization
+      in: header
+  
   schemas:
     Response:
       type: object
@@ -77,21 +83,142 @@ components:
             $ref: '#/components/schemas/CommentImage'
           description: 评论图片列表
 
+    CreateCommentReq:
+      type: object
+      required:
+        - article_id
+        - content
+      properties:
+        article_id:
+          type: integer
+          format: int64
+          description: 文章ID
+        content:
+          type: string
+          description: 评论内容
+        parent_id:
+          type: integer
+          format: int64
+          description: 父评论ID（可选）
+        reply_to_uid:
+          type: integer
+          format: int64
+          description: 回复的目标用户ID（可选）
+        image_ids:
+          type: array
+          items:
+            type: string
+          description: 图片ID列表
+
+    CreateCommentResp:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Comment'
+
+    GetCommentsReq:
+      type: object
+      required:
+        - article_id
+      properties:
+        article_id:
+          type: integer
+          format: int64
+          description: 文章ID
+        page:
+          type: integer
+          format: int32
+          description: 页码
+        page_size:
+          type: integer
+          format: int32
+          description: 每页数量
+
+    List:
+      type: object
+      properties:
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+          description: 评论列表
+        total:
+          type: integer
+          format: int32
+          description: 总评论数
+
+    GetCommentsResp:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/List'
+
+    GetCommentReq:
+      type: object
+      required:
+        - comment_id
+      properties:
+        comment_id:
+          type: integer
+          format: int64
+          description: 评论ID
+
+    GetCommentResp:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Comment'
+
+    DeleteCommentReq:
+      type: object
+      required:
+        - comment_id
+      properties:
+        comment_id:
+          type: integer
+          format: int64
+          description: 评论ID
+
+    DeleteCommentResp:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              type: boolean
+              description: 删除是否成功
+
+    HealthResp:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+
 paths:
   /comments/health:
     get:
       summary: 健康检查
+      operationId: Health
       responses:
         '200':
           description: 成功
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Response'
+                $ref: '#/components/schemas/HealthResp'
 
   /comments/create:
     post:
       summary: 创建评论
+      operationId: CreateComment
       security:
         - Auth: []
       requestBody:
@@ -99,40 +226,19 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                article_id:
-                  type: integer
-                  format: int64
-                  description: 文章ID
-                content:
-                  type: string
-                  description: 评论内容
-                parent_id:
-                  type: integer
-                  format: int64
-                  description: 父评论ID（可选）
-                image_ids:
-                  type: array
-                  items:
-                    type: string
-                  description: 图片ID列表
+              $ref: '#/components/schemas/CreateCommentReq'
       responses:
         '200':
           description: 成功
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/Comment'
+                $ref: '#/components/schemas/CreateCommentResp'
 
   /comments/article/{article_id}:
     get:
       summary: 获取评论列表
+      operationId: GetComments
       security:
         - Auth: []
       parameters:
@@ -142,40 +248,31 @@ paths:
           schema:
             type: integer
             format: int64
+          description: 文章ID
         - name: page
           in: query
           schema:
             type: integer
             format: int32
+          description: 页码
         - name: page_size
           in: query
           schema:
             type: integer
             format: int32
+          description: 每页数量
       responses:
         '200':
           description: 成功
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          comments:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/Comment'
-                          total:
-                            type: integer
-                            format: int32
+                $ref: '#/components/schemas/GetCommentsResp'
 
   /comments/{comment_id}:
     get:
       summary: 获取单个评论
+      operationId: GetComment
       security:
         - Auth: []
       parameters:
@@ -185,21 +282,18 @@ paths:
           schema:
             type: integer
             format: int64
+          description: 评论ID
       responses:
         '200':
           description: 成功
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/Comment'
+                $ref: '#/components/schemas/GetCommentResp'
     
     delete:
       summary: 删除评论
+      operationId: DeleteComment
       security:
         - Auth: []
       parameters:
@@ -209,15 +303,11 @@ paths:
           schema:
             type: integer
             format: int64
+          description: 评论ID
       responses:
         '200':
           description: 成功
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      data:
-                        type: boolean
+                $ref: '#/components/schemas/DeleteCommentResp'

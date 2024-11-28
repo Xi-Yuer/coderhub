@@ -35,11 +35,11 @@ type (
 	}
 	// 创建评论请求
 	CreateCommentReq {
-		ArticleId int64 `json:"article_id"`    // 文章ID
-		Content string `json:"content"`        // 评论内容
-		ParentId int64 `json:"parent_id"`      // 父评论ID（可选）
-		ReplyToUID int64 `json:"reply_to_uid"` // 回复的目标评论ID（可选）
-		ImageIds []string `json:"image_ids"`   // 图片ID列表
+        ArticleId int64 `json:"article_id"`    // 文章ID
+        Content string `json:"content"`        // 评论内容
+        ParentId int64 `json:"parent_id"`      // 父评论ID（可选）
+        ReplyToUID int64 `json:"reply_to_uid"` // 回复的目标评论ID（可选）
+        ImageIds []string `json:"image_ids"`   // 图片ID列表
 	}
 	// 创建评论响应
 	CreateCommentResp {
@@ -54,8 +54,8 @@ type (
 	}
 	// 列表
 	List {
-		Comments []*Comment `json:"comments"` // 评论列表
-		Total    int32      `json:"total"` // 总评论数
+        List []*Comment `json:"comments"` // 评论列表
+        Total int32 `json:"total"`        // 总评论数
 	}
 	// 获取评论列表响应
 	GetCommentsResp {

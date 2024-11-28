@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 停止并删除旧的容器
+# deploy % sudo docker compose -f docker-compose.yml -p deploy up -d xxx
+
 # 清除所有 none 镜像
 echo "Removing all dangling <none> images..."
 docker images -f "dangling=true" -q | xargs -r docker rmi

@@ -49,33 +49,10 @@ func (r *commentRepository) Create(ctx context.Context, comment *model.Comment) 
 // GetByID 根据ID获取评论，优先从缓存获取
 func (r *commentRepository) GetByID(ctx context.Context, id int64) (*model.Comment, error) {
 	comment := &model.Comment{}
-	cacheKey := comment.CacheKeyByID(id)
-
-	// 尝试从缓存获取
-	data, err := r.Redis.Get(cacheKey)
-	if err == nil {
-		err = json.Unmarshal([]byte(data), comment)
-		if err == nil {
-			return comment, nil
-		}
-	}
-
 	// 从数据库获取
-	err = r.DB.WithContext(ctx).First(comment, id).Error
-	if err != nil {
+	if err := r.DB.WithContext(ctx).First(comment, id).Error; err != nil {
 		return nil, err
 	}
-
-	// 热门评论写入缓存
-	if comment.LikeCount >= r.minLikes {
-		go func() {
-			err := r.cacheComment(comment)
-			if err != nil {
-				fmt.Printf("写入缓存失败: %v\n", err)
-			}
-		}()
-	}
-
 	return comment, nil
 }
 
@@ -189,6 +166,9 @@ func (r *commentRepository) ListByArticleID(ctx context.Context, articleID int64
 	var comments []model.Comment
 	var total int64
 	// 查询评论列表 parent_id = 0 为顶级评论，此外还要额外查询顶级下三条回复评论,并且构建树形结构
+	fmt.Println("文章ID: ", articleID)
+	fmt.Println("页码: ", page)
+	fmt.Println("每页大小: ", pageSize)
 	r.DB.WithContext(ctx).Where("article_id = ? AND parent_id = 0", articleID).Order("like_count DESC, created_at DESC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&comments)
 	// 查询总数
 	r.DB.WithContext(ctx).Model(&model.Comment{}).Where("article_id = ?", articleID).Count(&total)
@@ -198,7 +178,7 @@ func (r *commentRepository) ListByArticleID(ctx context.Context, articleID int64
 			// 获取回复总数
 			var replyCount int64
 			if err := r.DB.WithContext(ctx).Model(&model.Comment{}).
-				Where("reply_to_id = ?", comments[i].ID).
+				Where("parent_id = ?", comments[i].ID).
 				Count(&replyCount).Error; err != nil {
 				return nil, 0, err
 			}
@@ -220,7 +200,7 @@ func (r *commentRepository) ListByArticleID(ctx context.Context, articleID int64
 func (r *commentRepository) ListReplies(ctx context.Context, parentID int64, page int64, pageSize int64) ([]model.Comment, int64, error) {
 	var replies []model.Comment
 	var total int64
-	r.DB.WithContext(ctx).Where("reply_to_id = ?", parentID).Order("like_count DESC, created_at DESC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&replies)
+	r.DB.WithContext(ctx).Where("parent_id = ?", parentID).Order("like_count DESC, created_at DESC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&replies)
 	return replies, total, nil
 }
 

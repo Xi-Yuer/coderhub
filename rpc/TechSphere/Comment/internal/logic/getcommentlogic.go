@@ -38,6 +38,8 @@ func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.Ge
 			UserId:    commentModel.UserID,
 			CreatedAt: commentModel.CreatedAt.Unix(),
 			UpdatedAt: commentModel.UpdatedAt.Unix(),
+			LikeCount: commentModel.LikeCount,
+			Images:    nil,
 		},
 	}, nil
 }
