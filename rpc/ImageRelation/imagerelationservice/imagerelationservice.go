@@ -14,21 +14,23 @@ import (
 )
 
 type (
-	BatchCreateRelationRequest  = imageRelation.BatchCreateRelationRequest
-	BatchCreateRelationResponse = imageRelation.BatchCreateRelationResponse
-	BatchDeleteRelationRequest  = imageRelation.BatchDeleteRelationRequest
-	BatchDeleteRelationResponse = imageRelation.BatchDeleteRelationResponse
-	CreateRelationRequest       = imageRelation.CreateRelationRequest
-	CreateRelationResponse      = imageRelation.CreateRelationResponse
-	DeleteByEntityIDRequest     = imageRelation.DeleteByEntityIDRequest
-	DeleteByEntityIDResponse    = imageRelation.DeleteByEntityIDResponse
-	EntityInfo                  = imageRelation.EntityInfo
-	GetEntitiesByImageRequest   = imageRelation.GetEntitiesByImageRequest
-	GetEntitiesByImageResponse  = imageRelation.GetEntitiesByImageResponse
-	GetImagesByEntityRequest    = imageRelation.GetImagesByEntityRequest
-	GetImagesByEntityResponse   = imageRelation.GetImagesByEntityResponse
-	ImageInfo                   = imageRelation.ImageInfo
-	ImageRelation               = imageRelation.ImageRelation
+	BatchCreateRelationRequest     = imageRelation.BatchCreateRelationRequest
+	BatchCreateRelationResponse    = imageRelation.BatchCreateRelationResponse
+	BatchDeleteRelationRequest     = imageRelation.BatchDeleteRelationRequest
+	BatchDeleteRelationResponse    = imageRelation.BatchDeleteRelationResponse
+	BatchGetImagesByEntityRequest  = imageRelation.BatchGetImagesByEntityRequest
+	BatchGetImagesByEntityResponse = imageRelation.BatchGetImagesByEntityResponse
+	CreateRelationRequest          = imageRelation.CreateRelationRequest
+	CreateRelationResponse         = imageRelation.CreateRelationResponse
+	DeleteByEntityIDRequest        = imageRelation.DeleteByEntityIDRequest
+	DeleteByEntityIDResponse       = imageRelation.DeleteByEntityIDResponse
+	EntityInfo                     = imageRelation.EntityInfo
+	GetEntitiesByImageRequest      = imageRelation.GetEntitiesByImageRequest
+	GetEntitiesByImageResponse     = imageRelation.GetEntitiesByImageResponse
+	GetImagesByEntityRequest       = imageRelation.GetImagesByEntityRequest
+	GetImagesByEntityResponse      = imageRelation.GetImagesByEntityResponse
+	ImageInfo                      = imageRelation.ImageInfo
+	ImageRelation                  = imageRelation.ImageRelation
 
 	ImageRelationService interface {
 		// 创建图片关系
@@ -37,6 +39,8 @@ type (
 		BatchCreateRelation(ctx context.Context, in *BatchCreateRelationRequest, opts ...grpc.CallOption) (*BatchCreateRelationResponse, error)
 		// 批量删除图片关系
 		BatchDeleteRelation(ctx context.Context, in *BatchDeleteRelationRequest, opts ...grpc.CallOption) (*BatchDeleteRelationResponse, error)
+		// 批量获取图片关联，根据实体ID列表、实体类型列表获取
+		BatchGetImagesByEntity(ctx context.Context, in *BatchGetImagesByEntityRequest, opts ...grpc.CallOption) (*BatchGetImagesByEntityResponse, error)
 		// 根据实体ID、实体类型删除图片关系
 		DeleteByEntityID(ctx context.Context, in *DeleteByEntityIDRequest, opts ...grpc.CallOption) (*DeleteByEntityIDResponse, error)
 		// 获取实体关联的图片列表
@@ -72,6 +76,12 @@ func (m *defaultImageRelationService) BatchCreateRelation(ctx context.Context, i
 func (m *defaultImageRelationService) BatchDeleteRelation(ctx context.Context, in *BatchDeleteRelationRequest, opts ...grpc.CallOption) (*BatchDeleteRelationResponse, error) {
 	client := imageRelation.NewImageRelationServiceClient(m.cli.Conn())
 	return client.BatchDeleteRelation(ctx, in, opts...)
+}
+
+// 批量获取图片关联，根据实体ID列表、实体类型列表获取
+func (m *defaultImageRelationService) BatchGetImagesByEntity(ctx context.Context, in *BatchGetImagesByEntityRequest, opts ...grpc.CallOption) (*BatchGetImagesByEntityResponse, error) {
+	client := imageRelation.NewImageRelationServiceClient(m.cli.Conn())
+	return client.BatchGetImagesByEntity(ctx, in, opts...)
 }
 
 // 根据实体ID、实体类型删除图片关系

@@ -21,12 +21,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ImageRelationService_CreateRelation_FullMethodName      = "/imageRelation.ImageRelationService/CreateRelation"
-	ImageRelationService_BatchCreateRelation_FullMethodName = "/imageRelation.ImageRelationService/BatchCreateRelation"
-	ImageRelationService_BatchDeleteRelation_FullMethodName = "/imageRelation.ImageRelationService/BatchDeleteRelation"
-	ImageRelationService_DeleteByEntityID_FullMethodName    = "/imageRelation.ImageRelationService/DeleteByEntityID"
-	ImageRelationService_GetImagesByEntity_FullMethodName   = "/imageRelation.ImageRelationService/GetImagesByEntity"
-	ImageRelationService_GetEntitiesByImage_FullMethodName  = "/imageRelation.ImageRelationService/GetEntitiesByImage"
+	ImageRelationService_CreateRelation_FullMethodName         = "/imageRelation.ImageRelationService/CreateRelation"
+	ImageRelationService_BatchCreateRelation_FullMethodName    = "/imageRelation.ImageRelationService/BatchCreateRelation"
+	ImageRelationService_BatchDeleteRelation_FullMethodName    = "/imageRelation.ImageRelationService/BatchDeleteRelation"
+	ImageRelationService_BatchGetImagesByEntity_FullMethodName = "/imageRelation.ImageRelationService/BatchGetImagesByEntity"
+	ImageRelationService_DeleteByEntityID_FullMethodName       = "/imageRelation.ImageRelationService/DeleteByEntityID"
+	ImageRelationService_GetImagesByEntity_FullMethodName      = "/imageRelation.ImageRelationService/GetImagesByEntity"
+	ImageRelationService_GetEntitiesByImage_FullMethodName     = "/imageRelation.ImageRelationService/GetEntitiesByImage"
 )
 
 // ImageRelationServiceClient is the client API for ImageRelationService service.
@@ -41,6 +42,8 @@ type ImageRelationServiceClient interface {
 	BatchCreateRelation(ctx context.Context, in *BatchCreateRelationRequest, opts ...grpc.CallOption) (*BatchCreateRelationResponse, error)
 	// 批量删除图片关系
 	BatchDeleteRelation(ctx context.Context, in *BatchDeleteRelationRequest, opts ...grpc.CallOption) (*BatchDeleteRelationResponse, error)
+	// 批量获取图片关联，根据实体ID列表、实体类型列表获取
+	BatchGetImagesByEntity(ctx context.Context, in *BatchGetImagesByEntityRequest, opts ...grpc.CallOption) (*BatchGetImagesByEntityResponse, error)
 	// 根据实体ID、实体类型删除图片关系
 	DeleteByEntityID(ctx context.Context, in *DeleteByEntityIDRequest, opts ...grpc.CallOption) (*DeleteByEntityIDResponse, error)
 	// 获取实体关联的图片列表
@@ -81,6 +84,16 @@ func (c *imageRelationServiceClient) BatchDeleteRelation(ctx context.Context, in
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(BatchDeleteRelationResponse)
 	err := c.cc.Invoke(ctx, ImageRelationService_BatchDeleteRelation_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *imageRelationServiceClient) BatchGetImagesByEntity(ctx context.Context, in *BatchGetImagesByEntityRequest, opts ...grpc.CallOption) (*BatchGetImagesByEntityResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchGetImagesByEntityResponse)
+	err := c.cc.Invoke(ctx, ImageRelationService_BatchGetImagesByEntity_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -129,6 +142,8 @@ type ImageRelationServiceServer interface {
 	BatchCreateRelation(context.Context, *BatchCreateRelationRequest) (*BatchCreateRelationResponse, error)
 	// 批量删除图片关系
 	BatchDeleteRelation(context.Context, *BatchDeleteRelationRequest) (*BatchDeleteRelationResponse, error)
+	// 批量获取图片关联，根据实体ID列表、实体类型列表获取
+	BatchGetImagesByEntity(context.Context, *BatchGetImagesByEntityRequest) (*BatchGetImagesByEntityResponse, error)
 	// 根据实体ID、实体类型删除图片关系
 	DeleteByEntityID(context.Context, *DeleteByEntityIDRequest) (*DeleteByEntityIDResponse, error)
 	// 获取实体关联的图片列表
@@ -153,6 +168,9 @@ func (UnimplementedImageRelationServiceServer) BatchCreateRelation(context.Conte
 }
 func (UnimplementedImageRelationServiceServer) BatchDeleteRelation(context.Context, *BatchDeleteRelationRequest) (*BatchDeleteRelationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BatchDeleteRelation not implemented")
+}
+func (UnimplementedImageRelationServiceServer) BatchGetImagesByEntity(context.Context, *BatchGetImagesByEntityRequest) (*BatchGetImagesByEntityResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BatchGetImagesByEntity not implemented")
 }
 func (UnimplementedImageRelationServiceServer) DeleteByEntityID(context.Context, *DeleteByEntityIDRequest) (*DeleteByEntityIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteByEntityID not implemented")
@@ -238,6 +256,24 @@ func _ImageRelationService_BatchDeleteRelation_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ImageRelationService_BatchGetImagesByEntity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchGetImagesByEntityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ImageRelationServiceServer).BatchGetImagesByEntity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ImageRelationService_BatchGetImagesByEntity_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ImageRelationServiceServer).BatchGetImagesByEntity(ctx, req.(*BatchGetImagesByEntityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ImageRelationService_DeleteByEntityID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteByEntityIDRequest)
 	if err := dec(in); err != nil {
@@ -310,6 +346,10 @@ var ImageRelationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "BatchDeleteRelation",
 			Handler:    _ImageRelationService_BatchDeleteRelation_Handler,
+		},
+		{
+			MethodName: "BatchGetImagesByEntity",
+			Handler:    _ImageRelationService_BatchGetImagesByEntity_Handler,
 		},
 		{
 			MethodName: "DeleteByEntityID",

@@ -13,6 +13,8 @@ service ImageRelationService {
   rpc BatchCreateRelation(BatchCreateRelationRequest) returns (BatchCreateRelationResponse) {}
   // 批量删除图片关系
   rpc BatchDeleteRelation(BatchDeleteRelationRequest) returns (BatchDeleteRelationResponse) {}
+  // 批量获取图片关联，根据实体ID列表、实体类型列表获取
+  rpc BatchGetImagesByEntity(BatchGetImagesByEntityRequest) returns (BatchGetImagesByEntityResponse) {}
   // 根据实体ID、实体类型删除图片关系
   rpc DeleteByEntityID(DeleteByEntityIDRequest) returns (DeleteByEntityIDResponse) {}
   // 获取实体关联的图片列表
@@ -27,8 +29,10 @@ message ImageRelation {
   int64 image_id = 2;         // 图片ID
   int64 entity_id = 3;         // 关联实体ID
   string entity_type = 4;      // 关联实体类型(comment/article等)
-  int32 sort = 5;              // 排序号
-  string created_at = 6;       // 创建时间
+  string url = 5;             // 图片URL
+  string thumbnail_url = 6;   // 图片缩略图URL
+  int32 sort = 7;              // 排序号
+  string created_at = 8;       // 创建时间
 }
 
 // 创建关系请求
@@ -59,6 +63,16 @@ message BatchDeleteRelationRequest {
 
 message BatchDeleteRelationResponse {
   bool success = 1;  // 是否成功
+}
+
+// 批量获取图片关联，根据实体ID列表、实体类型列表获取请求
+message BatchGetImagesByEntityRequest {
+  repeated int64 entity_ids = 1;  // 实体ID列表
+  string entity_type = 2;         // 实体类型
+}
+
+message BatchGetImagesByEntityResponse {
+  repeated ImageRelation relations = 1;  // 图片关联列表
 }
 
 // 根据实体ID、实体类型删除图片关系请求

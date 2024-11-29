@@ -310,9 +310,11 @@ services:
     depends_on:
       - mysql
       - redis
-      - etcd
+      - etcd  
       - user-service
       - articles-service
+      - image-service
+      - image-relation-service
     networks:
       - coderhub-network
     healthcheck:
