@@ -35,7 +35,7 @@ func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.Ge
 	// 获取图片关联
 	imageRelations, err := l.svcCtx.ImageRelationService.GetImagesByEntity(l.ctx, &imageRelation.GetImagesByEntityRequest{
 		EntityId:   in.CommentId,
-		EntityType: model.ImageRelation_COMMENT,
+		EntityType: model.ImageRelationComment,
 	})
 	if err != nil {
 		return nil, err

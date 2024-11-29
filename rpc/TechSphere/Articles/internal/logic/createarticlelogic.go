@@ -80,7 +80,7 @@ func (l *CreateArticleLogic) CreateArticle(in *articles.CreateArticleRequest) (*
 	coverImageRelation := &model.ImageRelation{
 		ImageID:    coverImageId,
 		EntityID:   articleID,
-		EntityType: model.ImageRelation_ARTICLE_COVER,
+		EntityType: model.ImageRelationArticleCover,
 		Sort:       0,
 	}
 
@@ -94,7 +94,7 @@ func (l *CreateArticleLogic) CreateArticle(in *articles.CreateArticleRequest) (*
 		imageRelations[i] = &model.ImageRelation{
 			ImageID:    imageIdInt,
 			EntityID:   articleID,
-			EntityType: model.ImageRelation_ARTICLE_CONTENT,
+			EntityType: model.ImageRelationArticleContent,
 			Sort:       int32(i),
 		}
 	}

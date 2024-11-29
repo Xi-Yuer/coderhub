@@ -18,7 +18,7 @@ type ImageRelation struct {
 }
 
 const (
-	ImageRelation_ARTICLE_COVER = "article_cover"
-	ImageRelation_ARTICLE_CONTENT = "article_content"
-	ImageRelation_COMMENT         = "comment"
+	ImageRelationArticleCover   = "article_cover"
+	ImageRelationArticleContent = "article_content"
+	ImageRelationComment        = "comment"
 )

@@ -69,8 +69,8 @@ type HealthResp struct {
 }
 
 type List struct {
-	List  []*Comment `json:"comments"` // 评论列表
-	Total int32      `json:"total"`    // 总评论数
+	List  []*Comment `json:"list"`  // 评论列表
+	Total int32      `json:"total"` // 总评论数
 }
 
 type Response struct {

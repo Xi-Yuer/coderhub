@@ -49,18 +49,18 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 		// 获取图片关联
 		imageRelations, err := l.svcCtx.ImageRelationService.GetImagesByEntity(l.ctx, &imageRelation.GetImagesByEntityRequest{
 			EntityId:   val.ID,
-			EntityType: model.ImageRelation_COMMENT,
+			EntityType: model.ImageRelationComment,
 		})
 		if err != nil {
 			continue
 		}
 		images := make([]*comment.CommentImage, 0)
-		for _, imageRelation := range imageRelations.Images {
-			imageId := strconv.FormatInt(imageRelation.ImageId, 10)
+		for _, val := range imageRelations.Images {
+			imageId := strconv.FormatInt(val.ImageId, 10)
 			images = append(images, &comment.CommentImage{
 				ImageId:      imageId,
-				Url:          imageRelation.Url,
-				ThumbnailUrl: imageRelation.ThumbnailUrl,
+				Url:          val.Url,
+				ThumbnailUrl: val.ThumbnailUrl,
 			})
 		}
 		rootComments[i] = &comment.Comment{

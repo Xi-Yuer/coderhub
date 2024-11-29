@@ -160,7 +160,7 @@ func (l *UpdateArticleLogic) updateArticleFields(article *model.Articles, in *ar
 		// 更新到的时候有新的图片，则删除旧的图片
 		_, err := l.svcCtx.ImageRelationService.DeleteByEntityID(l.ctx, &imageRelation.DeleteByEntityIDRequest{
 			EntityId:   article.ID,
-			EntityType: model.ImageRelation_ARTICLE_CONTENT,
+			EntityType: model.ImageRelationArticleContent,
 		})
 		if err != nil {
 			l.Logger.Errorf("删除旧的图片关联失败: %v", err)
@@ -176,7 +176,7 @@ func (l *UpdateArticleLogic) updateArticleFields(article *model.Articles, in *ar
 			relations[i] = &imageRelation.CreateRelationRequest{
 				ImageId:    imageIdInt,
 				EntityId:   article.ID,
-				EntityType: model.ImageRelation_ARTICLE_CONTENT,
+				EntityType: model.ImageRelationArticleContent,
 			}
 		}
 

@@ -48,7 +48,7 @@ func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*c
 			imageRelationModels = append(imageRelationModels, &imageRelation.CreateRelationRequest{
 				ImageId:    imageIdInt,
 				EntityId:   CommentID,
-				EntityType: model.ImageRelation_COMMENT,
+				EntityType: model.ImageRelationComment,
 			})
 		}
 	}

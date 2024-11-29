@@ -49,7 +49,7 @@ func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.
 	// 获取图片关联
 	images, err := l.svcCtx.ImageRelationService.GetImagesByEntity(l.ctx, &imageRelation.GetImagesByEntityRequest{
 		EntityId:   article.ID,
-		EntityType: model.ImageRelation_ARTICLE_CONTENT,
+		EntityType: model.ImageRelationArticleContent,
 	})
 	if err != nil {
 		l.Logger.Errorf("获取图片关联失败: %v", err)
