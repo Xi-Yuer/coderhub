@@ -66,6 +66,16 @@ func (l *GetCommentsLogic) errorResp(err error) (*types.GetCommentsResp, error) 
 func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*types.Comment {
 	rootComments := make([]*types.Comment, len(comments))
 	for i, val := range comments {
+		// 获取图片
+		images := make([]types.CommentImage, len(val.Images))
+		for _, image := range val.Images {
+			images = append(images, types.CommentImage{
+				ImageId:      image.ImageId,
+				Url:          image.Url,
+				ThumbnailUrl: image.ThumbnailUrl,
+			})
+		}
+
 		rootComments[i] = &types.Comment{
 			Id:        val.Id,
 			ArticleId: val.ArticleId,
@@ -76,7 +86,7 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 			UpdatedAt: val.UpdatedAt,
 			Replies:   l.buildTree(val.Replies),
 			LikeCount: val.LikeCount,
-			Images:    nil,
+			Images:    images,
 		}
 	}
 	return rootComments

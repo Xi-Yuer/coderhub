@@ -68,14 +68,20 @@ func (l *GetArticleLogic) getArticle(articleId int64) (*articles.GetArticleRespo
 }
 
 func (l *GetArticleLogic) convertToArticleType(article *articles.Article) *types.Article {
+	// 将图片模型转换为图片URL
+	imageUrls := make([]string, 0)
+	for _, image := range article.Images {
+		imageUrls = append(imageUrls, image.Url)
+	}
+
 	return &types.Article{
 		Id:           article.Id,
 		Type:         article.Type,
 		Title:        article.Title,
 		Content:      article.Content,
 		Summary:      article.Summary,
-		CoverImage:   "",
-		ImageUrls:    make([]string, 0),
+		CoverImage:   article.CoverImage.Url,
+		ImageUrls:    imageUrls,
 		AuthorId:     article.AuthorId,
 		Tags:         article.Tags,
 		ViewCount:    article.ViewCount,

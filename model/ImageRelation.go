@@ -16,3 +16,9 @@ type ImageRelation struct {
 	CreatedAt  time.Time      `gorm:"<-:create" json:"created_at"`      // 创建时间
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"deleted_at"`          // 删除时间
 }
+
+const (
+	ImageRelation_ARTICLE_COVER = "article_cover"
+	ImageRelation_ARTICLE_CONTENT = "article_content"
+	ImageRelation_COMMENT         = "comment"
+)

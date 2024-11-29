@@ -2,8 +2,10 @@ package logic
 
 import (
 	"context"
+	"strconv"
 
 	"coderhub/model"
+	"coderhub/rpc/ImageRelation/imageRelation"
 	"coderhub/rpc/TechSphere/Comment/comment"
 	"coderhub/rpc/TechSphere/Comment/internal/svc"
 
@@ -44,6 +46,23 @@ func (l *GetCommentsLogic) GetComments(in *comment.GetCommentsRequest) (*comment
 func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Comment {
 	rootComments := make([]*comment.Comment, len(comments))
 	for i, val := range comments {
+		// 获取图片关联
+		imageRelations, err := l.svcCtx.ImageRelationService.GetImagesByEntity(l.ctx, &imageRelation.GetImagesByEntityRequest{
+			EntityId:   val.ID,
+			EntityType: model.ImageRelation_COMMENT,
+		})
+		if err != nil {
+			continue
+		}
+		images := make([]*comment.CommentImage, 0)
+		for _, imageRelation := range imageRelations.Images {
+			imageId := strconv.FormatInt(imageRelation.ImageId, 10)
+			images = append(images, &comment.CommentImage{
+				ImageId:      imageId,
+				Url:          imageRelation.Url,
+				ThumbnailUrl: imageRelation.ThumbnailUrl,
+			})
+		}
 		rootComments[i] = &comment.Comment{
 			Id:        val.ID,
 			ArticleId: val.ArticleID,
@@ -52,7 +71,7 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 			UserId:    val.UserID,
 			Replies:   l.buildTree(val.Replies),
 			LikeCount: val.LikeCount,
-			Images:    nil,
+			Images:    images,
 			CreatedAt: val.CreatedAt.Unix(),
 			UpdatedAt: val.UpdatedAt.Unix(),
 		}

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"coderhub/model"
+	"coderhub/rpc/ImageRelation/imageRelation"
 	"coderhub/rpc/TechSphere/Articles/articles"
 	"coderhub/rpc/TechSphere/Articles/internal/svc"
 	"coderhub/shared/MetaData"
@@ -154,5 +155,35 @@ func (l *UpdateArticleLogic) updateArticleFields(article *model.Articles, in *ar
 	article.Content = in.Content
 	article.Summary = in.Summary
 	article.Tags = strings.Join(in.Tags, ",")
-	article.Status = string(in.Status)
+	article.Status = in.Status
+	if in.ImageIds != nil {
+		// 更新到的时候有新的图片，则删除旧的图片
+		_, err := l.svcCtx.ImageRelationService.DeleteByEntityID(l.ctx, &imageRelation.DeleteByEntityIDRequest{
+			EntityId:   article.ID,
+			EntityType: model.ImageRelation_ARTICLE_CONTENT,
+		})
+		if err != nil {
+			l.Logger.Errorf("删除旧的图片关联失败: %v", err)
+		}
+		// 批量创建新的图片关联
+		relations := make([]*imageRelation.CreateRelationRequest, len(in.ImageIds))
+		for i, imageId := range in.ImageIds {
+			imageIdInt, err := strconv.ParseInt(imageId, 10, 64)
+			if err != nil {
+				l.Logger.Errorf("转换图片ID失败: %v", err)
+				continue
+			}
+			relations[i] = &imageRelation.CreateRelationRequest{
+				ImageId:    imageIdInt,
+				EntityId:   article.ID,
+				EntityType: model.ImageRelation_ARTICLE_CONTENT,
+			}
+		}
+
+		if _, err := l.svcCtx.ImageRelationService.BatchCreateRelation(l.ctx, &imageRelation.BatchCreateRelationRequest{
+			Relations: relations,
+		}); err != nil {
+			return
+		}
+	}
 }

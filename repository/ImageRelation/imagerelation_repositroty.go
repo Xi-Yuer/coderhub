@@ -10,6 +10,7 @@ import (
 type ImageRelationRepository interface {
 	Create(ctx context.Context, imageRelation *model.ImageRelation) error
 	BatchCreate(ctx context.Context, imageRelations []*model.ImageRelation) error
+	BatchDelete(ctx context.Context, ids []int64) error
 	Delete(ctx context.Context, imageID int64, entityID int64, entityType string) error
 	ListByEntityID(ctx context.Context, entityID int64, entityType string) ([]model.ImageRelation, error)
 	ListByImageID(ctx context.Context, imageID int64) ([]model.ImageRelation, error)
@@ -31,6 +32,17 @@ func (r *imageRelationRepository) BatchCreate(ctx context.Context, imageRelation
 	return r.DB.WithContext(ctx).Create(&imageRelations).Error
 }
 
+// BatchDelete 批量删除图片关联, 根据ID列表删除
+func (r *imageRelationRepository) BatchDelete(ctx context.Context, ids []int64) error {
+	return r.DB.WithContext(ctx).Where("id IN (?)", ids).Delete(&model.ImageRelation{}).Error
+}
+
+// Delete 批量删除关联，根据实体ID、实体类型删除
+func (r *imageRelationRepository) DeleteByEntityID(ctx context.Context, entityID int64, entityType string) error {
+	return r.DB.WithContext(ctx).Where("entity_id = ? AND entity_type = ?", entityID, entityType).Delete(&model.ImageRelation{}).Error
+}
+
+// Delete 删除图片关联, 根据图片ID、实体ID、实体类型删除
 func (r *imageRelationRepository) Delete(ctx context.Context, imageID int64, entityID int64, entityType string) error {
 	return r.DB.WithContext(ctx).Where("image_id = ? AND entity_id = ? AND entity_type = ?", imageID, entityID, entityType).Delete(&model.ImageRelation{}).Error
 }

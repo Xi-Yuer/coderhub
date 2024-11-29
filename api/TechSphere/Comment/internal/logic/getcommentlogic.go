@@ -38,6 +38,15 @@ func (l *GetCommentLogic) GetComment(req *types.GetCommentReq) (resp *types.GetC
 }
 
 func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse) (*types.GetCommentResp, error) {
+	// 获取图片
+	images := make([]types.CommentImage, len(comment.Comment.Images))
+	for i, image := range comment.Comment.Images {
+		images[i] = types.CommentImage{
+			ImageId:      image.ImageId,
+			Url:          image.Url,
+			ThumbnailUrl: image.ThumbnailUrl,
+		}
+	}
 	return &types.GetCommentResp{
 		Response: types.Response{
 			Code:    conf.HttpCode.HttpStatusOK,
@@ -53,7 +62,7 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 			UpdatedAt: comment.Comment.UpdatedAt,
 			Replies:   nil,
 			LikeCount: comment.Comment.LikeCount,
-			Images:    nil,
+			Images:    images,
 		},
 	}, nil
 }

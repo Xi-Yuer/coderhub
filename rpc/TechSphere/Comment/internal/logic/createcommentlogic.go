@@ -2,10 +2,13 @@ package logic
 
 import (
 	"coderhub/model"
+	"coderhub/rpc/ImageRelation/imageRelation"
 	"coderhub/rpc/TechSphere/Comment/comment"
 	"coderhub/rpc/TechSphere/Comment/internal/svc"
 	"coderhub/shared/SnowFlake"
 	"context"
+	"strconv"
+
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -34,8 +37,33 @@ func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*c
 		UserID:     in.UserId,
 		ReplyToUID: in.ReplyToUid,
 	}
+	// 如果评论有携带图片，则需要创建图片关联
+	var imageRelationModels []*imageRelation.CreateRelationRequest
+	if len(in.ImageIds) > 0 {
+		for _, imageId := range in.ImageIds {
+			imageIdInt, err := strconv.ParseInt(imageId, 10, 64)
+			if err != nil {
+				return nil, err
+			}
+			imageRelationModels = append(imageRelationModels, &imageRelation.CreateRelationRequest{
+				ImageId:    imageIdInt,
+				EntityId:   CommentID,
+				EntityType: model.ImageRelation_COMMENT,
+			})
+		}
+	}
+	_, err := l.svcCtx.ImageRelationService.BatchCreateRelation(l.ctx, &imageRelation.BatchCreateRelationRequest{
+		Relations: imageRelationModels,
+	})
+	if err != nil {
+		return nil, err
+	}
 	// 创建评论
 	if err := l.svcCtx.CommentRepository.Create(l.ctx, commentModel); err != nil {
+		// 事务回滚
+		l.svcCtx.ImageRelationService.BatchDeleteRelation(l.ctx, &imageRelation.BatchDeleteRelationRequest{
+			Ids: []int64{CommentID},
+		})
 		return nil, err
 	}
 	return &comment.CreateCommentResponse{

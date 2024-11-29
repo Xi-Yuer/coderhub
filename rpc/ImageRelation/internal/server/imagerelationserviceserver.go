@@ -35,6 +35,18 @@ func (s *ImageRelationServiceServer) BatchCreateRelation(ctx context.Context, in
 	return l.BatchCreateRelation(in)
 }
 
+// 批量删除图片关系
+func (s *ImageRelationServiceServer) BatchDeleteRelation(ctx context.Context, in *imageRelation.BatchDeleteRelationRequest) (*imageRelation.BatchDeleteRelationResponse, error) {
+	l := logic.NewBatchDeleteRelationLogic(ctx, s.svcCtx)
+	return l.BatchDeleteRelation(in)
+}
+
+// 根据实体ID、实体类型删除图片关系
+func (s *ImageRelationServiceServer) DeleteByEntityID(ctx context.Context, in *imageRelation.DeleteByEntityIDRequest) (*imageRelation.DeleteByEntityIDResponse, error) {
+	l := logic.NewDeleteByEntityIDLogic(ctx, s.svcCtx)
+	return l.DeleteByEntityID(in)
+}
+
 // 获取实体关联的图片列表
 func (s *ImageRelationServiceServer) GetImagesByEntity(ctx context.Context, in *imageRelation.GetImagesByEntityRequest) (*imageRelation.GetImagesByEntityResponse, error) {
 	l := logic.NewGetImagesByEntityLogic(ctx, s.svcCtx)
