@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"coderhub/rpc/Image/imageservice"
 	"context"
 
 	"coderhub/rpc/ImageRelation/imageRelation"
@@ -26,9 +27,8 @@ func NewGetImagesByEntityLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 // GetImagesByEntity 获取实体关联的图片列表
 func (l *GetImagesByEntityLogic) GetImagesByEntity(in *imageRelation.GetImagesByEntityRequest) (*imageRelation.GetImagesByEntityResponse, error) {
 	// 获取实体关联的图片列表
-	images, err := l.svcCtx.ImageService.GetImagesByEntity(l.ctx, &imageRelation.GetImagesByEntityRequest{
-		EntityId:   in.EntityId,
-		EntityType: in.EntityType,
+	images, err := l.svcCtx.ImageService.BatchGet(l.ctx, &imageservice.BatchGetRequest{
+		ImageIds: []int64{in.EntityId},
 	})
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (l *GetImagesByEntityLogic) GetImagesByEntity(in *imageRelation.GetImagesBy
 			ThumbnailUrl: image.ThumbnailUrl,
 			Width:        image.Width,
 			Height:       image.Height,
-			Sort:         image.Sort,
+			Sort:         0,
 		})
 	}
 

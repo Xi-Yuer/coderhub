@@ -12,6 +12,8 @@ service ImageService {
   rpc Delete(DeleteRequest) returns (DeleteResponse);
   // 获取图片信息
   rpc Get(GetRequest) returns (ImageInfo);
+  // 批量获取图片信息
+  rpc BatchGet(BatchGetRequest) returns (BatchGetResponse);
   // 获取用户图片列表
   rpc ListByUser(ListByUserRequest) returns (ListByUserResponse);
 }
@@ -33,6 +35,16 @@ message DeleteRequest {
 // 删除响应
 message DeleteResponse {
   bool success = 1;        // 是否成功
+}
+
+// 批量获取图片请求
+message BatchGetRequest {
+  repeated int64 image_ids = 1; // 图片ID列表
+}
+
+// 批量获取图片响应
+message BatchGetResponse {
+  repeated ImageInfo images = 1; // 图片列表
 }
 
 // 获取图片请求

@@ -24,6 +24,7 @@ const (
 	ImageService_Upload_FullMethodName     = "/image.ImageService/Upload"
 	ImageService_Delete_FullMethodName     = "/image.ImageService/Delete"
 	ImageService_Get_FullMethodName        = "/image.ImageService/Get"
+	ImageService_BatchGet_FullMethodName   = "/image.ImageService/BatchGet"
 	ImageService_ListByUser_FullMethodName = "/image.ImageService/ListByUser"
 )
 
@@ -39,6 +40,8 @@ type ImageServiceClient interface {
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 	// 获取图片信息
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*ImageInfo, error)
+	// 批量获取图片信息
+	BatchGet(ctx context.Context, in *BatchGetRequest, opts ...grpc.CallOption) (*BatchGetResponse, error)
 	// 获取用户图片列表
 	ListByUser(ctx context.Context, in *ListByUserRequest, opts ...grpc.CallOption) (*ListByUserResponse, error)
 }
@@ -81,6 +84,16 @@ func (c *imageServiceClient) Get(ctx context.Context, in *GetRequest, opts ...gr
 	return out, nil
 }
 
+func (c *imageServiceClient) BatchGet(ctx context.Context, in *BatchGetRequest, opts ...grpc.CallOption) (*BatchGetResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchGetResponse)
+	err := c.cc.Invoke(ctx, ImageService_BatchGet_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *imageServiceClient) ListByUser(ctx context.Context, in *ListByUserRequest, opts ...grpc.CallOption) (*ListByUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListByUserResponse)
@@ -103,6 +116,8 @@ type ImageServiceServer interface {
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 	// 获取图片信息
 	Get(context.Context, *GetRequest) (*ImageInfo, error)
+	// 批量获取图片信息
+	BatchGet(context.Context, *BatchGetRequest) (*BatchGetResponse, error)
 	// 获取用户图片列表
 	ListByUser(context.Context, *ListByUserRequest) (*ListByUserResponse, error)
 	mustEmbedUnimplementedImageServiceServer()
@@ -123,6 +138,9 @@ func (UnimplementedImageServiceServer) Delete(context.Context, *DeleteRequest) (
 }
 func (UnimplementedImageServiceServer) Get(context.Context, *GetRequest) (*ImageInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedImageServiceServer) BatchGet(context.Context, *BatchGetRequest) (*BatchGetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BatchGet not implemented")
 }
 func (UnimplementedImageServiceServer) ListByUser(context.Context, *ListByUserRequest) (*ListByUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListByUser not implemented")
@@ -202,6 +220,24 @@ func _ImageService_Get_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ImageService_BatchGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ImageServiceServer).BatchGet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ImageService_BatchGet_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ImageServiceServer).BatchGet(ctx, req.(*BatchGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ImageService_ListByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListByUserRequest)
 	if err := dec(in); err != nil {
@@ -238,6 +274,10 @@ var ImageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Get",
 			Handler:    _ImageService_Get_Handler,
+		},
+		{
+			MethodName: "BatchGet",
+			Handler:    _ImageService_BatchGet_Handler,
 		},
 		{
 			MethodName: "ListByUser",

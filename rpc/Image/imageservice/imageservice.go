@@ -14,6 +14,8 @@ import (
 )
 
 type (
+	BatchGetRequest    = image.BatchGetRequest
+	BatchGetResponse   = image.BatchGetResponse
 	DeleteRequest      = image.DeleteRequest
 	DeleteResponse     = image.DeleteResponse
 	GetRequest         = image.GetRequest
@@ -29,6 +31,8 @@ type (
 		Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 		// 获取图片信息
 		Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*ImageInfo, error)
+		// 批量获取图片信息
+		BatchGet(ctx context.Context, in *BatchGetRequest, opts ...grpc.CallOption) (*BatchGetResponse, error)
 		// 获取用户图片列表
 		ListByUser(ctx context.Context, in *ListByUserRequest, opts ...grpc.CallOption) (*ListByUserResponse, error)
 	}
@@ -60,6 +64,12 @@ func (m *defaultImageService) Delete(ctx context.Context, in *DeleteRequest, opt
 func (m *defaultImageService) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*ImageInfo, error) {
 	client := image.NewImageServiceClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
+}
+
+// 批量获取图片信息
+func (m *defaultImageService) BatchGet(ctx context.Context, in *BatchGetRequest, opts ...grpc.CallOption) (*BatchGetResponse, error) {
+	client := image.NewImageServiceClient(m.cli.Conn())
+	return client.BatchGet(ctx, in, opts...)
 }
 
 // 获取用户图片列表

@@ -3,7 +3,7 @@ package svc
 import (
 	Imagerepository "coderhub/repository/Image"
 	ImagerelationRepository "coderhub/repository/ImageRelation"
-	"coderhub/rpc/ImageRelation/imagerelationservice"
+	"coderhub/rpc/Image/imageservice"
 	"coderhub/rpc/ImageRelation/internal/config"
 	"coderhub/shared/SQL"
 
@@ -14,7 +14,7 @@ type ServiceContext struct {
 	Config                  config.Config
 	ImageRepository         Imagerepository.ImageRepository
 	ImageRelationRepository ImagerelationRepository.ImageRelationRepository
-	ImageService            imagerelationservice.ImageRelationService
+	ImageService            imageservice.ImageService
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -22,6 +22,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Config:                  c,
 		ImageRepository:         Imagerepository.NewImageRepository(SQL.NewGorm()),
 		ImageRelationRepository: ImagerelationRepository.NewImageRelationRepository(SQL.NewGorm()),
-		ImageService:            imagerelationservice.NewImageRelationService(zrpc.MustNewClient(c.ImageService)),
+		ImageService:            imageservice.NewImageService(zrpc.MustNewClient(c.ImageService)),
 	}
 }

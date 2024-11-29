@@ -41,6 +41,12 @@ func (s *ImageServiceServer) Get(ctx context.Context, in *image.GetRequest) (*im
 	return l.Get(in)
 }
 
+// 批量获取图片信息
+func (s *ImageServiceServer) BatchGet(ctx context.Context, in *image.BatchGetRequest) (*image.BatchGetResponse, error) {
+	l := logic.NewBatchGetLogic(ctx, s.svcCtx)
+	return l.BatchGet(in)
+}
+
 // 获取用户图片列表
 func (s *ImageServiceServer) ListByUser(ctx context.Context, in *image.ListByUserRequest) (*image.ListByUserResponse, error) {
 	l := logic.NewListByUserLogic(ctx, s.svcCtx)
