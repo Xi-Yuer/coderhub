@@ -44,25 +44,41 @@ func (l *GetCommentsLogic) GetComments(in *comment.GetCommentsRequest) (*comment
 
 // buildTree 构建树形结构
 func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Comment {
-	rootComments := make([]*comment.Comment, len(comments))
+	if len(comments) == 0 {
+		return nil
+	}
+
+	// 收集所有评论ID
+	commentIds := make([]int64, len(comments))
 	for i, val := range comments {
-		// 获取图片关联
-		imageRelations, err := l.svcCtx.ImageRelationService.GetImagesByEntity(l.ctx, &imageRelation.GetImagesByEntityRequest{
-			EntityId:   val.ID,
-			EntityType: model.ImageRelationComment,
-		})
-		if err != nil {
-			continue
-		}
-		images := make([]*comment.CommentImage, 0)
-		for _, val := range imageRelations.Images {
-			imageId := strconv.FormatInt(val.ImageId, 10)
-			images = append(images, &comment.CommentImage{
+		commentIds[i] = val.ID
+	}
+
+	// 批量获取所有评论的图片关联
+	imageRelations, err := l.svcCtx.ImageRelationService.BatchGetImagesByEntity(l.ctx, &imageRelation.BatchGetImagesByEntityRequest{
+		EntityIds:  commentIds,
+		EntityType: model.ImageRelationComment,
+	})
+	if err != nil {
+		// 添加错误日志
+		l.Logger.Errorf("获取评论图片失败: %v", err)
+	}
+
+	// 构建评论ID到图片列表的映射
+	commentImages := make(map[int64][]*comment.CommentImage)
+	if err == nil {
+		for _, img := range imageRelations.Relations {
+			imageId := strconv.FormatInt(img.ImageId, 10)
+			commentImages[img.EntityId] = append(commentImages[img.EntityId], &comment.CommentImage{
 				ImageId:      imageId,
-				Url:          val.Url,
-				ThumbnailUrl: val.ThumbnailUrl,
+				Url:          img.Url,
+				ThumbnailUrl: img.ThumbnailUrl,
 			})
 		}
+	}
+
+	rootComments := make([]*comment.Comment, len(comments))
+	for i, val := range comments {
 		rootComments[i] = &comment.Comment{
 			Id:        val.ID,
 			ArticleId: val.ArticleID,
@@ -71,7 +87,7 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 			UserId:    val.UserID,
 			Replies:   l.buildTree(val.Replies),
 			LikeCount: val.LikeCount,
-			Images:    images,
+			Images:    commentImages[val.ID], // 从映射中获取图片
 			CreatedAt: val.CreatedAt.Unix(),
 			UpdatedAt: val.UpdatedAt.Unix(),
 		}
