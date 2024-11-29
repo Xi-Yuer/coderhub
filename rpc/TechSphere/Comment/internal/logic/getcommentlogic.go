@@ -41,12 +41,12 @@ func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.Ge
 		return nil, err
 	}
 	images := make([]*comment.CommentImage, 0)
-	for _, imageRelation := range imageRelations.Images {
-		imageId := strconv.FormatInt(imageRelation.ImageId, 10)
+	for _, val := range imageRelations.Images {
+		imageId := strconv.FormatInt(val.ImageId, 10)
 		images = append(images, &comment.CommentImage{
 			ImageId:      imageId,
-			Url:          imageRelation.Url,
-			ThumbnailUrl: imageRelation.ThumbnailUrl,
+			Url:          val.Url,
+			ThumbnailUrl: val.ThumbnailUrl,
 		})
 	}
 	return &comment.GetCommentResponse{
