@@ -1,0 +1,15 @@
+{
+  "version": "32",
+  "credential": {
+    "accessKey": "your-access-key",
+    "secretKey": "your-secret-key"
+  },
+  "region": "us-east-1",
+  "browser": "on",
+  "logger": {
+    "console": {
+      "enabled": true,
+      "level": "info"
+    }
+  }
+}

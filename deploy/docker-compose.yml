@@ -109,7 +109,19 @@ services:
         target: /etc/nginx/nginx.conf
         read_only: true
         consistency: consistent
-
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000" # MinIO 服务端口
+      - "9001:9001" # MinIO 控制面板端口
+    environment:
+      MINIO_ROOT_USER: "minioadmin" # 设置管理员用户名
+      MINIO_ROOT_PASSWORD: "minioadmin" # 设置管理员密码（生产环境请使用强密码）
+    volumes:
+      - minio-data:/data # 使用 Docker 卷来持久化数据
+      - ./minio/config:/root/.minio # 持久化 MinIO 配置
+    command: server /data --console-address ":9001"
   #  Api 服务
   user-api:
     build:
@@ -310,7 +322,7 @@ services:
     depends_on:
       - mysql
       - redis
-      - etcd  
+      - etcd
       - user-service
       - articles-service
       - image-service
@@ -341,3 +353,4 @@ volumes:
   mysql-data:
   redis-data:
   es-data:
+  minio-data:
