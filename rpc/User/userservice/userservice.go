@@ -16,6 +16,8 @@ import (
 type (
 	AuthorizeRequest             = user.AuthorizeRequest
 	AuthorizeResponse            = user.AuthorizeResponse
+	BatchGetUserByIDRequest      = user.BatchGetUserByIDRequest
+	BatchGetUserByIDResponse     = user.BatchGetUserByIDResponse
 	ChangePasswordRequest        = user.ChangePasswordRequest
 	ChangePasswordResponse       = user.ChangePasswordResponse
 	CheckUserExistsRequest       = user.CheckUserExistsRequest
@@ -33,6 +35,7 @@ type (
 	ResetPasswordResponse        = user.ResetPasswordResponse
 	UpdateUserInfoRequest        = user.UpdateUserInfoRequest
 	UpdateUserInfoResponse       = user.UpdateUserInfoResponse
+	UserInfo                     = user.UserInfo
 
 	UserService interface {
 		// 授权
@@ -44,6 +47,8 @@ type (
 		// 获取用户信息
 		GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
 		GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
+		// 批量获取用户信息
+		BatchGetUserByID(ctx context.Context, in *BatchGetUserByIDRequest, opts ...grpc.CallOption) (*BatchGetUserByIDResponse, error)
 		// 更新用户信息
 		UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error)
 		// 修改密码
@@ -92,6 +97,12 @@ func (m *defaultUserService) GetUserInfo(ctx context.Context, in *GetUserInfoReq
 func (m *defaultUserService) GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
 	client := user.NewUserServiceClient(m.cli.Conn())
 	return client.GetUserInfoByUsername(ctx, in, opts...)
+}
+
+// 批量获取用户信息
+func (m *defaultUserService) BatchGetUserByID(ctx context.Context, in *BatchGetUserByIDRequest, opts ...grpc.CallOption) (*BatchGetUserByIDResponse, error) {
+	client := user.NewUserServiceClient(m.cli.Conn())
+	return client.BatchGetUserByID(ctx, in, opts...)
 }
 
 // 更新用户信息

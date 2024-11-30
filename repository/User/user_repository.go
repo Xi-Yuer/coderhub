@@ -14,6 +14,7 @@ type UserRepository interface {
 	CreateUser(user *model.User) error
 	GetUserByName(name string) (*model.User, error)
 	GetUserByID(id int64) (*model.User, error)
+	BatchGetUserByID(ids []int64) ([]*model.User, error)
 	UpdateUser(user *model.User) error
 	DeleteUser(id int64) error
 }
@@ -93,6 +94,11 @@ func (r *UserRepositoryImpl) GetUserByID(id int64) (*model.User, error) {
 	}()
 
 	return &user, nil
+}
+
+func (r *UserRepositoryImpl) BatchGetUserByID(ids []int64) ([]*model.User, error) {
+	var users []*model.User
+	return users, r.DB.Where("id IN (?)", ids).Find(&users).Error
 }
 
 func (r *UserRepositoryImpl) UpdateUser(user *model.User) error {

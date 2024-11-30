@@ -8,6 +8,7 @@ import (
 	"coderhub/rpc/ImageRelation/imageRelation"
 	"coderhub/rpc/TechSphere/Comment/comment"
 	"coderhub/rpc/TechSphere/Comment/internal/svc"
+	"coderhub/rpc/User/userservice"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -42,6 +43,13 @@ func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.Ge
 	if err != nil {
 		return nil, err
 	}
+	// 获取用户信息
+	user, err := l.svcCtx.UserService.GetUserInfo(l.ctx, &userservice.GetUserInfoRequest{
+		UserId: commentModel.UserID,
+	})
+	if err != nil {
+		return nil, err
+	}
 
 	images := make([]*comment.CommentImage, 0)
 	// 将图片关联转换为评论图片
@@ -59,7 +67,11 @@ func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.Ge
 			ArticleId: commentModel.ArticleID,
 			Content:   commentModel.Content,
 			ParentId:  commentModel.ParentID,
-			UserId:    commentModel.UserID,
+			UserInfo: &comment.UserInfo{
+				UserId:   user.UserId,
+				Username: user.UserName,
+				Avatar:   user.Avatar,
+			},
 			CreatedAt: commentModel.CreatedAt.Unix(),
 			UpdatedAt: commentModel.UpdatedAt.Unix(),
 			LikeCount: commentModel.LikeCount,

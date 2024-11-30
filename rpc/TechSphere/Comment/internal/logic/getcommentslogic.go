@@ -8,6 +8,7 @@ import (
 	"coderhub/rpc/ImageRelation/imageRelation"
 	"coderhub/rpc/TechSphere/Comment/comment"
 	"coderhub/rpc/TechSphere/Comment/internal/svc"
+	"coderhub/rpc/User/userservice"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -80,19 +81,41 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 		}
 	}
 
+	// 获取用户信息
+	userIds := make([]int64, len(comments))
+	for i, val := range comments {
+		userIds[i] = val.UserID
+	}
+	users, err := l.svcCtx.UserService.BatchGetUserByID(l.ctx, &userservice.BatchGetUserByIDRequest{
+		UserIds: userIds,
+	})
+	if err != nil {
+		l.Logger.Errorf("获取用户信息失败: %v", err)
+		return make([]*comment.Comment, 0)
+	}
+	// 构建用户信息映射
+	userInfos := make(map[int64]*comment.UserInfo)
+	for _, val := range users.UserInfos {
+		userInfos[val.UserId] = &comment.UserInfo{
+			UserId:   val.UserId,
+			Username: val.UserName,
+			Avatar:   val.Avatar,
+		}
+	}
+
 	rootComments := make([]*comment.Comment, len(comments))
 	for i, val := range comments {
 		// 确保每个评论的图片列表都被初始化
 		if _, ok := commentImages[val.ID]; !ok {
 			commentImages[val.ID] = make([]*comment.CommentImage, 0)
 		}
-		
+
 		rootComments[i] = &comment.Comment{
 			Id:        val.ID,
 			ArticleId: val.ArticleID,
 			Content:   val.Content,
 			ParentId:  val.ParentID,
-			UserId:    val.UserID,
+			UserInfo:  userInfos[val.UserID],
 			Replies:   l.buildTree(val.Replies),
 			LikeCount: val.LikeCount,
 			Images:    commentImages[val.ID],

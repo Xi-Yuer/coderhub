@@ -5,6 +5,7 @@ import (
 
 	"coderhub/api/TechSphere/Comment/internal/svc"
 	"coderhub/api/TechSphere/Comment/internal/types"
+	"coderhub/rpc/TechSphere/Comment/comment"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +26,43 @@ func NewGetCommentRepliesLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *GetCommentRepliesLogic) GetCommentReplies(req *types.GetCommentRepliesReq) (resp *types.GetCommentRepliesResp, err error) {
-	// todo: add your logic here and delete this line
+	reply, err := l.svcCtx.CommentService.GetCommentReplies(l.ctx, &comment.GetCommentRepliesRequest{
+		CommentId: req.CommentId,
+		Page:      int32(req.Page),
+		PageSize:  int32(req.PageSize),
+	})
+	if err != nil {
+		return nil, err
+	}
+	replies := make([]*types.Comment, len(reply.Replies))
+	for i, val := range reply.Replies {
+		images := make([]types.CommentImage, len(val.Images))
+		for j, img := range val.Images {
+			images[j] = types.CommentImage{
+				ImageId:      img.ImageId,
+				Url:          img.Url,
+				ThumbnailUrl: img.ThumbnailUrl,
+			}
+		}
+		replies[i] = &types.Comment{
+			Id:        val.Id,
+			ArticleId: val.ArticleId,
+			Content:   val.Content,
+			ParentId:  val.ParentId,
+			UserInfo:  types.UserInfo{},
+			CreatedAt: val.CreatedAt,
+			UpdatedAt: val.UpdatedAt,
+			Replies:   nil,
+			LikeCount: val.LikeCount,
+			Images:    images,
+		}
+	}
 
-	return
+	return &types.GetCommentRepliesResp{
+		Response: types.Response{},
+		Data: types.List{
+			List:  replies,
+			Total: reply.Total,
+		},
+	}, nil
 }

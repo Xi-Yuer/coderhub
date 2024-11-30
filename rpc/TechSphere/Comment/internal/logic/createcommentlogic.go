@@ -5,6 +5,7 @@ import (
 	"coderhub/rpc/ImageRelation/imageRelation"
 	"coderhub/rpc/TechSphere/Comment/comment"
 	"coderhub/rpc/TechSphere/Comment/internal/svc"
+	"coderhub/rpc/User/userservice"
 	"coderhub/shared/SnowFlake"
 	"context"
 	"strconv"
@@ -37,6 +38,10 @@ func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*c
 		UserID:     in.UserId,
 		ReplyToUID: in.ReplyToUid,
 	}
+	// 获取用户信息
+	user, err := l.svcCtx.UserService.GetUserInfo(l.ctx, &userservice.GetUserInfoRequest{
+		UserId: in.UserId,
+	})
 	// 如果评论有携带图片，则需要创建图片关联
 	var imageRelationModels []*imageRelation.CreateRelationRequest
 	if len(in.ImageIds) > 0 {
@@ -52,7 +57,7 @@ func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*c
 			})
 		}
 	}
-	_, err := l.svcCtx.ImageRelationService.BatchCreateRelation(l.ctx, &imageRelation.BatchCreateRelationRequest{
+	_, err = l.svcCtx.ImageRelationService.BatchCreateRelation(l.ctx, &imageRelation.BatchCreateRelationRequest{
 		Relations: imageRelationModels,
 	})
 	if err != nil {
@@ -72,7 +77,11 @@ func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*c
 			ArticleId: commentModel.ArticleID,
 			Content:   commentModel.Content,
 			ParentId:  commentModel.ParentID,
-			UserId:    commentModel.UserID,
+			UserInfo: &comment.UserInfo{
+				UserId:   user.UserId,
+				Username: user.UserName,
+				Avatar:   user.Avatar,
+			},
 		},
 	}, nil
 }

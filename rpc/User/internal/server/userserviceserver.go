@@ -52,6 +52,12 @@ func (s *UserServiceServer) GetUserInfoByUsername(ctx context.Context, in *user.
 	return l.GetUserInfoByUsername(in)
 }
 
+// 批量获取用户信息
+func (s *UserServiceServer) BatchGetUserByID(ctx context.Context, in *user.BatchGetUserByIDRequest) (*user.BatchGetUserByIDResponse, error) {
+	l := logic.NewBatchGetUserByIDLogic(ctx, s.svcCtx)
+	return l.BatchGetUserByID(in)
+}
+
 // 更新用户信息
 func (s *UserServiceServer) UpdateUserInfo(ctx context.Context, in *user.UpdateUserInfoRequest) (*user.UpdateUserInfoResponse, error) {
 	l := logic.NewUpdateUserInfoLogic(ctx, s.svcCtx)

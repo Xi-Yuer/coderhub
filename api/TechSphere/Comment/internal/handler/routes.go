@@ -49,6 +49,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/create",
 				Handler: CreateCommentHandler(serverCtx),
 			},
+			{
+				// 获取某条评论的子评论列表
+				Method:  http.MethodGet,
+				Path:    "/replies/:comment_id",
+				Handler: GetCommentRepliesHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/comments"),

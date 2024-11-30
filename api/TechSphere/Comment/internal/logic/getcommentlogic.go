@@ -7,6 +7,7 @@ import (
 	"coderhub/api/TechSphere/Comment/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/TechSphere/Comment/commentservice"
+	"coderhub/rpc/User/userservice"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -47,6 +48,18 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 			ThumbnailUrl: image.ThumbnailUrl,
 		}
 	}
+	// 获取用户信息
+	user, err := l.svcCtx.UserService.GetUserInfo(l.ctx, &userservice.GetUserInfoRequest{
+		UserId: comment.Comment.UserInfo.UserId,
+	})
+	if err != nil {
+		return l.errorResp(err)
+	}
+	userInfo := types.UserInfo{
+		UserId:   user.UserId,
+		Username: user.UserName,
+		Avatar:   user.Avatar,
+	}
 	return &types.GetCommentResp{
 		Response: types.Response{
 			Code:    conf.HttpCode.HttpStatusOK,
@@ -57,7 +70,7 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 			ArticleId: comment.Comment.ArticleId,
 			Content:   comment.Comment.Content,
 			ParentId:  comment.Comment.ParentId,
-			UserId:    comment.Comment.UserId,
+			UserInfo:  userInfo,
 			CreatedAt: comment.Comment.CreatedAt,
 			UpdatedAt: comment.Comment.UpdatedAt,
 			Replies:   nil,

@@ -8,7 +8,7 @@ type Comment struct {
 	ArticleId int64          `json:"article_id"` // 文章ID
 	Content   string         `json:"content"`    // 评论内容
 	ParentId  int64          `json:"parent_id"`  // 父评论ID
-	UserId    int64          `json:"user_id"`    // 评论者ID
+	UserInfo  UserInfo       `json:"user_info"`  // 评论者信息
 	CreatedAt int64          `json:"created_at"` // 创建时间
 	UpdatedAt int64          `json:"updated_at"` // 更新时间
 	Replies   []*Comment     `json:"replies"`    // 子评论列表
@@ -44,6 +44,17 @@ type DeleteCommentResp struct {
 	Data bool `json:"data"` // 删除是否成功
 }
 
+type GetCommentRepliesReq struct {
+	CommentId int64 `path:"comment_id"` // 评论ID
+	Page      int32 `form:"page"`       // 页码
+	PageSize  int32 `form:"page_size"`  // 每页数量
+}
+
+type GetCommentRepliesResp struct {
+	Response
+	Data List `json:"data"` // 子评论列表
+}
+
 type GetCommentReq struct {
 	CommentId int64 `path:"comment_id"` // 评论ID
 }
@@ -76,4 +87,10 @@ type List struct {
 type Response struct {
 	Code    int32  `json:"code"`    // 状态码
 	Message string `json:"message"` // 提示信息
+}
+
+type UserInfo struct {
+	UserId   int64  `json:"user_id"`  // 用户ID
+	Username string `json:"username"` // 用户名
+	Avatar   string `json:"avatar"`   // 头像
 }

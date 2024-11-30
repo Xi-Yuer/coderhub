@@ -6,4 +6,5 @@ type Config struct {
 	zrpc.RpcServerConf
 	ImageRelationService zrpc.RpcClientConf
 	ImageService         zrpc.RpcClientConf
+	UserService          zrpc.RpcClientConf
 }

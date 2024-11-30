@@ -12,4 +12,5 @@ type Config struct {
 		AccessExpire int64
 	}
 	CommentService zrpc.RpcClientConf
+	UserService    zrpc.RpcClientConf
 }

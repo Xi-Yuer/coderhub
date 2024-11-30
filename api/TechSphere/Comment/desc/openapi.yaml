@@ -268,7 +268,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetCommentsResp'
-
   /comments/{comment_id}:
     get:
       summary: 获取单个评论
@@ -290,7 +289,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetCommentResp'
-    
     delete:
       summary: 删除评论
       operationId: DeleteComment
@@ -311,3 +309,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeleteCommentResp'
+
+  /comments/replies/{comment_id}:
+    get:
+      summary: 获取某条评论的子评论列表
+      operationId: GetCommentReplies
+      security:
+        - Auth: []
+      parameters:
+        - name: comment_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: 评论ID
+        - name: page
+          in: query
+          schema:
+            type: integer
+            format: int32
+          description: 页码
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            format: int32
+          description: 每页数量
+      responses:  
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCommentRepliesResp'

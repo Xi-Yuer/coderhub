@@ -26,12 +26,18 @@ type (
 		ArticleId int64          `json:"article_id"` // 文章ID
 		Content   string         `json:"content"` // 评论内容
 		ParentId  int64          `json:"parent_id"` // 父评论ID
-		UserId    int64          `json:"user_id"` // 评论者ID
+		UserInfo  UserInfo       `json:"user_info"` // 评论者信息
 		CreatedAt int64          `json:"created_at"` // 创建时间
 		UpdatedAt int64          `json:"updated_at"` // 更新时间
 		Replies   []*Comment     `json:"replies"` // 子评论列表
 		LikeCount int32          `json:"like_count"` // 点赞数
 		Images    []CommentImage `json:"images"` // 评论图片列表
+	}
+	// 评论者信息
+	UserInfo {
+		UserId   int64  `json:"user_id"` // 用户ID
+		Username string `json:"username"` // 用户名
+		Avatar   string `json:"avatar"` // 头像
 	}
 	// 创建评论请求
 	CreateCommentReq {
@@ -75,6 +81,17 @@ type (
 	DeleteCommentReq {
 		CommentId int64 `path:"comment_id"` // 评论ID
 	}
+	// 获取某条评论的子评论列表请求
+	GetCommentRepliesReq {
+		CommentId int64 `path:"comment_id"` // 评论ID
+		Page      int32 `form:"page"` // 页码
+		PageSize  int32 `form:"page_size"` // 每页数量
+	}
+	// 获取某条评论的子评论列表响应
+	GetCommentRepliesResp {
+		Response
+		Data List `json:"data"` // 子评论列表
+	}
 	// 删除评论响应
 	DeleteCommentResp {
 		Response
@@ -104,6 +121,10 @@ service comment-api {
 	@doc "获取评论列表"
 	@handler GetComments
 	get /article/:article_id (GetCommentsReq) returns (GetCommentsResp)
+
+	@doc "获取某条评论的子评论列表"
+	@handler GetCommentReplies
+	get /replies/:comment_id (GetCommentRepliesReq) returns (GetCommentRepliesResp)
 
 	@doc "获取单个评论"
 	@handler GetComment

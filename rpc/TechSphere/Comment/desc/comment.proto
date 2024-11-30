@@ -10,6 +10,8 @@ service CommentService {
   rpc CreateComment(CreateCommentRequest) returns (CreateCommentResponse) {}
   // 获取评论列表
   rpc GetComments(GetCommentsRequest) returns (GetCommentsResponse) {}
+  // 获取某条评论的子评论列表
+  rpc GetCommentReplies(GetCommentRepliesRequest) returns (GetCommentRepliesResponse) {}
   // 获取单个评论详情
   rpc GetComment(GetCommentRequest) returns (GetCommentResponse) {}
   // 删除评论
@@ -22,12 +24,19 @@ message Comment {
   int64 article_id = 2;            // 文章ID
   string content = 3;              // 评论内容
   int64 parent_id = 4;             // 父评论ID，用于嵌套评论
-  int64 user_id = 5;               // 评论者ID
+  UserInfo user_info = 5;          // 评论者信息
   int64 created_at = 6;            // 创建时间
   int64 updated_at = 7;            // 更新时间
   repeated Comment replies = 8;     // 子评论列表
   int32 like_count = 9;            // 点赞数
   repeated CommentImage images = 10;  // 评论包含的图片列表
+}
+
+// 评论者信息
+message UserInfo {
+  int64 user_id = 1;                // 用户ID
+  string username = 2;              // 用户名
+  string avatar = 3;                 // 头像
 }
 
 // 创建评论请求
@@ -53,6 +62,18 @@ message GetCommentsRequest {
 
 message GetCommentsResponse {
   repeated Comment comments = 1;    // 评论列表
+  int32 total = 2;                 // 总评论数
+}
+
+// 获取某条评论的子评论列表请求
+message GetCommentRepliesRequest {
+  int64 comment_id = 1;            // 评论ID
+  int32 page = 2;                  // 页码
+  int32 page_size = 3;             // 每页数量
+}
+
+message GetCommentRepliesResponse {
+  repeated Comment replies = 1;    // 子评论列表
   int32 total = 2;                 // 总评论数
 }
 

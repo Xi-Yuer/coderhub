@@ -5,6 +5,7 @@ import (
 	"coderhub/rpc/Image/imageservice"
 	"coderhub/rpc/ImageRelation/imagerelationservice"
 	"coderhub/rpc/TechSphere/Comment/internal/config"
+	"coderhub/rpc/User/userservice"
 	"coderhub/shared/CacheDB"
 	"coderhub/shared/SQL"
 
@@ -15,6 +16,7 @@ type ServiceContext struct {
 	Config               config.Config
 	ImageRelationService imagerelationservice.ImageRelationService
 	ImageService         imageservice.ImageService
+	UserService          userservice.UserService
 	CommentRepository    repository.CommentRepository
 }
 
@@ -27,6 +29,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Config:               c,
 		ImageRelationService: imagerelationservice.NewImageRelationService(zrpc.MustNewClient(c.ImageRelationService)),
 		ImageService:         imageservice.NewImageService(zrpc.MustNewClient(c.ImageService)),
+		UserService:          userservice.NewUserService(zrpc.MustNewClient(c.UserService)),
 		CommentRepository:    repository.NewCommentRepository(SQL.NewGorm(), redisDB),
 	}
 }

@@ -35,6 +35,12 @@ func (s *CommentServiceServer) GetComments(ctx context.Context, in *comment.GetC
 	return l.GetComments(in)
 }
 
+// 获取某条评论的子评论列表
+func (s *CommentServiceServer) GetCommentReplies(ctx context.Context, in *comment.GetCommentRepliesRequest) (*comment.GetCommentRepliesResponse, error) {
+	l := logic.NewGetCommentRepliesLogic(ctx, s.svcCtx)
+	return l.GetCommentReplies(in)
+}
+
 // 获取单个评论详情
 func (s *CommentServiceServer) GetComment(ctx context.Context, in *comment.GetCommentRequest) (*comment.GetCommentResponse, error) {
 	l := logic.NewGetCommentLogic(ctx, s.svcCtx)

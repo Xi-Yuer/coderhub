@@ -25,7 +25,25 @@ func NewBatchGetUserByIDLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 // 批量获取用户信息
 func (l *BatchGetUserByIDLogic) BatchGetUserByID(in *user.BatchGetUserByIDRequest) (*user.BatchGetUserByIDResponse, error) {
-	// todo: add your logic here and delete this line
+	users, err := l.svcCtx.UserRepository.BatchGetUserByID(in.UserIds)
+	if err != nil {
+		return nil, err
+	}
 
-	return &user.BatchGetUserByIDResponse{}, nil
+	userInfos := make([]*user.UserInfo, len(users))
+	for i, val := range users {
+		userInfos[i] = &user.UserInfo{
+			UserId:    val.ID,
+			UserName:  val.UserName,
+			Avatar:    val.Avatar.String,
+			Email:     val.Email.String,
+			NickName:  val.NickName.String,
+			IsAdmin:   val.IsAdmin,
+			Status:    val.Status,
+			CreatedAt: val.CreatedAt.Unix(),
+			UpdatedAt: val.UpdatedAt.Unix(),
+		}
+	}
+
+	return &user.BatchGetUserByIDResponse{UserInfos: userInfos}, nil
 }

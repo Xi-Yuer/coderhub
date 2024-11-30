@@ -9,3 +9,8 @@ CommentService:
     Hosts:
       - etcd:2379
     Key: comment.rpc
+UserService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: user.rpc

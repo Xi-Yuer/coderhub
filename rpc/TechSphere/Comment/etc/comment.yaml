@@ -14,4 +14,9 @@ ImageService:
     Hosts:
       - etcd:2379
     Key: image.rpc
+UserService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: user.rpc
   

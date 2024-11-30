@@ -26,6 +26,7 @@ const (
 	UserService_CreateUser_FullMethodName            = "/user.UserService/CreateUser"
 	UserService_GetUserInfo_FullMethodName           = "/user.UserService/GetUserInfo"
 	UserService_GetUserInfoByUsername_FullMethodName = "/user.UserService/GetUserInfoByUsername"
+	UserService_BatchGetUserByID_FullMethodName      = "/user.UserService/BatchGetUserByID"
 	UserService_UpdateUserInfo_FullMethodName        = "/user.UserService/UpdateUserInfo"
 	UserService_ChangePassword_FullMethodName        = "/user.UserService/ChangePassword"
 	UserService_ResetPassword_FullMethodName         = "/user.UserService/ResetPassword"
@@ -45,6 +46,8 @@ type UserServiceClient interface {
 	// 获取用户信息
 	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
 	GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
+	// 批量获取用户信息
+	BatchGetUserByID(ctx context.Context, in *BatchGetUserByIDRequest, opts ...grpc.CallOption) (*BatchGetUserByIDResponse, error)
 	// 更新用户信息
 	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error)
 	// 修改密码
@@ -113,6 +116,16 @@ func (c *userServiceClient) GetUserInfoByUsername(ctx context.Context, in *GetUs
 	return out, nil
 }
 
+func (c *userServiceClient) BatchGetUserByID(ctx context.Context, in *BatchGetUserByIDRequest, opts ...grpc.CallOption) (*BatchGetUserByIDResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchGetUserByIDResponse)
+	err := c.cc.Invoke(ctx, UserService_BatchGetUserByID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateUserInfoResponse)
@@ -166,6 +179,8 @@ type UserServiceServer interface {
 	// 获取用户信息
 	GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error)
 	GetUserInfoByUsername(context.Context, *GetUserInfoByUsernameRequest) (*GetUserInfoResponse, error)
+	// 批量获取用户信息
+	BatchGetUserByID(context.Context, *BatchGetUserByIDRequest) (*BatchGetUserByIDResponse, error)
 	// 更新用户信息
 	UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*UpdateUserInfoResponse, error)
 	// 修改密码
@@ -198,6 +213,9 @@ func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *GetUserInfoR
 }
 func (UnimplementedUserServiceServer) GetUserInfoByUsername(context.Context, *GetUserInfoByUsernameRequest) (*GetUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfoByUsername not implemented")
+}
+func (UnimplementedUserServiceServer) BatchGetUserByID(context.Context, *BatchGetUserByIDRequest) (*BatchGetUserByIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BatchGetUserByID not implemented")
 }
 func (UnimplementedUserServiceServer) UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*UpdateUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserInfo not implemented")
@@ -322,6 +340,24 @@ func _UserService_GetUserInfoByUsername_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_BatchGetUserByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchGetUserByIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).BatchGetUserByID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_BatchGetUserByID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).BatchGetUserByID(ctx, req.(*BatchGetUserByIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_UpdateUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateUserInfoRequest)
 	if err := dec(in); err != nil {
@@ -420,6 +456,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserInfoByUsername",
 			Handler:    _UserService_GetUserInfoByUsername_Handler,
+		},
+		{
+			MethodName: "BatchGetUserByID",
+			Handler:    _UserService_BatchGetUserByID_Handler,
 		},
 		{
 			MethodName: "UpdateUserInfo",
