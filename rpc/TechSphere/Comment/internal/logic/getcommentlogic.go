@@ -32,16 +32,20 @@ func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.Ge
 	if err != nil {
 		return nil, err
 	}
-	// 获取图片关联
-	imageRelations, err := l.svcCtx.ImageRelationService.GetImagesByEntity(l.ctx, &imageRelation.GetImagesByEntityRequest{
-		EntityId:   in.CommentId,
+	// 评论ID
+	commentId := []int64{commentModel.ID}
+	// 获取与评论关联的所有图片
+	imageRelations, err := l.svcCtx.ImageRelationService.BatchGetImagesByEntity(l.ctx, &imageRelation.BatchGetImagesByEntityRequest{
+		EntityIds:  commentId,
 		EntityType: model.ImageRelationComment,
 	})
 	if err != nil {
 		return nil, err
 	}
+
 	images := make([]*comment.CommentImage, 0)
-	for _, val := range imageRelations.Images {
+	// 将图片关联转换为评论图片
+	for _, val := range imageRelations.Relations {
 		imageId := strconv.FormatInt(val.ImageId, 10)
 		images = append(images, &comment.CommentImage{
 			ImageId:      imageId,

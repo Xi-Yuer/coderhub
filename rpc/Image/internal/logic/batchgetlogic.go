@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"coderhub/model"
 	"coderhub/rpc/Image/image"
 	"coderhub/rpc/Image/internal/svc"
 
@@ -25,13 +24,13 @@ func NewBatchGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BatchGet
 	}
 }
 
-// 批量获取图片信息
+// BatchGet 批量获取图片信息
 func (l *BatchGetLogic) BatchGet(in *image.BatchGetRequest) (*image.BatchGetResponse, error) {
-	images, err := l.svcCtx.ImageRepository.BatchGetImagesByEntity(l.ctx, in.ImageIds, model.ImageRelationArticleContent)
+	images, err := l.svcCtx.ImageRepository.BatchGetImagesByID(l.ctx, in.ImageIds)
 	if err != nil {
 		return nil, err
 	}
-	imageInfos := make([]*image.ImageInfo, 0, len(images))
+	imageInfos := make([]*image.ImageInfo, 0)
 	for _, value := range images {
 		imageInfos = append(imageInfos, &image.ImageInfo{
 			ImageId:      value.ID,

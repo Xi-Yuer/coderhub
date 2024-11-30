@@ -1,5 +1,5 @@
 # 第 1 阶段：构建阶段
-FROM golang:1.21.1-alpine AS builder
+FROM golang:1.22-alpine3.19 AS builder
 # 设置 Go 模块代理
 ENV GOPROXY=https://goproxy.cn,direct
 
@@ -16,7 +16,7 @@ RUN go mod download
 RUN go build -o /app/bin/cmd ./api/User/user.go
 
 # 第 2 阶段：运行阶段（轻量级）
-FROM alpine:3.18
+FROM alpine:3.19
 
 RUN apk add --no-cache curl
 

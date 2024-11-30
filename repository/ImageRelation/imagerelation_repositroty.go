@@ -44,7 +44,7 @@ func (r *imageRelationRepository) BatchGetImagesByEntity(ctx context.Context, en
 	return imageRelations, r.DB.WithContext(ctx).Where("entity_id IN (?) AND entity_type = ?", entityIds, entityType).Find(&imageRelations).Error
 }
 
-// Delete 批量删除关联，根据实体ID、实体类型删除
+// DeleteByEntityID 批量删除关联，根据实体ID、实体类型删除
 func (r *imageRelationRepository) DeleteByEntityID(ctx context.Context, entityID int64, entityType string) error {
 	return r.DB.WithContext(ctx).Where("entity_id = ? AND entity_type = ?", entityID, entityType).Delete(&model.ImageRelation{}).Error
 }

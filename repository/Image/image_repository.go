@@ -20,8 +20,8 @@ type ImageRepository interface {
 	Delete(ctx context.Context, id int64) error
 	// ListByEntityID 获取关联实体的图片列表
 	ListByEntityID(ctx context.Context, entityID int64, entityType string) ([]model.Image, int64, error)
-	// BatchGetImagesByEntity 批量获取图片关联，根据实体ID列表、实体类型列表获取
-	BatchGetImagesByEntity(ctx context.Context, entityIds []int64, entityType string) ([]model.Image, error)
+	// BatchGetImagesByID 批量获取图片关联，根据实体ID列表、实体类型列表获取
+	BatchGetImagesByID(ctx context.Context, ids []int64) ([]model.Image, error)
 }
 
 var (
@@ -84,7 +84,7 @@ func (r *imageRepository) ListByEntityID(ctx context.Context, entityID int64, en
 	return images, total, nil
 }
 
-func (r *imageRepository) BatchGetImagesByEntity(ctx context.Context, entityIds []int64, entityType string) ([]model.Image, error) {
+func (r *imageRepository) BatchGetImagesByID(ctx context.Context, ids []int64) ([]model.Image, error) {
 	var images []model.Image
-	return images, r.DB.WithContext(ctx).Where("id IN (?)", entityIds).Find(&images).Error
+	return images, r.DB.WithContext(ctx).Where("id IN (?)", ids).Find(&images).Error
 }

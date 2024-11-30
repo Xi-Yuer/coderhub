@@ -25,21 +25,25 @@ func NewBatchGetImagesByEntityLogic(ctx context.Context, svcCtx *svc.ServiceCont
 	}
 }
 
-// 批量获取图片关联，根据实体ID列表、实体类型列表获取
+// BatchGetImagesByEntity 批量获取图片，根据实体ID列表、实体类型列表获取
 func (l *BatchGetImagesByEntityLogic) BatchGetImagesByEntity(in *imageRelation.BatchGetImagesByEntityRequest) (*imageRelation.BatchGetImagesByEntityResponse, error) {
+	l.Logger.Infof("获取实体图片关系，实体IDs: %v, 实体类型: %s", in.EntityIds, in.EntityType)
+	
 	imageRelations, err := l.svcCtx.ImageRelationRepository.BatchGetImagesByEntity(l.ctx, in.EntityIds, in.EntityType)
 	if err != nil {
 		return nil, err
 	}
-
+	
+	l.Logger.Infof("查询到的图片关系数量: %d", len(imageRelations))
+	
 	// 收集所有图片ID
 	imageIds := make([]int64, len(imageRelations))
 	for i, rel := range imageRelations {
-		imageIds[i] = rel.ImageID
+			imageIds[i] = rel.ImageID
 	}
 
 	// 批量获取图片详细信息
-	images, err := l.svcCtx.ImageRepository.BatchGetImagesByEntity(l.ctx, imageIds, in.EntityType)
+	images, err := l.svcCtx.ImageRepository.BatchGetImagesByID(l.ctx, imageIds)
 	if err != nil {
 		return nil, err
 	}

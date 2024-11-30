@@ -54,27 +54,30 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 		commentIds[i] = val.ID
 	}
 
-	// 批量获取所有评论的图片关联
+	// 在获取图片关联之前添加日志
+	l.Logger.Infof("正在获取评论的图片关联，评论IDs: %v", commentIds)
+
 	imageRelations, err := l.svcCtx.ImageRelationService.BatchGetImagesByEntity(l.ctx, &imageRelation.BatchGetImagesByEntityRequest{
 		EntityIds:  commentIds,
 		EntityType: model.ImageRelationComment,
 	})
 	if err != nil {
-		// 添加错误日志
 		l.Logger.Errorf("获取评论图片失败: %v", err)
+		return make([]*comment.Comment, 0) // 返回空切片而不是错误
 	}
+
+	l.Logger.Infof("获取到的图片关联数量: %d", len(imageRelations.Relations))
 
 	// 构建评论ID到图片列表的映射
 	commentImages := make(map[int64][]*comment.CommentImage)
-	if err == nil {
-		for _, img := range imageRelations.Relations {
-			imageId := strconv.FormatInt(img.ImageId, 10)
-			commentImages[img.EntityId] = append(commentImages[img.EntityId], &comment.CommentImage{
-				ImageId:      imageId,
-				Url:          img.Url,
-				ThumbnailUrl: img.ThumbnailUrl,
-			})
-		}
+	for _, img := range imageRelations.Relations {
+		l.Logger.Infof("处理图片关联: EntityId=%d, ImageId=%d", img.EntityId, img.ImageId)
+		imageId := strconv.FormatInt(img.ImageId, 10)
+		commentImages[img.EntityId] = append(commentImages[img.EntityId], &comment.CommentImage{
+			ImageId:      imageId,
+			Url:          img.Url,
+			ThumbnailUrl: img.ThumbnailUrl,
+		})
 	}
 
 	rootComments := make([]*comment.Comment, len(comments))

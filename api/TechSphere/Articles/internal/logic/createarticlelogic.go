@@ -88,7 +88,7 @@ func (l *CreateArticleLogic) prepareArticleData(req *types.CreateArticleReq, use
 		Content:      req.Content,
 		Summary:      l.generateSummary(req.Summary, req.Content),
 		ImageIds:     nil,
-		CoverImageId: "",
+		CoverImageId: req.CoverImageID,
 		AuthorId:     userId,
 		Tags:         req.Tags,
 		Status:       req.Status,
