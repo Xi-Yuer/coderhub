@@ -122,6 +122,13 @@ services:
       - minio-data:/data # 使用 Docker 卷来持久化数据
       - ./minio/config:/root/.minio # 持久化 MinIO 配置
     command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+        - coderhub-network
   #  Api 服务
   user-api:
     build:
@@ -270,6 +277,7 @@ services:
       - etcd
       - user-service
       - articles-service
+      - minio
     networks:
       - coderhub-network
     healthcheck:
