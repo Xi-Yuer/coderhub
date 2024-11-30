@@ -3,6 +3,7 @@ package repository
 import (
 	"coderhub/model"
 	"context"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -41,7 +42,27 @@ func (r *imageRelationRepository) BatchDelete(ctx context.Context, ids []int64) 
 // BatchGetImagesByEntity 批量获取图片关联，根据实体ID列表、实体类型列表获取
 func (r *imageRelationRepository) BatchGetImagesByEntity(ctx context.Context, entityIds []int64, entityType string) ([]model.ImageRelation, error) {
 	var imageRelations []model.ImageRelation
-	return imageRelations, r.DB.WithContext(ctx).Where("entity_id IN (?) AND entity_type = ?", entityIds, entityType).Find(&imageRelations).Error
+	
+	// 添加SQL查询日志
+	query := r.DB.WithContext(ctx).
+		Where("entity_id IN (?) AND entity_type = ?", entityIds, entityType)
+	
+	// 打印SQL语句
+	sql := query.Statement.SQL.String()
+	fmt.Printf("执行的SQL: %s\n参数: entityIds=%v, entityType=%s\n", sql, entityIds, entityType)
+	
+	err := query.Find(&imageRelations).Error
+	if err != nil {
+		return nil, err
+	}
+	
+	// 打印查询结果
+	fmt.Printf("查询到的记录数: %d\n", len(imageRelations))
+	for i, rel := range imageRelations {
+		fmt.Printf("记录 %d: entity_id=%d, image_id=%d\n", i+1, rel.EntityID, rel.ImageID)
+	}
+	
+	return imageRelations, nil
 }
 
 // DeleteByEntityID 批量删除关联，根据实体ID、实体类型删除

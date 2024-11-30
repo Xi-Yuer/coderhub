@@ -67,7 +67,7 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 	rootComments := make([]*types.Comment, len(comments))
 	for i, val := range comments {
 		// 获取图片
-		images := make([]types.CommentImage, len(val.Images))
+		images := make([]types.CommentImage, 0, len(val.Images))
 		for _, image := range val.Images {
 			images = append(images, types.CommentImage{
 				ImageId:      image.ImageId,

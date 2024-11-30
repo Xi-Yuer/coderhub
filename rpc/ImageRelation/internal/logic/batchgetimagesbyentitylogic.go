@@ -36,10 +36,17 @@ func (l *BatchGetImagesByEntityLogic) BatchGetImagesByEntity(in *imageRelation.B
 	
 	l.Logger.Infof("查询到的图片关系数量: %d", len(imageRelations))
 	
+	// 如果没有找到图片关系，直接返回空切片
+	if len(imageRelations) == 0 {
+		return &imageRelation.BatchGetImagesByEntityResponse{
+			Relations: make([]*imageRelation.ImageRelation, 0),
+		}, nil
+	}
+	
 	// 收集所有图片ID
 	imageIds := make([]int64, len(imageRelations))
 	for i, rel := range imageRelations {
-			imageIds[i] = rel.ImageID
+		imageIds[i] = rel.ImageID
 	}
 
 	// 批量获取图片详细信息
@@ -55,18 +62,19 @@ func (l *BatchGetImagesByEntityLogic) BatchGetImagesByEntity(in *imageRelation.B
 	}
 
 	// 转换类型并填充图片详细信息
-	relations := make([]*imageRelation.ImageRelation, len(imageRelations))
-	for i, rel := range imageRelations {
-		img := imageMap[rel.ImageID]
-		relations[i] = &imageRelation.ImageRelation{
-			Id:           rel.ID,
-			ImageId:      rel.ImageID,
-			EntityId:     rel.EntityID,
-			EntityType:   rel.EntityType,
-			Url:          img.URL,
-			ThumbnailUrl: img.ThumbnailURL,
-			Sort:         rel.Sort,
-			CreatedAt:    strconv.FormatInt(rel.CreatedAt.Unix(), 10),
+	relations := make([]*imageRelation.ImageRelation, 0, len(imageRelations)) // 使用0初始容量
+	for _, rel := range imageRelations {
+		if img, ok := imageMap[rel.ImageID]; ok {
+			relations = append(relations, &imageRelation.ImageRelation{
+				Id:           rel.ID,
+				ImageId:      rel.ImageID,
+				EntityId:     rel.EntityID,
+				EntityType:   rel.EntityType,
+				Url:          img.URL,
+				ThumbnailUrl: img.ThumbnailURL,
+				Sort:         rel.Sort,
+				CreatedAt:    strconv.FormatInt(rel.CreatedAt.Unix(), 10),
+			})
 		}
 	}
 
