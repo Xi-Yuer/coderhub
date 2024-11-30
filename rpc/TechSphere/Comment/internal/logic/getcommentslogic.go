@@ -95,11 +95,16 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 	}
 	// 构建用户信息映射
 	userInfos := make(map[int64]*comment.UserInfo)
-	for _, val := range users.UserInfos {
-		userInfos[val.UserId] = &comment.UserInfo{
-			UserId:   val.UserId,
-			Username: val.UserName,
-			Avatar:   val.Avatar,
+	if users != nil && len(users.UserInfos) > 0 {
+		for _, user := range users.UserInfos {
+			if user != nil {
+				l.Logger.Infof("映射用户信息: userId=%d, userName=%s", user.UserId, user.UserName)
+				userInfos[user.UserId] = &comment.UserInfo{
+					UserId:   user.UserId,
+					Username: user.UserName,
+					Avatar:   user.Avatar,
+				}
+			}
 		}
 	}
 

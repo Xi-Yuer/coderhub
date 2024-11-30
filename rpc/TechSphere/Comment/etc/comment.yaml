@@ -18,5 +18,5 @@ UserService:
   Etcd:
     Hosts:
       - etcd:2379
-    Key: user.rpc
+    Key: User.rpc
   

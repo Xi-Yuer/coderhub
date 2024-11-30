@@ -81,7 +81,11 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 			ArticleId: val.ArticleId,
 			Content:   val.Content,
 			ParentId:  val.ParentId,
-			UserInfo:  types.UserInfo{},
+			UserInfo: types.UserInfo{
+				UserId:   val.UserInfo.UserId,
+				Username: val.UserInfo.Username,
+				Avatar:   val.UserInfo.Avatar,
+			},
 			CreatedAt: val.CreatedAt,
 			UpdatedAt: val.UpdatedAt,
 			Replies:   l.buildTree(val.Replies),

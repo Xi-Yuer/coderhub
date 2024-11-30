@@ -7,7 +7,6 @@ import (
 	"coderhub/api/TechSphere/Comment/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/TechSphere/Comment/commentservice"
-	"coderhub/rpc/User/userservice"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -39,6 +38,25 @@ func (l *GetCommentLogic) GetComment(req *types.GetCommentReq) (resp *types.GetC
 }
 
 func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse) (*types.GetCommentResp, error) {
+	if comment == nil {
+		return &types.GetCommentResp{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpNotFound,
+				Message: conf.HttpMessage.MsgFailed,
+			},
+		}, nil
+	}
+
+	// 构建用户信息，处理空值情况
+	var userInfo *types.UserInfo
+	if comment.Comment.UserInfo != nil {
+		userInfo = &types.UserInfo{
+			UserId:   comment.Comment.UserInfo.UserId,
+			Username: comment.Comment.UserInfo.Username,
+			Avatar:   comment.Comment.UserInfo.Avatar,
+		}
+	}
+
 	// 获取图片
 	images := make([]types.CommentImage, len(comment.Comment.Images))
 	for i, image := range comment.Comment.Images {
@@ -48,29 +66,18 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 			ThumbnailUrl: image.ThumbnailUrl,
 		}
 	}
-	// 获取用户信息
-	user, err := l.svcCtx.UserService.GetUserInfo(l.ctx, &userservice.GetUserInfoRequest{
-		UserId: comment.Comment.UserInfo.UserId,
-	})
-	if err != nil {
-		return l.errorResp(err)
-	}
-	userInfo := types.UserInfo{
-		UserId:   user.UserId,
-		Username: user.UserName,
-		Avatar:   user.Avatar,
-	}
+
 	return &types.GetCommentResp{
 		Response: types.Response{
 			Code:    conf.HttpCode.HttpStatusOK,
-			Message: conf.HttpMessage.MsgOK,
+				Message: conf.HttpMessage.MsgOK,
 		},
 		Data: types.Comment{
 			Id:        comment.Comment.Id,
 			ArticleId: comment.Comment.ArticleId,
 			Content:   comment.Comment.Content,
 			ParentId:  comment.Comment.ParentId,
-			UserInfo:  userInfo,
+			UserInfo:  *userInfo,
 			CreatedAt: comment.Comment.CreatedAt,
 			UpdatedAt: comment.Comment.UpdatedAt,
 			Replies:   nil,
