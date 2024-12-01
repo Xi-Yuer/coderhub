@@ -47,50 +47,43 @@ func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.
 	}
 
 	// 获取图片关联（文章配图）
-	images, err := l.svcCtx.ImageRelationService.GetImagesByEntity(l.ctx, &imageRelation.GetImagesByEntityRequest{
-		EntityId:   article.ID,
+	images, err := l.svcCtx.ImageRelationService.BatchGetImagesByEntity(l.ctx, &imageRelation.BatchGetImagesByEntityRequest{
+		EntityIds:  []int64{article.ID},
 		EntityType: model.ImageRelationArticleContent,
 	})
 	if err != nil {
 		l.Logger.Errorf("获取图片关联失败: %v", err)
 		return nil, fmt.Errorf("获取图片关联失败: %v", err)
 	}
-	l.Logger.Info("RPC: 获取文章配图成功, 配图数量:", len(images.Images))
+	l.Logger.Info("RPC: 获取文章配图成功, 配图数量:", len(images.Relations))
 	// 获取图片关联（文章封面）
-	coverImages, err := l.svcCtx.ImageRelationService.GetImagesByEntity(l.ctx, &imageRelation.GetImagesByEntityRequest{
-		EntityId:   article.ID,
+	coverImages, err := l.svcCtx.ImageRelationService.BatchGetImagesByEntity(l.ctx, &imageRelation.BatchGetImagesByEntityRequest{
+		EntityIds:  []int64{article.ID},
 		EntityType: model.ImageRelationArticleCover,
 	})
 	if err != nil {
 		l.Logger.Errorf("获取图片关联失败: %v", err)
 		return nil, fmt.Errorf("获取图片关联失败: %v", err)
 	}
-	l.Logger.Info("RPC: 获取文章封面成功, 封面数量:", len(coverImages.Images))
+	l.Logger.Info("RPC: 获取文章封面成功, 封面数量:", len(coverImages.Relations))
 	// 获取文章配图
 	articleImages := make([]*articles.Image, 0)
-	if len(images.Images) > 0 {
-		// 只有当图片数量大于1时才处理文章配图
-		if len(images.Images) > 1 {
-			for _, image := range images.Images[1:] {
-				imageId := strconv.FormatInt(image.ImageId, 10)
-				articleImages = append(articleImages, &articles.Image{
-					ImageId:      imageId,
-					Url:          image.Url,
-					ThumbnailUrl: image.ThumbnailUrl,
-					Width:        image.Width,
-					Height:       image.Height,
-				})
-			}
+	if len(images.Relations) > 0 {
+		for _, image := range images.Relations {
+			imageId := strconv.FormatInt(image.ImageId, 10)
+			articleImages = append(articleImages, &articles.Image{
+				ImageId:      imageId,
+				Url:          image.Url,
+				ThumbnailUrl: image.ThumbnailUrl,
+			})
 		}
 	}
 	var coverImage *articles.Image
-	if len(coverImages.Images) > 0 {
+	if len(coverImages.Relations) > 0 {
 		coverImage = &articles.Image{
-			ImageId:      strconv.FormatInt(coverImages.Images[0].ImageId, 10),
-			Url:          coverImages.Images[0].Url,
-			ThumbnailUrl: coverImages.Images[0].ThumbnailUrl,
-			Width:        coverImages.Images[0].Width,
-			Height:       coverImages.Images[0].Height,
+			ImageId:      strconv.FormatInt(coverImages.Relations[0].ImageId, 10),
+			Url:          coverImages.Relations[0].Url,
+			ThumbnailUrl: coverImages.Relations[0].ThumbnailUrl,
 		}
 	}
 
