@@ -14,12 +14,12 @@ type DeleteResponse struct {
 }
 
 type GetRequest struct {
-	ImageId int64 `json:"image_id"` // 图片ID
+	ImageId int64 `path:"image_id"` // 图片ID
 }
 
 type GetResponse struct {
 	Response
-	Data ImageInfo `json:"data"` // 图片详情
+	Data *ImageInfo `json:"data"` // 图片详情
 }
 
 type HealthResponse struct {

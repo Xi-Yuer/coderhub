@@ -43,7 +43,7 @@ func (l *GetLogic) successResp(response *image.ImageInfo) (*types.GetResponse, e
 			Code:    conf.HttpCode.HttpStatusOK,
 			Message: conf.HttpMessage.MsgOK,
 		},
-		Data: types.ImageInfo{
+		Data: &types.ImageInfo{
 			ImageId:      response.ImageId,
 			BucketName:   response.BucketName,
 			ObjectName:   response.ObjectName,

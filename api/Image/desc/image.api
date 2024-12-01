@@ -42,11 +42,11 @@ type (
 		Data bool `json:"success"` // 删除是否成功
 	}
 	GetRequest {
-		ImageId int64 `json:"image_id"` // 图片ID
+		ImageId int64 `path:"image_id"` // 图片ID
 	}
 	GetResponse {
 		Response
-		Data ImageInfo `json:"data"` // 图片详情
+		Data *ImageInfo `json:"data"` // 图片详情
 	}
 	ListByUserRequest {
 		UserId   int64 `json:"user_id"` // 用户ID
@@ -91,7 +91,7 @@ service Image {
 
 	@doc "获取图片信息"
 	@handler Get
-	get /get (GetRequest) returns (GetResponse)
+	get /get/:image_id (GetRequest) returns (GetResponse)
 
 	@doc "获取用户图片列表"
 	@handler ListByUser

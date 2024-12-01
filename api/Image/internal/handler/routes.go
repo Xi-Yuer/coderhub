@@ -35,7 +35,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// 获取图片信息
 				Method:  http.MethodGet,
-				Path:    "/get",
+				Path:    "/get/:image_id",
 				Handler: GetHandler(serverCtx),
 			},
 			{
