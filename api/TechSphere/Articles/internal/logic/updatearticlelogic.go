@@ -65,6 +65,7 @@ func (l *UpdateArticleLogic) errorResp(err error) *types.UpdateArticleResp {
 			Code:    conf.HttpCode.HttpBadRequest,
 			Message: err.Error(),
 		},
+		Data: false,
 	}
 }
 
@@ -75,6 +76,7 @@ func (l *UpdateArticleLogic) successResp() *types.UpdateArticleResp {
 			Code:    conf.HttpCode.HttpStatusOK,
 			Message: conf.HttpMessage.MsgOK,
 		},
+		Data: true,
 	}
 }
 
