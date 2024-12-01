@@ -46,7 +46,7 @@ func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.
 		return nil, fmt.Errorf("文章不存在")
 	}
 
-	// 获取图片关联
+	// 获取图片关联（文章配图）
 	images, err := l.svcCtx.ImageRelationService.GetImagesByEntity(l.ctx, &imageRelation.GetImagesByEntityRequest{
 		EntityId:   article.ID,
 		EntityType: model.ImageRelationArticleContent,
@@ -55,29 +55,43 @@ func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.
 		l.Logger.Errorf("获取图片关联失败: %v", err)
 		return nil, fmt.Errorf("获取图片关联失败: %v", err)
 	}
-	// 获取封面图片
-	var coverImage *articles.Image
-	if len(images.Images) > 0 {
-		imageId := strconv.FormatInt(images.Images[0].ImageId, 10)
-		coverImage = &articles.Image{
-			ImageId:      imageId,
-			Url:          images.Images[0].Url,
-			ThumbnailUrl: images.Images[0].ThumbnailUrl,
-			Width:        images.Images[0].Width,
-			Height:       images.Images[0].Height,
-		}
+	l.Logger.Info("RPC: 获取文章配图成功, 配图数量:", len(images.Images))
+	// 获取图片关联（文章封面）
+	coverImages, err := l.svcCtx.ImageRelationService.GetImagesByEntity(l.ctx, &imageRelation.GetImagesByEntityRequest{
+		EntityId:   article.ID,
+		EntityType: model.ImageRelationArticleCover,
+	})
+	if err != nil {
+		l.Logger.Errorf("获取图片关联失败: %v", err)
+		return nil, fmt.Errorf("获取图片关联失败: %v", err)
 	}
+	l.Logger.Info("RPC: 获取文章封面成功, 封面数量:", len(coverImages.Images))
 	// 获取文章配图
 	articleImages := make([]*articles.Image, 0)
-	for _, image := range images.Images[1:] {
-		imageId := strconv.FormatInt(image.ImageId, 10)
-		articleImages = append(articleImages, &articles.Image{
-			ImageId:      imageId,
-			Url:          image.Url,
-			ThumbnailUrl: image.ThumbnailUrl,
-			Width:        image.Width,
-			Height:       image.Height,
-		})
+	if len(images.Images) > 0 {
+		// 只有当图片数量大于1时才处理文章配图
+		if len(images.Images) > 1 {
+			for _, image := range images.Images[1:] {
+				imageId := strconv.FormatInt(image.ImageId, 10)
+				articleImages = append(articleImages, &articles.Image{
+					ImageId:      imageId,
+					Url:          image.Url,
+					ThumbnailUrl: image.ThumbnailUrl,
+					Width:        image.Width,
+					Height:       image.Height,
+				})
+			}
+		}
+	}
+	var coverImage *articles.Image
+	if len(coverImages.Images) > 0 {
+		coverImage = &articles.Image{
+			ImageId:      strconv.FormatInt(coverImages.Images[0].ImageId, 10),
+			Url:          coverImages.Images[0].Url,
+			ThumbnailUrl: coverImages.Images[0].ThumbnailUrl,
+			Width:        coverImages.Images[0].Width,
+			Height:       coverImages.Images[0].Height,
+		}
 	}
 
 	// 转换为响应格式

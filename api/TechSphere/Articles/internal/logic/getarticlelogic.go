@@ -68,11 +68,26 @@ func (l *GetArticleLogic) getArticle(articleId int64) (*articles.GetArticleRespo
 }
 
 func (l *GetArticleLogic) convertToArticleType(article *articles.Article) *types.Article {
+	if article == nil {
+		return nil
+	}
+
 	// 将图片模型转换为图片URL
 	imageUrls := make([]string, 0)
-	for _, image := range article.Images {
-		imageUrls = append(imageUrls, image.Url)
+	if article.Images != nil {
+		for _, image := range article.Images {
+			if image != nil {
+				imageUrls = append(imageUrls, image.Url)
+			}
+		}
 	}
+	l.Logger.Info("API: 获取文章配图成功, 配图数量:", len(imageUrls))
+
+	coverImageUrl := ""
+	if article.CoverImage != nil {
+		coverImageUrl = article.CoverImage.Url
+	}
+	l.Logger.Info("API: 获取文章封面成功, 封面URL:", coverImageUrl)
 
 	return &types.Article{
 		Id:           article.Id,
@@ -80,7 +95,7 @@ func (l *GetArticleLogic) convertToArticleType(article *articles.Article) *types
 		Title:        article.Title,
 		Content:      article.Content,
 		Summary:      article.Summary,
-		CoverImage:   article.CoverImage.Url,
+		CoverImage:   coverImageUrl,
 		ImageUrls:    imageUrls,
 		AuthorId:     article.AuthorId,
 		Tags:         article.Tags,

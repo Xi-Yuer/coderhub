@@ -81,13 +81,13 @@ func (l *CreateArticleLogic) validateArticleData(req *types.CreateArticleReq) er
 }
 
 func (l *CreateArticleLogic) prepareArticleData(req *types.CreateArticleReq, userId int64) *articles.CreateArticleRequest {
-
+	l.Logger.Info("API: 准备文章数据, 文章类型:", req.Type, "标题:", req.Title, "内容:", req.Content, "摘要:", req.Summary, "配图ID:", req.ImageIds, "封面ID:", req.CoverImageID, "作者ID:", userId, "标签:", req.Tags, "状态:", req.Status)
 	return &articles.CreateArticleRequest{
 		Type:         req.Type,
 		Title:        req.Title,
 		Content:      req.Content,
 		Summary:      l.generateSummary(req.Summary, req.Content),
-		ImageIds:     nil,
+		ImageIds:     req.ImageIds,
 		CoverImageId: req.CoverImageID,
 		AuthorId:     userId,
 		Tags:         req.Tags,

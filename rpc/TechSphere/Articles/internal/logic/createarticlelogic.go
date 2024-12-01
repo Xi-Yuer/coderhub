@@ -76,7 +76,7 @@ func (l *CreateArticleLogic) CreateArticle(in *articles.CreateArticleRequest) (*
 		Status:   in.Status,
 	}
 
-	// 获取封面图片并创建封面图片关联
+	// 创建封面图片关联
 	coverImageRelation := &model.ImageRelation{
 		ImageID:    coverImageId,
 		EntityID:   articleID,
@@ -84,7 +84,7 @@ func (l *CreateArticleLogic) CreateArticle(in *articles.CreateArticleRequest) (*
 		Sort:       0,
 	}
 
-	// 处理正文配图关联
+	// 创建正文配图关联
 	imageRelations := make([]*model.ImageRelation, len(in.ImageIds))
 	for i, imageId := range in.ImageIds {
 		imageIdInt, err := strconv.ParseInt(imageId, 10, 64)
@@ -119,6 +119,7 @@ func (l *CreateArticleLogic) CreateArticle(in *articles.CreateArticleRequest) (*
 	}); err != nil {
 		return nil, fmt.Errorf("保存图片关联失败: %w", err)
 	}
+	l.Logger.Info("RPC: 保存图片关联成功, 图片关联数量:", len(imageRelationReq))
 
 	// 保存文章
 	if err := l.svcCtx.ArticleRepository.CreateArticle(article); err != nil {
