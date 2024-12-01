@@ -86,11 +86,12 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 				Username: val.UserInfo.Username,
 				Avatar:   val.UserInfo.Avatar,
 			},
-			CreatedAt: val.CreatedAt,
-			UpdatedAt: val.UpdatedAt,
-			Replies:   l.buildTree(val.Replies),
-			LikeCount: val.LikeCount,
-			Images:    images,
+			CreatedAt:    val.CreatedAt,
+			UpdatedAt:    val.UpdatedAt,
+			Replies:      l.buildTree(val.Replies),
+			RepliesCount: val.RepliesCount,
+			LikeCount:    val.LikeCount,
+			Images:       images,
 		}
 	}
 	return rootComments

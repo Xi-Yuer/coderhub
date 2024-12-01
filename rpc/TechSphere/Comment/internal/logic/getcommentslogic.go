@@ -122,6 +122,7 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 			ParentId:  val.ParentID,
 			UserInfo:  userInfos[val.UserID],
 			Replies:   l.buildTree(val.Replies),
+			RepliesCount: int64(val.ReplyCount),
 			LikeCount: val.LikeCount,
 			Images:    commentImages[val.ID],
 			CreatedAt: val.CreatedAt.Unix(),

@@ -70,19 +70,20 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 	return &types.GetCommentResp{
 		Response: types.Response{
 			Code:    conf.HttpCode.HttpStatusOK,
-				Message: conf.HttpMessage.MsgOK,
+			Message: conf.HttpMessage.MsgOK,
 		},
 		Data: types.Comment{
-			Id:        comment.Comment.Id,
-			ArticleId: comment.Comment.ArticleId,
-			Content:   comment.Comment.Content,
-			ParentId:  comment.Comment.ParentId,
-			UserInfo:  *userInfo,
-			CreatedAt: comment.Comment.CreatedAt,
-			UpdatedAt: comment.Comment.UpdatedAt,
-			Replies:   nil,
-			LikeCount: comment.Comment.LikeCount,
-			Images:    images,
+			Id:           comment.Comment.Id,
+			ArticleId:    comment.Comment.ArticleId,
+			Content:      comment.Comment.Content,
+			ParentId:     comment.Comment.ParentId,
+			UserInfo:     *userInfo,
+			CreatedAt:    comment.Comment.CreatedAt,
+			UpdatedAt:    comment.Comment.UpdatedAt,
+			Replies:      nil,
+			RepliesCount: comment.Comment.RepliesCount,
+			LikeCount:    comment.Comment.LikeCount,
+			Images:       images,
 		},
 	}, nil
 }

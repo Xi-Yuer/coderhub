@@ -54,11 +54,12 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(req *types.GetCommentRepliesR
 				Username: val.UserInfo.Username,
 				Avatar:   val.UserInfo.Avatar,
 			},
-			CreatedAt: val.CreatedAt,
-			UpdatedAt: val.UpdatedAt,
-			Replies:   nil,
-			LikeCount: val.LikeCount,
-			Images:    images,
+			CreatedAt:    val.CreatedAt,
+			UpdatedAt:    val.UpdatedAt,
+			Replies:      nil,
+			RepliesCount: val.RepliesCount,
+			LikeCount:    val.LikeCount,
+			Images:       images,
 		}
 	}
 
