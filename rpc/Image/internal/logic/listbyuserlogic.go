@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"time"
 
 	"coderhub/rpc/Image/image"
 	"coderhub/rpc/Image/internal/svc"
@@ -25,7 +26,7 @@ func NewListByUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListBy
 
 // ListByUser 获取用户图片列表
 func (l *ListByUserLogic) ListByUser(in *image.ListByUserRequest) (*image.ListByUserResponse, error) {
-	images, total, err := l.svcCtx.ImageRepository.ListByEntityID(l.ctx, in.UserId, "user")
+	images, total, err := l.svcCtx.ImageRepository.ListByUserID(l.ctx, in.UserId, in.Page, in.PageSize)
 	if err != nil {
 		return nil, err
 	}
@@ -41,6 +42,10 @@ func (l *ListByUserLogic) ListByUser(in *image.ListByUserRequest) (*image.ListBy
 			Size:         v.Size,
 			Width:        v.Width,
 			Height:       v.Height,
+			UploadIp:     v.UploadIP,
+			UserId:       v.UserID,
+			Status:       v.Status,
+			CreatedAt:    v.CreatedAt.Format(time.DateTime),
 		})
 	}
 

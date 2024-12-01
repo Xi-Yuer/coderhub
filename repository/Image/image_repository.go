@@ -20,6 +20,8 @@ type ImageRepository interface {
 	Delete(ctx context.Context, id int64) error
 	// ListByEntityID 获取关联实体的图片列表
 	ListByEntityID(ctx context.Context, entityID int64, entityType string) ([]model.Image, int64, error)
+	// ListByUserID 获取用户上传的图片列表
+	ListByUserID(ctx context.Context, userID int64, page, pageSize int32) ([]model.Image, int64, error)
 	// BatchGetImagesByID 批量获取图片关联，根据实体ID列表、实体类型列表获取
 	BatchGetImagesByID(ctx context.Context, ids []int64) ([]model.Image, error)
 }
@@ -78,6 +80,22 @@ func (r *imageRepository) ListByEntityID(ctx context.Context, entityID int64, en
 		Where("image_relations.entity_id = ? AND image_relations.entity_type = ?", entityID, entityType).
 		Order("image_relations.sort ASC").
 		Find(&images).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	return images, total, nil
+}
+
+func (r *imageRepository) ListByUserID(ctx context.Context, userID int64, page, pageSize int32) ([]model.Image, int64, error) {
+	var images []model.Image
+	var total int64
+	err := r.DB.WithContext(ctx).
+		Model(&model.Image{}).
+		Where("user_id = ?", userID).
+		Offset(int((page - 1) * pageSize)).
+		Limit(int(pageSize)).
+		Find(&images).
+		Count(&total).Error
 	if err != nil {
 		return nil, 0, err
 	}
