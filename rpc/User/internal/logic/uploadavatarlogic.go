@@ -48,8 +48,10 @@ func (l *UploadAvatarLogic) UploadAvatar(in *user.UploadAvatarRequest) (*user.Up
 
 	// 上传图片
 	response, err := l.svcCtx.ImageService.Upload(l.ctx, &imageservice.UploadRequest{
-		UserId: in.UserId,
-		File:   in.File,
+		File:        in.File,
+		Filename:    in.Filename,
+		UserId:      in.UserId,
+		ContentType: in.ContentType,
 	})
 	if err != nil {
 		return nil, err

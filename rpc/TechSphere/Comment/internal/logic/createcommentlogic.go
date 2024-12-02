@@ -66,7 +66,7 @@ func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*c
 	// 创建评论
 	if err := l.svcCtx.CommentRepository.Create(l.ctx, commentModel); err != nil {
 		// 事务回滚
-		l.svcCtx.ImageRelationService.BatchDeleteRelation(l.ctx, &imageRelation.BatchDeleteRelationRequest{
+		_, _ = l.svcCtx.ImageRelationService.BatchDeleteRelation(l.ctx, &imageRelation.BatchDeleteRelationRequest{
 			Ids: []int64{CommentID},
 		})
 		return nil, err

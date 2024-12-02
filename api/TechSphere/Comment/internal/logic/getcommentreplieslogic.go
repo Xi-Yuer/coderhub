@@ -16,7 +16,7 @@ type GetCommentRepliesLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 获取某条评论的子评论列表
+// NewGetCommentRepliesLogic 获取某条评论的子评论列表
 func NewGetCommentRepliesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCommentRepliesLogic {
 	return &GetCommentRepliesLogic{
 		Logger: logx.WithContext(ctx),
@@ -28,8 +28,8 @@ func NewGetCommentRepliesLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 func (l *GetCommentRepliesLogic) GetCommentReplies(req *types.GetCommentRepliesReq) (resp *types.GetCommentRepliesResp, err error) {
 	reply, err := l.svcCtx.CommentService.GetCommentReplies(l.ctx, &comment.GetCommentRepliesRequest{
 		CommentId: req.CommentId,
-		Page:      int32(req.Page),
-		PageSize:  int32(req.PageSize),
+		Page:      req.Page,
+		PageSize:  req.PageSize,
 	})
 	if err != nil {
 		return nil, err
