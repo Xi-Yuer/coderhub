@@ -64,6 +64,12 @@ func (s *UserServiceServer) UpdateUserInfo(ctx context.Context, in *user.UpdateU
 	return l.UpdateUserInfo(in)
 }
 
+// 上传用户头像
+func (s *UserServiceServer) UploadAvatar(ctx context.Context, in *user.UploadAvatarRequest) (*user.UploadAvatarResponse, error) {
+	l := logic.NewUploadAvatarLogic(ctx, s.svcCtx)
+	return l.UploadAvatar(in)
+}
+
 // 修改密码
 func (s *UserServiceServer) ChangePassword(ctx context.Context, in *user.ChangePasswordRequest) (*user.ChangePasswordResponse, error) {
 	l := logic.NewChangePasswordLogic(ctx, s.svcCtx)

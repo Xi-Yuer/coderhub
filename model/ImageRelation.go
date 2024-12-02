@@ -21,4 +21,5 @@ const (
 	ImageRelationArticleCover   = "article_cover"
 	ImageRelationArticleContent = "article_content"
 	ImageRelationComment        = "comment"
+	ImageRelationUserAvatar     = "user_avatar"
 )

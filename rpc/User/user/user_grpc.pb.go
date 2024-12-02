@@ -28,6 +28,7 @@ const (
 	UserService_GetUserInfoByUsername_FullMethodName = "/user.UserService/GetUserInfoByUsername"
 	UserService_BatchGetUserByID_FullMethodName      = "/user.UserService/BatchGetUserByID"
 	UserService_UpdateUserInfo_FullMethodName        = "/user.UserService/UpdateUserInfo"
+	UserService_UploadAvatar_FullMethodName          = "/user.UserService/UploadAvatar"
 	UserService_ChangePassword_FullMethodName        = "/user.UserService/ChangePassword"
 	UserService_ResetPassword_FullMethodName         = "/user.UserService/ResetPassword"
 	UserService_DeleteUser_FullMethodName            = "/user.UserService/DeleteUser"
@@ -50,6 +51,8 @@ type UserServiceClient interface {
 	BatchGetUserByID(ctx context.Context, in *BatchGetUserByIDRequest, opts ...grpc.CallOption) (*BatchGetUserByIDResponse, error)
 	// 更新用户信息
 	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error)
+	// 上传用户头像
+	UploadAvatar(ctx context.Context, in *UploadAvatarRequest, opts ...grpc.CallOption) (*UploadAvatarResponse, error)
 	// 修改密码
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 	// 重置密码
@@ -136,6 +139,16 @@ func (c *userServiceClient) UpdateUserInfo(ctx context.Context, in *UpdateUserIn
 	return out, nil
 }
 
+func (c *userServiceClient) UploadAvatar(ctx context.Context, in *UploadAvatarRequest, opts ...grpc.CallOption) (*UploadAvatarResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UploadAvatarResponse)
+	err := c.cc.Invoke(ctx, UserService_UploadAvatar_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ChangePasswordResponse)
@@ -183,6 +196,8 @@ type UserServiceServer interface {
 	BatchGetUserByID(context.Context, *BatchGetUserByIDRequest) (*BatchGetUserByIDResponse, error)
 	// 更新用户信息
 	UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*UpdateUserInfoResponse, error)
+	// 上传用户头像
+	UploadAvatar(context.Context, *UploadAvatarRequest) (*UploadAvatarResponse, error)
 	// 修改密码
 	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
 	// 重置密码
@@ -219,6 +234,9 @@ func (UnimplementedUserServiceServer) BatchGetUserByID(context.Context, *BatchGe
 }
 func (UnimplementedUserServiceServer) UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*UpdateUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserInfo not implemented")
+}
+func (UnimplementedUserServiceServer) UploadAvatar(context.Context, *UploadAvatarRequest) (*UploadAvatarResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadAvatar not implemented")
 }
 func (UnimplementedUserServiceServer) ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
@@ -376,6 +394,24 @@ func _UserService_UpdateUserInfo_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadAvatarRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UploadAvatar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_UploadAvatar_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UploadAvatar(ctx, req.(*UploadAvatarRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_ChangePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ChangePasswordRequest)
 	if err := dec(in); err != nil {
@@ -464,6 +500,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUserInfo",
 			Handler:    _UserService_UpdateUserInfo_Handler,
+		},
+		{
+			MethodName: "UploadAvatar",
+			Handler:    _UserService_UploadAvatar_Handler,
 		},
 		{
 			MethodName: "ChangePassword",

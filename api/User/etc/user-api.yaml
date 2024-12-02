@@ -8,4 +8,4 @@ UserService:
   Etcd:
     Hosts:
       - etcd:2379
-    Key: User.rpc
+    Key: User.rpc=

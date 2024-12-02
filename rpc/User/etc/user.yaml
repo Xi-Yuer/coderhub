@@ -4,3 +4,14 @@ Etcd:
   Hosts:
   - etcd:2379
   Key: User.rpc
+
+ImageRelationService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: imagerelation.rpc
+ImageService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: image.rpc

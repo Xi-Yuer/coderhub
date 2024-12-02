@@ -35,6 +35,8 @@ type (
 	ResetPasswordResponse        = user.ResetPasswordResponse
 	UpdateUserInfoRequest        = user.UpdateUserInfoRequest
 	UpdateUserInfoResponse       = user.UpdateUserInfoResponse
+	UploadAvatarRequest          = user.UploadAvatarRequest
+	UploadAvatarResponse         = user.UploadAvatarResponse
 	UserInfo                     = user.UserInfo
 
 	UserService interface {
@@ -51,6 +53,8 @@ type (
 		BatchGetUserByID(ctx context.Context, in *BatchGetUserByIDRequest, opts ...grpc.CallOption) (*BatchGetUserByIDResponse, error)
 		// 更新用户信息
 		UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error)
+		// 上传用户头像
+		UploadAvatar(ctx context.Context, in *UploadAvatarRequest, opts ...grpc.CallOption) (*UploadAvatarResponse, error)
 		// 修改密码
 		ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 		// 重置密码
@@ -109,6 +113,12 @@ func (m *defaultUserService) BatchGetUserByID(ctx context.Context, in *BatchGetU
 func (m *defaultUserService) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error) {
 	client := user.NewUserServiceClient(m.cli.Conn())
 	return client.UpdateUserInfo(ctx, in, opts...)
+}
+
+// 上传用户头像
+func (m *defaultUserService) UploadAvatar(ctx context.Context, in *UploadAvatarRequest, opts ...grpc.CallOption) (*UploadAvatarResponse, error) {
+	client := user.NewUserServiceClient(m.cli.Conn())
+	return client.UploadAvatar(ctx, in, opts...)
 }
 
 // 修改密码
