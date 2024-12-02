@@ -8,6 +8,7 @@ import (
 	"coderhub/rpc/User/userservice"
 	"coderhub/shared/SnowFlake"
 	"context"
+	"fmt"
 	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -71,6 +72,7 @@ func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*c
 		})
 		return nil, err
 	}
+	l.svcCtx.MQ.PublishMessage("article_queue", "article_queue", []byte(fmt.Sprintf("%v", CommentID)))
 	return &comment.CreateCommentResponse{
 		Comment: &comment.Comment{
 			Id:        commentModel.ID,

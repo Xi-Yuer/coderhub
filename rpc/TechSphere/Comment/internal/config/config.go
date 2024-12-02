@@ -7,4 +7,10 @@ type Config struct {
 	ImageRelationService zrpc.RpcClientConf
 	ImageService         zrpc.RpcClientConf
 	UserService          zrpc.RpcClientConf
+	RabbitMQ             struct {
+		Host     string
+		Port     string
+		Username string
+		Password string
+	}
 }

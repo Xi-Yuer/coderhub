@@ -13,9 +13,7 @@ type Consumer struct {
 	cancel   context.CancelFunc
 }
 
-type MessageHandler interface {
-	HandleMessage([]byte) error
-}
+type MessageHandler func(message []byte) error
 
 func NewConsumer(mq *RabbitMQ) *Consumer {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -64,12 +62,12 @@ func (c *Consumer) consume(queueName string, handler MessageHandler) {
 
 			for msg := range msgs {
 				// 处理消息
-				err := handler.HandleMessage(msg.Body)
+				err := handler(msg.Body)
 				if err != nil {
 					log.Printf("处理消息失败: %v", err)
-					msg.Nack(false, true) // 消息处理失败，重新入队
+					_ = msg.Nack(false, true) // 消息处理失败，重新入队
 				} else {
-					msg.Ack(false) // 确认消息
+					_ = msg.Ack(false) // 确认消息
 				}
 			}
 		}

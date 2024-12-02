@@ -7,6 +7,7 @@ import (
 	"coderhub/rpc/TechSphere/Comment/internal/config"
 	"coderhub/rpc/User/userservice"
 	"coderhub/shared/CacheDB"
+	"coderhub/shared/MQ"
 	"coderhub/shared/SQL"
 
 	"github.com/zeromicro/go-zero/zrpc"
@@ -18,6 +19,8 @@ type ServiceContext struct {
 	ImageService         imageservice.ImageService
 	UserService          userservice.UserService
 	CommentRepository    repository.CommentRepository
+	MQ                   *rabbitmq.RabbitMQ
+	Consumer             *rabbitmq.Consumer
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -31,5 +34,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		ImageService:         imageservice.NewImageService(zrpc.MustNewClient(c.ImageService)),
 		UserService:          userservice.NewUserService(zrpc.MustNewClient(c.UserService)),
 		CommentRepository:    repository.NewCommentRepository(SQL.NewGorm(), redisDB),
+		MQ:                   rabbitmq.NewServiceContext(c.RabbitMQ).MQ,
+		Consumer:             rabbitmq.NewServiceContext(c.RabbitMQ).Consumer,
 	}
 }
