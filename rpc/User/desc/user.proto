@@ -88,23 +88,12 @@ message UpdateUserInfoResponse {bool success = 1;}
 
 message UploadAvatarRequest {
   int64 user_id = 1;
-  bytes file = 2;
-  string filename = 3;
-  string content_type = 4;
+  int64 image_id = 2;
 }
 message UploadAvatarResponse {
   int64 image_id = 1;      // 图片ID
-  string bucket_name = 2;   // MinIO bucket名称
-  string object_name = 3;   // MinIO中的对象名称
   string url = 4;          // 完整的访问URL
   string thumbnail_url = 5; // 缩略图URL
-  string content_type = 6;  // 文件MIME类型
-  int64 size = 7;          // 文件大小(bytes)
-  int32 width = 8;         // 图片宽度(px)
-  int32 height = 9;        // 图片高度(px)
-  string upload_ip = 10;    // 上传者IP
-  int64 user_id = 11;      // 上传者ID
-  string status = 12;      // 状态
   string created_at = 13;   // 创建时间
 }
 

@@ -58,17 +58,8 @@ type HealthCheckResponse struct {
 
 type ImageInfo struct {
 	ImageId      int64  `json:"image_id"`      // 图片ID
-	BucketName   string `json:"bucket_name"`   // MinIO bucket名称
-	ObjectName   string `json:"object_name"`   // MinIO中的对象名称
 	Url          string `json:"url"`           // 完整的访问URL
 	ThumbnailUrl string `json:"thumbnail_url"` // 缩略图URL
-	ContentType  string `json:"content_type"`  // 文件MIME类型
-	Size         int64  `json:"size"`          // 文件大小(bytes)
-	Width        int32  `json:"width"`         // 图片宽度(px)
-	Height       int32  `json:"height"`        // 图片高度(px)
-	UploadIp     string `json:"upload_ip"`     // 上传者IP
-	UserId       int64  `json:"user_id"`       // 上传者ID
-	Status       string `json:"status"`        // 状态
 	CreatedAt    string `json:"created_at"`    // 创建时间
 }
 
@@ -95,6 +86,10 @@ type UpdateUserInfoRequest struct {
 type UpdateUserInfoResponse struct {
 	Response
 	Data bool `json:"data"`
+}
+
+type UploadUserAvatarRequest struct {
+	ImageId int64 `json:"imageId"`
 }
 
 type UploadUserAvatarResponse struct {

@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"coderhub/model"
-	"coderhub/rpc/Image/imageservice"
 	"coderhub/rpc/ImageRelation/imagerelationservice"
 	"coderhub/rpc/User/internal/svc"
 	"coderhub/rpc/User/user"
@@ -46,20 +45,9 @@ func (l *UploadAvatarLogic) UploadAvatar(in *user.UploadAvatarRequest) (*user.Up
 		return nil, fmt.Errorf("非法操作")
 	}
 
-	// 上传图片
-	response, err := l.svcCtx.ImageService.Upload(l.ctx, &imageservice.UploadRequest{
-		File:        in.File,
-		Filename:    in.Filename,
-		UserId:      in.UserId,
-		ContentType: in.ContentType,
-	})
-	if err != nil {
-		return nil, err
-	}
-
 	// 保存图片关系
 	imageRelation, err := l.svcCtx.ImageRelationService.CreateRelation(l.ctx, &imagerelationservice.CreateRelationRequest{
-		ImageId:    response.ImageId,
+		ImageId:    in.ImageId,
 		EntityId:   in.UserId,
 		EntityType: model.ImageRelationUserAvatar,
 		Sort:       0,
@@ -67,7 +55,7 @@ func (l *UploadAvatarLogic) UploadAvatar(in *user.UploadAvatarRequest) (*user.Up
 	if err != nil {
 		// 事务回滚
 		_, err := l.svcCtx.ImageRelationService.BatchDeleteRelation(l.ctx, &imagerelationservice.BatchDeleteRelationRequest{
-			Ids: []int64{response.ImageId},
+			Ids: []int64{in.ImageId},
 		})
 		if err != nil {
 			return nil, err
@@ -89,18 +77,9 @@ func (l *UploadAvatarLogic) UploadAvatar(in *user.UploadAvatarRequest) (*user.Up
 	}
 
 	return &user.UploadAvatarResponse{
-		ImageId:      response.ImageId,
-		BucketName:   response.BucketName,
-		ObjectName:   response.ObjectName,
-		Url:          response.Url,
-		ThumbnailUrl: response.ThumbnailUrl,
-		ContentType:  response.ContentType,
-		Size:         response.Size,
-		Width:        response.Width,
-		Height:       response.Height,
-		UploadIp:     response.UploadIp,
-		UserId:       response.UserId,
-		Status:       response.Status,
-		CreatedAt:    response.CreatedAt,
+		ImageId:      in.ImageId,
+		Url:          imageRelation.Relation.Url,
+		ThumbnailUrl: imageRelation.Relation.ThumbnailUrl,
+		CreatedAt:    imageRelation.Relation.CreatedAt,
 	}, nil
 }
