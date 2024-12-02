@@ -28,14 +28,13 @@ func NewUpdateArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upd
 }
 
 func (l *UpdateArticleLogic) UpdateArticle(req *types.UpdateArticleReq) (*types.UpdateArticleResp, error) {
-	// 1. 参数验证
-	if err := Validator.New().ArticleID(req.Id).Check(); err != nil {
-		return l.errorResp(err), nil
-	}
-
-	// 2. 获取用户ID并转换
 	userId, err := MetaData.GetUserID(l.ctx)
 	if err != nil {
+		return l.errorResp(err), nil
+	}
+	ctx := MetaData.SetUserMetaData(l.ctx) // 设置元数据
+	// 1. 参数验证
+	if err := Validator.New().ArticleID(req.Id).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
 
@@ -51,7 +50,7 @@ func (l *UpdateArticleLogic) UpdateArticle(req *types.UpdateArticleReq) (*types.
 	}
 
 	// 5. 更新文章逻辑
-	if _, err := l.updateArticle(req); err != nil {
+	if _, err := l.updateArticle(ctx, req); err != nil {
 		return l.errorResp(err), nil
 	}
 
@@ -88,8 +87,7 @@ func (l *UpdateArticleLogic) getArticle(articleId int64) (*articles.GetArticleRe
 }
 
 // 更新文章
-func (l *UpdateArticleLogic) updateArticle(req *types.UpdateArticleReq) (*articles.UpdateArticleResponse, error) {
-	ctx := MetaData.SetUserMetaData(l.ctx)
+func (l *UpdateArticleLogic) updateArticle(ctx context.Context, req *types.UpdateArticleReq) (*articles.UpdateArticleResponse, error) {
 	return l.svcCtx.ArticleService.UpdateArticle(ctx, &articles.UpdateArticleRequest{
 		Id:           req.Id,
 		Title:        req.Title,

@@ -29,6 +29,12 @@ func NewDeleteArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Del
 }
 
 func (l *DeleteArticleLogic) DeleteArticle(req *types.DeleteArticleReq) (*types.DeleteArticleResp, error) {
+	_, err := MetaData.GetUserID(l.ctx)
+	if err != nil {
+		return l.errorResp(err), nil
+	}
+	ctx := MetaData.SetUserMetaData(l.ctx) // 设置元数据
+
 	if err := Validator.New().ArticleID(req.Id).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
@@ -38,7 +44,7 @@ func (l *DeleteArticleLogic) DeleteArticle(req *types.DeleteArticleReq) (*types.
 		return l.errorResp(err), nil
 	}
 
-	if err := l.deleteArticle(articleIdInt); err != nil {
+	if err := l.deleteArticle(ctx, articleIdInt); err != nil {
 		return l.errorResp(err), nil
 	}
 
@@ -65,12 +71,12 @@ func (l *DeleteArticleLogic) successResp() *types.DeleteArticleResp {
 	}
 }
 
-func (l *DeleteArticleLogic) deleteArticle(articleId int64) error {
+func (l *DeleteArticleLogic) deleteArticle(ctx context.Context, articleId int64) error {
 	userID, err := MetaData.GetUserID(l.ctx)
 	if err != nil {
 		return err
 	}
-	_, err = l.svcCtx.ArticleService.DeleteArticle(l.ctx, &articles.DeleteArticleRequest{
+	_, err = l.svcCtx.ArticleService.DeleteArticle(ctx, &articles.DeleteArticleRequest{
 		Id:     articleId,
 		UserId: userID,
 	})

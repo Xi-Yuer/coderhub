@@ -1,6 +1,9 @@
 package logic
 
 import (
+	"coderhub/conf"
+	"coderhub/shared/MetaData"
+	"coderhub/shared/Validator"
 	"context"
 
 	"coderhub/api/User/internal/svc"
@@ -24,7 +27,26 @@ func NewResetPasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Res
 }
 
 func (l *ResetPasswordLogic) ResetPassword(req *types.ResetPasswordRequest) (resp *types.ResetPasswordResponse, err error) {
-	// todo: add your logic here and delete this line
+	if err := Validator.New().Password(req.Email).Password(req.NewPassword).Check(); err != nil {
+		return &types.ResetPasswordResponse{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpBadRequest,
+				Message: err.Error(),
+			},
+			Data: false,
+		}, nil
+	}
+
+	_, err = MetaData.GetUserID(l.ctx)
+	if err != nil {
+		return &types.ResetPasswordResponse{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpBadRequest,
+				Message: err.Error(),
+			},
+		}, nil
+	}
+	_ = MetaData.SetUserMetaData(l.ctx) // 设置元数据
 
 	return
 }

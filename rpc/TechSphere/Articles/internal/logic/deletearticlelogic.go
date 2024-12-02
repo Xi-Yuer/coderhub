@@ -2,10 +2,12 @@ package logic
 
 import (
 	"coderhub/model"
+	"coderhub/shared/MetaData"
 	"coderhub/shared/Validator"
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
 
 	"coderhub/rpc/TechSphere/Articles/articles"
@@ -37,6 +39,19 @@ func (l *DeleteArticleLogic) DeleteArticle(in *articles.DeleteArticleRequest) (*
 	defer func(start time.Time) {
 		l.Logger.Infof("DeleteArticle 执行耗时: %v", time.Since(start))
 	}(time.Now())
+
+	// 从 metadata 中获取 userId
+	var (
+		userId string
+		err    error
+	)
+	if userId, err = MetaData.GetUserMetaData(l.ctx); err != nil {
+		return nil, err
+	}
+
+	if userId != strconv.FormatInt(in.UserId, 10) {
+		return nil, fmt.Errorf("非法操作")
+	}
 
 	// 参数校验
 	if err := l.validateRequest(in); err != nil {

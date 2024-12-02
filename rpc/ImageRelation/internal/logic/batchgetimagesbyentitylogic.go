@@ -28,21 +28,21 @@ func NewBatchGetImagesByEntityLogic(ctx context.Context, svcCtx *svc.ServiceCont
 // BatchGetImagesByEntity 批量获取图片，根据实体ID列表、实体类型列表获取
 func (l *BatchGetImagesByEntityLogic) BatchGetImagesByEntity(in *imageRelation.BatchGetImagesByEntityRequest) (*imageRelation.BatchGetImagesByEntityResponse, error) {
 	l.Logger.Infof("获取实体图片关系，实体IDs: %v, 实体类型: %s", in.EntityIds, in.EntityType)
-	
+
 	imageRelations, err := l.svcCtx.ImageRelationRepository.BatchGetImagesByEntity(l.ctx, in.EntityIds, in.EntityType)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	l.Logger.Infof("查询到的图片关系数量: %d", len(imageRelations))
-	
+
 	// 如果没有找到图片关系，直接返回空切片
 	if len(imageRelations) == 0 {
 		return &imageRelation.BatchGetImagesByEntityResponse{
 			Relations: make([]*imageRelation.ImageRelation, 0),
 		}, nil
 	}
-	
+
 	// 收集所有图片ID
 	imageIds := make([]int64, len(imageRelations))
 	for i, rel := range imageRelations {
@@ -65,6 +65,7 @@ func (l *BatchGetImagesByEntityLogic) BatchGetImagesByEntity(in *imageRelation.B
 	relations := make([]*imageRelation.ImageRelation, 0, len(imageRelations)) // 使用0初始容量
 	for _, rel := range imageRelations {
 		if img, ok := imageMap[rel.ImageID]; ok {
+			// 这里可以获取图片的所有信息，目前只返回了图片的地址和缩略图
 			relations = append(relations, &imageRelation.ImageRelation{
 				Id:           rel.ID,
 				ImageId:      rel.ImageID,

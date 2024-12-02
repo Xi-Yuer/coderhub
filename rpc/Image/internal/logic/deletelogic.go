@@ -2,9 +2,12 @@ package logic
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 
 	"coderhub/rpc/Image/image"
 	"coderhub/rpc/Image/internal/svc"
+	"coderhub/shared/MetaData"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +28,20 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 
 // 删除图片
 func (l *DeleteLogic) Delete(in *image.DeleteRequest) (*image.DeleteResponse, error) {
-	err := l.svcCtx.ImageRepository.Delete(l.ctx, in.ImageId)
+	// 权限校验
+	var (
+		userId string
+		err    error
+	)
+	if userId, err = MetaData.GetUserMetaData(l.ctx); err != nil {
+		return nil, err
+	}
+
+	if userId != strconv.FormatInt(in.UserId, 10) {
+		return nil, fmt.Errorf("非法操作")
+	}
+
+	err = l.svcCtx.ImageRepository.Delete(l.ctx, in.ImageId)
 	if err != nil {
 		return nil, err
 	}

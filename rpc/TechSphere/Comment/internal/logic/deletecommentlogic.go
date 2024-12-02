@@ -2,10 +2,13 @@ package logic
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 
 	"coderhub/rpc/ImageRelation/imageRelation"
 	"coderhub/rpc/TechSphere/Comment/comment"
 	"coderhub/rpc/TechSphere/Comment/internal/svc"
+	"coderhub/shared/MetaData"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,11 +29,24 @@ func NewDeleteCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Del
 
 // DeleteComment 删除评论
 func (l *DeleteCommentLogic) DeleteComment(in *comment.DeleteCommentRequest) (*comment.DeleteCommentResponse, error) {
+	// 权限校验
+	var (
+		userId string
+		err    error
+	)
+	if userId, err = MetaData.GetUserMetaData(l.ctx); err != nil {
+		return nil, err
+	}
+
+	if userId != strconv.FormatInt(in.UserId, 10) {
+		return nil, fmt.Errorf("非法操作")
+	}
+
 	if err := l.svcCtx.CommentRepository.Delete(l.ctx, in.CommentId); err != nil {
 		return nil, err
 	}
 	// 删除图片关联
-	_, err := l.svcCtx.ImageRelationService.BatchDeleteRelation(l.ctx, &imageRelation.BatchDeleteRelationRequest{
+	_, err = l.svcCtx.ImageRelationService.BatchDeleteRelation(l.ctx, &imageRelation.BatchDeleteRelationRequest{
 		Ids: []int64{in.CommentId},
 	})
 	if err != nil {
