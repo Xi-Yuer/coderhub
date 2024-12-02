@@ -81,7 +81,7 @@ type (
 		Data bool `json:"data"`
 	}
 	UploadUserAvatarRequest {
-		ImageId int64 `json:"imageId"`
+		ImageId int64 `json:"image_id"`
 	}
 	UploadUserAvatarResponse {
 		Response

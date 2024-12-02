@@ -89,7 +89,7 @@ type UpdateUserInfoResponse struct {
 }
 
 type UploadUserAvatarRequest struct {
-	ImageId int64 `json:"imageId"`
+	ImageId int64 `json:"image_id"`
 }
 
 type UploadUserAvatarResponse struct {

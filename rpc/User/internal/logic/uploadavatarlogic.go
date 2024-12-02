@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"coderhub/model"
+	"coderhub/rpc/Image/image"
 	"coderhub/rpc/ImageRelation/imagerelationservice"
 	"coderhub/rpc/User/internal/svc"
 	"coderhub/rpc/User/user"
@@ -46,12 +47,19 @@ func (l *UploadAvatarLogic) UploadAvatar(in *user.UploadAvatarRequest) (*user.Up
 	}
 
 	// 保存图片关系
-	imageRelation, err := l.svcCtx.ImageRelationService.CreateRelation(l.ctx, &imagerelationservice.CreateRelationRequest{
+	createRelationRequest := &imagerelationservice.CreateRelationRequest{
 		ImageId:    in.ImageId,
 		EntityId:   in.UserId,
 		EntityType: model.ImageRelationUserAvatar,
-		Sort:       0,
-	})
+	}
+	_, err = l.svcCtx.ImageRelationService.BatchCreateRelation(
+		l.ctx,
+		&imagerelationservice.BatchCreateRelationRequest{
+			Relations: []*imagerelationservice.CreateRelationRequest{
+				createRelationRequest,
+			},
+		},
+	)
 	if err != nil {
 		// 事务回滚
 		_, err := l.svcCtx.ImageRelationService.BatchDeleteRelation(l.ctx, &imagerelationservice.BatchDeleteRelationRequest{
@@ -63,13 +71,21 @@ func (l *UploadAvatarLogic) UploadAvatar(in *user.UploadAvatarRequest) (*user.Up
 		l.Errorf("保存图片关系失败: %v", err)
 		return nil, err
 	}
+	// 获取图片信息
+	imageInfo, err := l.svcCtx.ImageService.Get(l.ctx, &image.GetRequest{
+		ImageId: in.ImageId,
+	})
+	if err != nil {
+		return nil, err
+	}
 	// 更新用户头像
-	// 获取用户
 	userInfo, err := l.svcCtx.UserRepository.GetUserByID(in.UserId)
 	if err != nil {
 		return nil, err
 	}
-	userInfo.Avatar = sql.NullString{String: imageRelation.Relation.Url, Valid: true}
+	l.Logger.Infof("imageRelation用户头像: %v", imageInfo.Url)
+	userInfo.Avatar = sql.NullString{String: imageInfo.Url, Valid: true}
+	l.Logger.Infof("更新用户头像: %v", userInfo.Avatar)
 	err = l.svcCtx.UserRepository.UpdateUser(userInfo)
 	if err != nil {
 		l.Errorf("更新用户头像失败: %v", err)
@@ -78,8 +94,8 @@ func (l *UploadAvatarLogic) UploadAvatar(in *user.UploadAvatarRequest) (*user.Up
 
 	return &user.UploadAvatarResponse{
 		ImageId:      in.ImageId,
-		Url:          imageRelation.Relation.Url,
-		ThumbnailUrl: imageRelation.Relation.ThumbnailUrl,
-		CreatedAt:    imageRelation.Relation.CreatedAt,
+		Url:          imageInfo.Url,
+		ThumbnailUrl: imageInfo.ThumbnailUrl,
+		CreatedAt:    imageInfo.CreatedAt,
 	}, nil
 }

@@ -24,7 +24,7 @@ func NewCreateRelationLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cr
 	}
 }
 
-// 创建图片关系
+// CreateRelation 创建图片关系
 func (l *CreateRelationLogic) CreateRelation(in *imageRelation.CreateRelationRequest) (*imageRelation.CreateRelationResponse, error) {
 	err := l.svcCtx.ImageRelationRepository.Create(l.ctx, &model.ImageRelation{
 		ImageID:    in.ImageId,
