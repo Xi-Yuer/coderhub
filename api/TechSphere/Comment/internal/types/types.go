@@ -33,7 +33,7 @@ type CreateCommentReq struct {
 
 type CreateCommentResp struct {
 	Response
-	Data Comment `json:"data"` // 创建的评论
+	Data *Comment `json:"data"` // 创建的评论
 }
 
 type DeleteCommentReq struct {

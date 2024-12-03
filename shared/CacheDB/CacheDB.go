@@ -31,6 +31,12 @@ type RedisDB interface {
 	NewScript(script string) *redis.Script
 	Close() error
 	Pipeline() redis.Pipeliner
+	HIncrBy(key string, field string, value int64) (int64, error)
+	HGet(key string, field string) (string, error)
+	HGetAll(key string) (map[string]string, error)
+	SMembers(key string) ([]string, error)
+	SAdd(key string, members ...interface{}) error
+	SRem(key string, members ...interface{}) error
 }
 
 // DefaultConfig 默认配置
@@ -130,4 +136,32 @@ func (r *RedisDBImpl) NewScript(script string) *redis.Script {
 
 func (r *RedisDBImpl) Close() error {
 	return r.Client.Close()
+}
+
+func (r *RedisDBImpl) HIncrBy(key string, field string, value int64) (int64, error) {
+	ctx := context.Background()
+	return r.Client.HIncrBy(ctx, key, field, value).Result()
+}
+
+func (r *RedisDBImpl) HGet(key string, field string) (string, error) {
+	ctx := context.Background()
+	return r.Client.HGet(ctx, key, field).Result()
+}
+
+func (r *RedisDBImpl) HGetAll(key string) (map[string]string, error) {
+	ctx := context.Background()
+	return r.Client.HGetAll(ctx, key).Result()
+}
+
+func (r *RedisDBImpl) SMembers(key string) ([]string, error) {
+	ctx := context.Background()
+	return r.Client.SMembers(ctx, key).Result()
+}
+
+func (r *RedisDBImpl) SAdd(key string, members ...interface{}) error {
+	return r.Client.SAdd(context.Background(), key, members...).Err()
+}
+
+func (r *RedisDBImpl) SRem(key string, members ...interface{}) error {
+	return r.Client.SRem(context.Background(), key, members...).Err()
 }

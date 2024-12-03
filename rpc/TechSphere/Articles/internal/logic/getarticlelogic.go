@@ -94,6 +94,29 @@ func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.
 		return nil, fmt.Errorf("获取文章点赞数失败: %v", err)
 	}
 
+	// 获取文章浏览量
+	articlePV, err := l.svcCtx.ArticlePVRepository.GetArticlePVByArticleID(article.ID)
+	if err != nil {
+		l.Logger.Errorf("获取文章浏览量失败: %v", err)
+		return nil, fmt.Errorf("获取文章浏览量失败: %v", err)
+	}
+
+	// 获取文章评论数
+	commentCount, err := l.svcCtx.CommentRepository.CountByArticleID(l.ctx, article.ID)
+	if err != nil {
+		l.Logger.Errorf("获取文章评论数失败: %v", err)
+		return nil, fmt.Errorf("获取文章评论数失败: %v", err)
+	}
+
+	// 文章浏览量+1
+	err = l.svcCtx.ArticlePVRepository.CreateArticlePV(&model.ArticlePV{
+		ArticleID: article.ID,
+		Count:     1,
+	})
+	if err != nil {
+		l.Logger.Errorf("文章浏览量+1失败: %v", err)
+	}
+
 	// 转换为响应格式
 	response := &articles.GetArticleResponse{
 		Article: &articles.Article{
@@ -106,9 +129,9 @@ func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.
 			CoverImage:   coverImage,
 			AuthorId:     article.AuthorID,
 			Tags:         strings.Split(article.Tags, ","),
-			ViewCount:    article.ViewCount,
+			ViewCount:    articlePV.Count,
 			LikeCount:    likeCount,
-			CommentCount: 0,
+			CommentCount: commentCount,
 			Status:       article.Status,
 			CreatedAt:    article.CreatedAt.Unix(),
 			UpdatedAt:    article.UpdatedAt.Unix(),

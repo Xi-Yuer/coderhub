@@ -13,6 +13,7 @@ import (
 type ArticlePVRepository interface {
 	CreateArticlePV(articlePV *model.ArticlePV) error
 	GetArticlePVByArticleID(articleID int64) (*model.ArticlePV, error)
+	SyncIncrementalPVToDB() error
 }
 
 type ArticlePVRepositoryImpl struct {

@@ -73,15 +73,17 @@ func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*c
 	}
 	return &comment.CreateCommentResponse{
 		Comment: &comment.Comment{
-			Id:        commentModel.ID,
-			ArticleId: commentModel.ArticleID,
-			Content:   commentModel.Content,
-			ParentId:  commentModel.ParentID,
-			UserInfo: &comment.UserInfo{
-				UserId:   user.UserId,
-				Username: user.UserName,
-				Avatar:   user.Avatar,
-			},
+			Id:           commentModel.ID,
+			ArticleId:    commentModel.ArticleID,
+			Content:      commentModel.Content,
+			ParentId:     commentModel.ParentID,
+			UserInfo:     &comment.UserInfo{UserId: user.UserId, Username: user.UserName, Avatar: user.Avatar},
+			CreatedAt:    commentModel.CreatedAt.Unix(),
+			UpdatedAt:    commentModel.UpdatedAt.Unix(),
+			Replies:      nil,
+			RepliesCount: 0,
+			LikeCount:    0,
+			Images:       nil,
 		},
 	}, nil
 }

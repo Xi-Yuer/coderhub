@@ -17,6 +17,8 @@ type ServiceContext struct {
 	ImageService                   imageservice.ImageService
 	ArticleRepository              repository.ArticleRepository
 	ArticlesRelationLikeRepository repository.ArticlesRelationLikeRepository
+	ArticlePVRepository            repository.ArticlePVRepository
+	CommentRepository              repository.CommentRepository
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -31,5 +33,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		ImageService:                   imageservice.NewImageService(zrpc.MustNewClient(c.ImageService)),
 		ArticleRepository:              repository.NewArticleRepositoryImpl(SQL.NewGorm(), redisDB),
 		ArticlesRelationLikeRepository: repository.NewArticlesRelationLikeRepository(SQL.NewGorm(), redisDB),
+		ArticlePVRepository:            repository.NewArticlePVRepositoryImpl(SQL.NewGorm(), redisDB),
+		CommentRepository:              repository.NewCommentRepository(SQL.NewGorm(), redisDB),
 	}
 }

@@ -51,7 +51,7 @@ type (
 	// 创建评论响应
 	CreateCommentResp {
 		Response
-		Data Comment `json:"data"` // 创建的评论
+		Data *Comment `json:"data"` // 创建的评论
 	}
 	// 获取评论列表请求
 	GetCommentsReq {

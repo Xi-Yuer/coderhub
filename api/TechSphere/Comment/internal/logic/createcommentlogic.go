@@ -54,8 +54,18 @@ func (l *CreateCommentLogic) successResp(comment *commentservice.CreateCommentRe
 			Code:    conf.HttpCode.HttpStatusOK,
 			Message: conf.HttpMessage.MsgOK,
 		},
-		Data: types.Comment{
-			Id: comment.Comment.Id,
+		Data: &types.Comment{
+			Id:           comment.Comment.Id,
+			ArticleId:    comment.Comment.ArticleId,
+			Content:      comment.Comment.Content,
+			ParentId:     comment.Comment.ParentId,
+			UserInfo:     types.UserInfo{UserId: comment.Comment.UserInfo.UserId, Username: comment.Comment.UserInfo.Username, Avatar: comment.Comment.UserInfo.Avatar},
+			CreatedAt:    comment.Comment.CreatedAt,
+			UpdatedAt:    comment.Comment.UpdatedAt,
+			Replies:      nil,
+			RepliesCount: 0,
+			LikeCount:    0,
+			Images:       nil,
 		},
 	}, nil
 }
@@ -66,5 +76,6 @@ func (l *CreateCommentLogic) errorResp(err error) (*types.CreateCommentResp, err
 			Code:    conf.HttpCode.HttpBadRequest,
 			Message: err.Error(),
 		},
+		Data: nil,
 	}, nil
 }

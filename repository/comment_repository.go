@@ -18,6 +18,7 @@ type CommentRepository interface {
 	Delete(ctx context.Context, id int64) error
 	ListByArticleID(ctx context.Context, articleID int64, page int64, pageSize int64) ([]model.Comment, int64, error)
 	ListReplies(ctx context.Context, parentID int64, page int64, pageSize int64) ([]model.Comment, int64, error)
+	CountByArticleID(ctx context.Context, articleID int64) (int64, error)
 }
 
 var ErrConcurrentUpdate = errors.New("并发更新冲突，请重试")
@@ -124,6 +125,15 @@ func (r *commentRepository) ListReplies(ctx context.Context, parentID int64, pag
 // UpdateByID 更新评论
 func (r *commentRepository) UpdateByID(ctx context.Context, id int64, comment *model.Comment) error {
 	return r.DB.WithContext(ctx).Model(&model.Comment{}).Where("id = ?", id).Updates(comment).Error
+}
+
+// CountByArticleID 获取文章评论数
+func (r *commentRepository) CountByArticleID(ctx context.Context, articleID int64) (int64, error) {
+	var count int64
+	if err := r.DB.WithContext(ctx).Model(&model.Comment{}).Where("article_id = ?", articleID).Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 
 // 内部辅助方法
