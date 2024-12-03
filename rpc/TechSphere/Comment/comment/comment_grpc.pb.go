@@ -21,11 +21,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CommentService_CreateComment_FullMethodName     = "/comment.CommentService/CreateComment"
-	CommentService_GetComments_FullMethodName       = "/comment.CommentService/GetComments"
-	CommentService_GetCommentReplies_FullMethodName = "/comment.CommentService/GetCommentReplies"
-	CommentService_GetComment_FullMethodName        = "/comment.CommentService/GetComment"
-	CommentService_DeleteComment_FullMethodName     = "/comment.CommentService/DeleteComment"
+	CommentService_CreateComment_FullMethodName          = "/comment.CommentService/CreateComment"
+	CommentService_GetComments_FullMethodName            = "/comment.CommentService/GetComments"
+	CommentService_GetCommentReplies_FullMethodName      = "/comment.CommentService/GetCommentReplies"
+	CommentService_UpdateCommentLikeCount_FullMethodName = "/comment.CommentService/UpdateCommentLikeCount"
+	CommentService_GetComment_FullMethodName             = "/comment.CommentService/GetComment"
+	CommentService_DeleteComment_FullMethodName          = "/comment.CommentService/DeleteComment"
 )
 
 // CommentServiceClient is the client API for CommentService service.
@@ -40,6 +41,8 @@ type CommentServiceClient interface {
 	GetComments(ctx context.Context, in *GetCommentsRequest, opts ...grpc.CallOption) (*GetCommentsResponse, error)
 	// 获取某条评论的子评论列表
 	GetCommentReplies(ctx context.Context, in *GetCommentRepliesRequest, opts ...grpc.CallOption) (*GetCommentRepliesResponse, error)
+	// 更新评论点赞数
+	UpdateCommentLikeCount(ctx context.Context, in *UpdateCommentLikeCountRequest, opts ...grpc.CallOption) (*UpdateCommentLikeCountResponse, error)
 	// 获取单个评论详情
 	GetComment(ctx context.Context, in *GetCommentRequest, opts ...grpc.CallOption) (*GetCommentResponse, error)
 	// 删除评论
@@ -84,6 +87,16 @@ func (c *commentServiceClient) GetCommentReplies(ctx context.Context, in *GetCom
 	return out, nil
 }
 
+func (c *commentServiceClient) UpdateCommentLikeCount(ctx context.Context, in *UpdateCommentLikeCountRequest, opts ...grpc.CallOption) (*UpdateCommentLikeCountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateCommentLikeCountResponse)
+	err := c.cc.Invoke(ctx, CommentService_UpdateCommentLikeCount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *commentServiceClient) GetComment(ctx context.Context, in *GetCommentRequest, opts ...grpc.CallOption) (*GetCommentResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCommentResponse)
@@ -116,6 +129,8 @@ type CommentServiceServer interface {
 	GetComments(context.Context, *GetCommentsRequest) (*GetCommentsResponse, error)
 	// 获取某条评论的子评论列表
 	GetCommentReplies(context.Context, *GetCommentRepliesRequest) (*GetCommentRepliesResponse, error)
+	// 更新评论点赞数
+	UpdateCommentLikeCount(context.Context, *UpdateCommentLikeCountRequest) (*UpdateCommentLikeCountResponse, error)
 	// 获取单个评论详情
 	GetComment(context.Context, *GetCommentRequest) (*GetCommentResponse, error)
 	// 删除评论
@@ -138,6 +153,9 @@ func (UnimplementedCommentServiceServer) GetComments(context.Context, *GetCommen
 }
 func (UnimplementedCommentServiceServer) GetCommentReplies(context.Context, *GetCommentRepliesRequest) (*GetCommentRepliesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCommentReplies not implemented")
+}
+func (UnimplementedCommentServiceServer) UpdateCommentLikeCount(context.Context, *UpdateCommentLikeCountRequest) (*UpdateCommentLikeCountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCommentLikeCount not implemented")
 }
 func (UnimplementedCommentServiceServer) GetComment(context.Context, *GetCommentRequest) (*GetCommentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetComment not implemented")
@@ -220,6 +238,24 @@ func _CommentService_GetCommentReplies_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CommentService_UpdateCommentLikeCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCommentLikeCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommentServiceServer).UpdateCommentLikeCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CommentService_UpdateCommentLikeCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommentServiceServer).UpdateCommentLikeCount(ctx, req.(*UpdateCommentLikeCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _CommentService_GetComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetCommentRequest)
 	if err := dec(in); err != nil {
@@ -274,6 +310,10 @@ var CommentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCommentReplies",
 			Handler:    _CommentService_GetCommentReplies_Handler,
+		},
+		{
+			MethodName: "UpdateCommentLikeCount",
+			Handler:    _CommentService_UpdateCommentLikeCount_Handler,
 		},
 		{
 			MethodName: "GetComment",

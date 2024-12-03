@@ -79,3 +79,12 @@ type UpdateArticleResp struct {
 	Response
 	Data bool `json:"data"` // 是否更新成功
 }
+
+type UpdateLikeCountReq struct {
+	Id int64 `json:"id"` // 文章 ID
+}
+
+type UpdateLikeCountResp struct {
+	Response
+	Data bool `json:"data"` // 是否更新成功
+}

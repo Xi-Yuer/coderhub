@@ -14,21 +14,24 @@ import (
 )
 
 type (
-	Article               = articles.Article
-	CreateArticleRequest  = articles.CreateArticleRequest
-	CreateArticleResponse = articles.CreateArticleResponse
-	DeleteArticleRequest  = articles.DeleteArticleRequest
-	DeleteArticleResponse = articles.DeleteArticleResponse
-	GetArticleRequest     = articles.GetArticleRequest
-	GetArticleResponse    = articles.GetArticleResponse
-	Image                 = articles.Image
-	UpdateArticleRequest  = articles.UpdateArticleRequest
-	UpdateArticleResponse = articles.UpdateArticleResponse
+	Article                 = articles.Article
+	CreateArticleRequest    = articles.CreateArticleRequest
+	CreateArticleResponse   = articles.CreateArticleResponse
+	DeleteArticleRequest    = articles.DeleteArticleRequest
+	DeleteArticleResponse   = articles.DeleteArticleResponse
+	GetArticleRequest       = articles.GetArticleRequest
+	GetArticleResponse      = articles.GetArticleResponse
+	Image                   = articles.Image
+	UpdateArticleRequest    = articles.UpdateArticleRequest
+	UpdateArticleResponse   = articles.UpdateArticleResponse
+	UpdateLikeCountRequest  = articles.UpdateLikeCountRequest
+	UpdateLikeCountResponse = articles.UpdateLikeCountResponse
 
 	ArticleService interface {
 		GetArticle(ctx context.Context, in *GetArticleRequest, opts ...grpc.CallOption) (*GetArticleResponse, error)
 		CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*CreateArticleResponse, error)
 		UpdateArticle(ctx context.Context, in *UpdateArticleRequest, opts ...grpc.CallOption) (*UpdateArticleResponse, error)
+		UpdateLikeCount(ctx context.Context, in *UpdateLikeCountRequest, opts ...grpc.CallOption) (*UpdateLikeCountResponse, error)
 		DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*DeleteArticleResponse, error)
 	}
 
@@ -56,6 +59,11 @@ func (m *defaultArticleService) CreateArticle(ctx context.Context, in *CreateArt
 func (m *defaultArticleService) UpdateArticle(ctx context.Context, in *UpdateArticleRequest, opts ...grpc.CallOption) (*UpdateArticleResponse, error) {
 	client := articles.NewArticleServiceClient(m.cli.Conn())
 	return client.UpdateArticle(ctx, in, opts...)
+}
+
+func (m *defaultArticleService) UpdateLikeCount(ctx context.Context, in *UpdateLikeCountRequest, opts ...grpc.CallOption) (*UpdateLikeCountResponse, error) {
+	client := articles.NewArticleServiceClient(m.cli.Conn())
+	return client.UpdateLikeCount(ctx, in, opts...)
 }
 
 func (m *defaultArticleService) DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*DeleteArticleResponse, error) {

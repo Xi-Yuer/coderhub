@@ -73,6 +73,13 @@ type (
 	HealthResp {
 		Response
 	}
+	UpdateLikeCountReq {
+		Id int64 `json:"id"` // 文章 ID
+	}
+	UpdateLikeCountResp {
+		Response
+		Data bool `json:"data"` // 是否更新成功
+	}
 )
 
 @server (
@@ -99,5 +106,8 @@ service Articles {
 
 	@handler DeleteArticle
 	delete /:id returns (DeleteArticleResp)
+
+	@handler UpdateLikeCount
+	post /update_like_count (UpdateLikeCountReq) returns (UpdateLikeCountResp)
 }
 

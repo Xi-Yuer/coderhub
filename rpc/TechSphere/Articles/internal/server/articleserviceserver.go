@@ -38,6 +38,11 @@ func (s *ArticleServiceServer) UpdateArticle(ctx context.Context, in *articles.U
 	return l.UpdateArticle(in)
 }
 
+func (s *ArticleServiceServer) UpdateLikeCount(ctx context.Context, in *articles.UpdateLikeCountRequest) (*articles.UpdateLikeCountResponse, error) {
+	l := logic.NewUpdateLikeCountLogic(ctx, s.svcCtx)
+	return l.UpdateLikeCount(in)
+}
+
 func (s *ArticleServiceServer) DeleteArticle(ctx context.Context, in *articles.DeleteArticleRequest) (*articles.DeleteArticleResponse, error) {
 	l := logic.NewDeleteArticleLogic(ctx, s.svcCtx)
 	return l.DeleteArticle(in)

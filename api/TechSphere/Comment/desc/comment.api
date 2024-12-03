@@ -102,6 +102,15 @@ type (
 	HealthResp {
 		Response
 	}
+	// 更新评论点赞数请求
+	UpdateCommentLikeCountReq {
+		CommentId int64 `json:"comment_id"` // 评论ID
+	}
+	// 更新评论点赞数响应
+	UpdateCommentLikeCountResp {
+		Response
+		Data bool `json:"data"` // 更新是否成功
+	}
 )
 
 service comment-api {
@@ -126,6 +135,10 @@ service comment-api {
 	@doc "获取某条评论的子评论列表"
 	@handler GetCommentReplies
 	get /replies/:comment_id (GetCommentRepliesReq) returns (GetCommentRepliesResp)
+
+	@doc "更新评论点赞数"
+	@handler UpdateCommentLikeCount
+	post /update_like_count (UpdateCommentLikeCountReq) returns (UpdateCommentLikeCountResp)
 
 	@doc "获取单个评论"
 	@handler GetComment

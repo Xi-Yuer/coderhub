@@ -45,6 +45,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/create",
 				Handler: CreateArticleHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/update_like_count",
+				Handler: UpdateLikeCountHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/articles"),

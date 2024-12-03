@@ -87,6 +87,13 @@ func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.
 		}
 	}
 
+	// 获取文章点赞数
+	likeCount, err := l.svcCtx.ArticlesRelationLikeRepository.List(l.ctx, article.ID)
+	if err != nil {
+		l.Logger.Errorf("获取文章点赞数失败: %v", err)
+		return nil, fmt.Errorf("获取文章点赞数失败: %v", err)
+	}
+
 	// 转换为响应格式
 	response := &articles.GetArticleResponse{
 		Article: &articles.Article{
@@ -100,8 +107,8 @@ func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.
 			AuthorId:     article.AuthorID,
 			Tags:         strings.Split(article.Tags, ","),
 			ViewCount:    article.ViewCount,
-			LikeCount:    article.LikeCount,
-			CommentCount: article.CommentCount,
+			LikeCount:    likeCount,
+			CommentCount: 0,
 			Status:       article.Status,
 			CreatedAt:    article.CreatedAt.Unix(),
 			UpdatedAt:    article.UpdatedAt.Unix(),

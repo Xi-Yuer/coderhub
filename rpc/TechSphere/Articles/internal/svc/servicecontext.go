@@ -1,7 +1,7 @@
 package svc
 
 import (
-	repository "coderhub/repository/Article"
+	"coderhub/repository"
 	"coderhub/rpc/Image/imageservice"
 	"coderhub/rpc/ImageRelation/imagerelationservice"
 	"coderhub/rpc/TechSphere/Articles/internal/config"
@@ -12,10 +12,11 @@ import (
 )
 
 type ServiceContext struct {
-	Config               config.Config
-	ArticleRepository    repository.ArticleRepository
-	ImageRelationService imagerelationservice.ImageRelationService
-	ImageService         imageservice.ImageService
+	Config                         config.Config
+	ImageRelationService           imagerelationservice.ImageRelationService
+	ImageService                   imageservice.ImageService
+	ArticleRepository              repository.ArticleRepository
+	ArticlesRelationLikeRepository repository.ArticlesRelationLikeRepository
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -25,9 +26,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 
 	return &ServiceContext{
-		Config:            c,
-		ArticleRepository: repository.NewArticleRepositoryImpl(SQL.NewGorm(), redisDB),
-		ImageRelationService: imagerelationservice.NewImageRelationService(zrpc.MustNewClient(c.ImageRelationService)),
-		ImageService:         imageservice.NewImageService(zrpc.MustNewClient(c.ImageService)),
+		Config:                         c,
+		ImageRelationService:           imagerelationservice.NewImageRelationService(zrpc.MustNewClient(c.ImageRelationService)),
+		ImageService:                   imageservice.NewImageService(zrpc.MustNewClient(c.ImageService)),
+		ArticleRepository:              repository.NewArticleRepositoryImpl(SQL.NewGorm(), redisDB),
+		ArticlesRelationLikeRepository: repository.NewArticlesRelationLikeRepository(SQL.NewGorm(), redisDB),
 	}
 }

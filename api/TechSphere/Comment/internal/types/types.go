@@ -90,6 +90,15 @@ type Response struct {
 	Message string `json:"message"` // 提示信息
 }
 
+type UpdateCommentLikeCountReq struct {
+	CommentId int64 `json:"comment_id"` // 评论ID
+}
+
+type UpdateCommentLikeCountResp struct {
+	Response
+	Data bool `json:"data"` // 更新是否成功
+}
+
 type UserInfo struct {
 	UserId   int64  `json:"user_id"`  // 用户ID
 	Username string `json:"username"` // 用户名

@@ -1,7 +1,7 @@
 package svc
 
 import (
-	repository "coderhub/repository/User"
+	"coderhub/repository"
 	"coderhub/rpc/Image/imageservice"
 	"coderhub/rpc/ImageRelation/imagerelationservice"
 	"coderhub/rpc/User/internal/config"

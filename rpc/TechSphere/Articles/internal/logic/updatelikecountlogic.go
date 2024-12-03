@@ -28,6 +28,7 @@ func (l *UpdateLikeCountLogic) UpdateLikeCount(in *articles.UpdateLikeCountReque
 	// 更新文章点赞数
 	articleRelationLike := model.ArticlesRelationLike{
 		ArticleID: in.Id,
+		UserID:    in.UserId,
 	}
 	isLike := l.svcCtx.ArticlesRelationLikeRepository.Get(l.ctx, &articleRelationLike)
 	if isLike {
@@ -36,17 +37,9 @@ func (l *UpdateLikeCountLogic) UpdateLikeCount(in *articles.UpdateLikeCountReque
 		if err != nil {
 			return nil, err
 		}
-		err = l.svcCtx.ArticleRepository.LikeArticle(in.Id, -1)
-		if err != nil {
-			return nil, err
-		}
 	} else {
 		// 点赞
 		err := l.svcCtx.ArticlesRelationLikeRepository.Create(l.ctx, &articleRelationLike)
-		if err != nil {
-			return nil, err
-		}
-		err = l.svcCtx.ArticleRepository.LikeArticle(in.Id, 1)
 		if err != nil {
 			return nil, err
 		}

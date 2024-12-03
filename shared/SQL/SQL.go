@@ -66,7 +66,15 @@ func NewGorm() *gorm.DB {
 		sqlDB.SetConnMaxLifetime(time.Hour) // 设置连接的最大可复用时间
 
 		// Automatically migrate the schema
-		if err := db.AutoMigrate(&model.User{}, &model.Articles{}, &model.Comment{}, &model.Image{}, &model.ImageRelation{}); err != nil {
+		if err := db.AutoMigrate(
+			&model.User{},
+			&model.Articles{},
+			&model.Comment{},
+			&model.Image{},
+			&model.ImageRelation{},
+			&model.ArticlesRelationLike{},
+			&model.CommentRelationLike{},
+		); err != nil {
 			log.Fatalf("数据库迁移失败: %v", err)
 		}
 

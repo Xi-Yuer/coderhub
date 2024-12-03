@@ -61,6 +61,11 @@ func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.Ge
 			ThumbnailUrl: val.ThumbnailUrl,
 		})
 	}
+	// 获取评论点赞数
+	likeCount, err := l.svcCtx.CommentRelationLikeRepository.List(l.ctx, commentModel.ID)
+	if err != nil {
+		return nil, err
+	}
 	return &comment.GetCommentResponse{
 		Comment: &comment.Comment{
 			Id:        commentModel.ID,
@@ -74,7 +79,7 @@ func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.Ge
 			},
 			CreatedAt: commentModel.CreatedAt.Unix(),
 			UpdatedAt: commentModel.UpdatedAt.Unix(),
-			LikeCount: commentModel.LikeCount,
+			LikeCount: int32(likeCount),
 			Images:    images,
 		},
 	}, nil

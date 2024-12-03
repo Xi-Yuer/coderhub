@@ -1,7 +1,7 @@
 package svc
 
 import (
-	repository "coderhub/repository/Comment"
+	"coderhub/repository"
 	"coderhub/rpc/Image/imageservice"
 	"coderhub/rpc/ImageRelation/imagerelationservice"
 	"coderhub/rpc/TechSphere/Comment/internal/config"
@@ -13,11 +13,12 @@ import (
 )
 
 type ServiceContext struct {
-	Config               config.Config
-	ImageRelationService imagerelationservice.ImageRelationService
-	ImageService         imageservice.ImageService
-	UserService          userservice.UserService
-	CommentRepository    repository.CommentRepository
+	Config                        config.Config
+	ImageRelationService          imagerelationservice.ImageRelationService
+	ImageService                  imageservice.ImageService
+	UserService                   userservice.UserService
+	CommentRepository             repository.CommentRepository
+	CommentRelationLikeRepository repository.CommentRelationLikeRepository
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -26,10 +27,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		panic(err)
 	}
 	return &ServiceContext{
-		Config:               c,
-		ImageRelationService: imagerelationservice.NewImageRelationService(zrpc.MustNewClient(c.ImageRelationService)),
-		ImageService:         imageservice.NewImageService(zrpc.MustNewClient(c.ImageService)),
-		UserService:          userservice.NewUserService(zrpc.MustNewClient(c.UserService)),
-		CommentRepository:    repository.NewCommentRepository(SQL.NewGorm(), redisDB),
+		Config:                        c,
+		ImageRelationService:          imagerelationservice.NewImageRelationService(zrpc.MustNewClient(c.ImageRelationService)),
+		ImageService:                  imageservice.NewImageService(zrpc.MustNewClient(c.ImageService)),
+		UserService:                   userservice.NewUserService(zrpc.MustNewClient(c.UserService)),
+		CommentRepository:             repository.NewCommentRepository(SQL.NewGorm(), redisDB),
+		CommentRelationLikeRepository: repository.NewCommentRelationLikeRepository(SQL.NewGorm(), redisDB),
 	}
 }

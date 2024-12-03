@@ -17,13 +17,15 @@ type Articles struct {
 	Images       []Image        `gorm:"-" json:"images"`                                              // 文章图片列表
 	CoverImage   *Image         `gorm:"-" json:"cover_image,omitempty"`                               // 封面图片
 	Tags         string         `gorm:"size:255" json:"tags"`                                         // 标签，逗号分隔（适用于长文）
-	ViewCount    int64          `gorm:"default:0" json:"view_count"`                                  // 阅读次数（长文专用）
-	LikeCount    int64          `gorm:"default:0" json:"like_count"`                                  // 点赞次数
 	CommentCount int64          `gorm:"default:0" json:"comment_count"`                               // 评论数
 	Status       string         `gorm:"type:enum('draft','published');default:'draft'" json:"status"` // 内容状态
+	Version      int64          `gorm:"default:0" json:"version"`                                     // 版本号
 	CreatedAt    time.Time      `gorm:"<-:create" json:"created_at"`                                  // 创建时间
 	UpdatedAt    time.Time      `gorm:"autoCreateTime;autoUpdateTime" json:"updated_at"`              // 更新时间
 	DeletedAt    gorm.DeletedAt `gorm:"index" json:"deleted_at"`                                      // 删除时间
+
+	ViewCount int64 `gorm:"-" json:"view_count"` // 阅读次数（长文专用）
+	LikeCount int64 `gorm:"-" json:"like_count"` // 点赞次数
 
 }
 

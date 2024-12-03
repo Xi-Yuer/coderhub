@@ -41,6 +41,12 @@ func (s *CommentServiceServer) GetCommentReplies(ctx context.Context, in *commen
 	return l.GetCommentReplies(in)
 }
 
+// 更新评论点赞数
+func (s *CommentServiceServer) UpdateCommentLikeCount(ctx context.Context, in *comment.UpdateCommentLikeCountRequest) (*comment.UpdateCommentLikeCountResponse, error) {
+	l := logic.NewUpdateCommentLikeCountLogic(ctx, s.svcCtx)
+	return l.UpdateCommentLikeCount(in)
+}
+
 // 获取单个评论详情
 func (s *CommentServiceServer) GetComment(ctx context.Context, in *comment.GetCommentRequest) (*comment.GetCommentResponse, error) {
 	l := logic.NewGetCommentLogic(ctx, s.svcCtx)

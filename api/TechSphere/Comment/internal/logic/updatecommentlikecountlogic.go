@@ -5,6 +5,9 @@ import (
 
 	"coderhub/api/TechSphere/Comment/internal/svc"
 	"coderhub/api/TechSphere/Comment/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/TechSphere/Comment/comment"
+	"coderhub/shared/MetaData"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +28,38 @@ func NewUpdateCommentLikeCountLogic(ctx context.Context, svcCtx *svc.ServiceCont
 }
 
 func (l *UpdateCommentLikeCountLogic) UpdateCommentLikeCount(req *types.UpdateCommentLikeCountReq) (resp *types.UpdateCommentLikeCountResp, err error) {
-	// todo: add your logic here and delete this line
+	userId, err := MetaData.GetUserID(l.ctx)
+	if err != nil {
+		return l.errorResp(err), nil
+	}
+	ctx := MetaData.SetUserMetaData(l.ctx)
 
-	return
+	if _, err := l.svcCtx.CommentService.UpdateCommentLikeCount(ctx, &comment.UpdateCommentLikeCountRequest{
+		CommentId: req.CommentId,
+		UserId:    userId,
+	}); err != nil {
+		return l.errorResp(err), nil
+	}
+
+	return l.successResp(), nil
+}
+
+func (l *UpdateCommentLikeCountLogic) errorResp(err error) *types.UpdateCommentLikeCountResp {
+	return &types.UpdateCommentLikeCountResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpBadRequest,
+			Message: err.Error(),
+		},
+		Data: false,
+	}
+}
+
+func (l *UpdateCommentLikeCountLogic) successResp() *types.UpdateCommentLikeCountResp {
+	return &types.UpdateCommentLikeCountResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: "success",
+		},
+		Data: true,
+	}
 }

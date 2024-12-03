@@ -55,6 +55,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/replies/:comment_id",
 				Handler: GetCommentRepliesHandler(serverCtx),
 			},
+			{
+				// 更新评论点赞数
+				Method:  http.MethodPost,
+				Path:    "/update_like_count",
+				Handler: UpdateCommentLikeCountHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/comments"),

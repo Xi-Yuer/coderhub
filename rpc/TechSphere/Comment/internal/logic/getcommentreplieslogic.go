@@ -102,6 +102,13 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *comment.GetCommentReplies
 		}
 	}
 
+	// 获取评论点赞数
+	likeCountMap, err := l.svcCtx.CommentRelationLikeRepository.BatchList(l.ctx, replyIds)
+	if err != nil {
+		l.Logger.Errorf("获取评论点赞数失败: %v", err)
+		return nil, err
+	}
+
 	// 构建回复列表
 	commentReplies := make([]*comment.Comment, len(replies))
 	for i, reply := range replies {
@@ -115,7 +122,7 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *comment.GetCommentReplies
 			Content:   reply.Content,
 			ParentId:  reply.ParentID,
 			UserInfo:  userInfos[reply.UserID],
-			LikeCount: reply.LikeCount,
+			LikeCount: int32(likeCountMap[reply.ID]),
 			Images:    replyImages[reply.ID],
 			CreatedAt: reply.CreatedAt.Unix(),
 			UpdatedAt: reply.UpdatedAt.Unix(),

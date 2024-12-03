@@ -109,6 +109,12 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 	}
 
 	rootComments := make([]*comment.Comment, len(comments))
+	// 获取评论点赞数
+	likeCountMap, err := l.svcCtx.CommentRelationLikeRepository.BatchList(l.ctx, commentIds)
+	if err != nil {
+		l.Logger.Errorf("获取评论点赞数失败: %v", err)
+		return make([]*comment.Comment, 0)
+	}
 	for i, val := range comments {
 		// 确保每个评论的图片列表都被初始化
 		if _, ok := commentImages[val.ID]; !ok {
@@ -116,17 +122,17 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 		}
 
 		rootComments[i] = &comment.Comment{
-			Id:        val.ID,
-			ArticleId: val.ArticleID,
-			Content:   val.Content,
-			ParentId:  val.ParentID,
-			UserInfo:  userInfos[val.UserID],
-			Replies:   l.buildTree(val.Replies),
+			Id:           val.ID,
+			ArticleId:    val.ArticleID,
+			Content:      val.Content,
+			ParentId:     val.ParentID,
+			UserInfo:     userInfos[val.UserID],
+			Replies:      l.buildTree(val.Replies),
 			RepliesCount: int64(val.ReplyCount),
-			LikeCount: val.LikeCount,
-			Images:    commentImages[val.ID],
-			CreatedAt: val.CreatedAt.Unix(),
-			UpdatedAt: val.UpdatedAt.Unix(),
+			LikeCount:    int32(likeCountMap[val.ID]),
+			Images:       commentImages[val.ID],
+			CreatedAt:    val.CreatedAt.Unix(),
+			UpdatedAt:    val.UpdatedAt.Unix(),
 		}
 	}
 	return rootComments

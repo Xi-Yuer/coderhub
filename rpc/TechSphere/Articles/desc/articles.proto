@@ -78,6 +78,17 @@ message UpdateArticleResponse {
   bool success = 1;                  // 是否更新成功
 }
 
+// 更新点赞数请求
+message UpdateLikeCountRequest {
+  int64 id = 1;                     // 文章 ID
+  int64 user_id = 2;                // 用户 ID
+}
+
+// 更新点赞数响应
+message UpdateLikeCountResponse {
+  bool success = 1;                  // 是否更新成功
+}
+
 // 删除文章请求
 message DeleteArticleRequest {
   int64 id = 1;                     // 文章 ID
@@ -94,5 +105,6 @@ service ArticleService {
   rpc GetArticle(GetArticleRequest) returns (GetArticleResponse);     // 获取文章详情
   rpc CreateArticle(CreateArticleRequest) returns (CreateArticleResponse); // 创建文章
   rpc UpdateArticle(UpdateArticleRequest) returns (UpdateArticleResponse); // 更新文章
+  rpc UpdateLikeCount(UpdateLikeCountRequest) returns (UpdateLikeCountResponse); // 更新点赞数
   rpc DeleteArticle(DeleteArticleRequest) returns (DeleteArticleResponse); // 删除文章
 }

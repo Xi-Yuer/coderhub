@@ -14,7 +14,6 @@ type Comment struct {
 	Content    string         `gorm:"type:text;not null" json:"content"`               // 评论内容
 	ParentID   int64          `gorm:"default:0;index" json:"parent_id"`                // 父评论ID，0表示顶级评论
 	UserID     int64          `gorm:"index" json:"user_id"`                            // 评论者ID
-	LikeCount  int32          `gorm:"default:0" json:"like_count"`                     // 点赞数
 	CreatedAt  time.Time      `gorm:"<-:create" json:"created_at"`                     // 创建时间
 	UpdatedAt  time.Time      `gorm:"autoCreateTime;autoUpdateTime" json:"updated_at"` // 更新时间
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"deleted_at"`                         // 删除时间
@@ -25,6 +24,7 @@ type Comment struct {
 	ImageIDs   []string  `gorm:"-" json:"image_ids"`   // 评论图片ID列表
 	Replies    []Comment `gorm:"-" json:"replies"`     // 子评论列表
 	ReplyCount int64     `gorm:"-" json:"reply_count"` // 回复数量
+	LikeCount  int64     `gorm:"-" json:"like_count"`  // 点赞次数
 }
 
 // CacheKeyByID 生成评论缓存键

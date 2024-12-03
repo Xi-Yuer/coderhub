@@ -1,7 +1,7 @@
 package svc
 
 import (
-	repository "coderhub/repository/Image"
+	"coderhub/repository"
 	"coderhub/rpc/Image/internal/config"
 	"coderhub/shared/Minio"
 	"coderhub/shared/SQL"
@@ -23,7 +23,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		c.Minio.Region,
 		c.Minio.UseSSL,
 	)
-	
+
 	err := minioClient.Connect()
 	if err != nil {
 		panic(fmt.Sprintf("Minio 连接失败: %v", err))

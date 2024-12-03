@@ -14,19 +14,21 @@ import (
 )
 
 type (
-	Comment                   = comment.Comment
-	CommentImage              = comment.CommentImage
-	CreateCommentRequest      = comment.CreateCommentRequest
-	CreateCommentResponse     = comment.CreateCommentResponse
-	DeleteCommentRequest      = comment.DeleteCommentRequest
-	DeleteCommentResponse     = comment.DeleteCommentResponse
-	GetCommentRepliesRequest  = comment.GetCommentRepliesRequest
-	GetCommentRepliesResponse = comment.GetCommentRepliesResponse
-	GetCommentRequest         = comment.GetCommentRequest
-	GetCommentResponse        = comment.GetCommentResponse
-	GetCommentsRequest        = comment.GetCommentsRequest
-	GetCommentsResponse       = comment.GetCommentsResponse
-	UserInfo                  = comment.UserInfo
+	Comment                        = comment.Comment
+	CommentImage                   = comment.CommentImage
+	CreateCommentRequest           = comment.CreateCommentRequest
+	CreateCommentResponse          = comment.CreateCommentResponse
+	DeleteCommentRequest           = comment.DeleteCommentRequest
+	DeleteCommentResponse          = comment.DeleteCommentResponse
+	GetCommentRepliesRequest       = comment.GetCommentRepliesRequest
+	GetCommentRepliesResponse      = comment.GetCommentRepliesResponse
+	GetCommentRequest              = comment.GetCommentRequest
+	GetCommentResponse             = comment.GetCommentResponse
+	GetCommentsRequest             = comment.GetCommentsRequest
+	GetCommentsResponse            = comment.GetCommentsResponse
+	UpdateCommentLikeCountRequest  = comment.UpdateCommentLikeCountRequest
+	UpdateCommentLikeCountResponse = comment.UpdateCommentLikeCountResponse
+	UserInfo                       = comment.UserInfo
 
 	CommentService interface {
 		// 创建评论
@@ -35,6 +37,8 @@ type (
 		GetComments(ctx context.Context, in *GetCommentsRequest, opts ...grpc.CallOption) (*GetCommentsResponse, error)
 		// 获取某条评论的子评论列表
 		GetCommentReplies(ctx context.Context, in *GetCommentRepliesRequest, opts ...grpc.CallOption) (*GetCommentRepliesResponse, error)
+		// 更新评论点赞数
+		UpdateCommentLikeCount(ctx context.Context, in *UpdateCommentLikeCountRequest, opts ...grpc.CallOption) (*UpdateCommentLikeCountResponse, error)
 		// 获取单个评论详情
 		GetComment(ctx context.Context, in *GetCommentRequest, opts ...grpc.CallOption) (*GetCommentResponse, error)
 		// 删除评论
@@ -68,6 +72,12 @@ func (m *defaultCommentService) GetComments(ctx context.Context, in *GetComments
 func (m *defaultCommentService) GetCommentReplies(ctx context.Context, in *GetCommentRepliesRequest, opts ...grpc.CallOption) (*GetCommentRepliesResponse, error) {
 	client := comment.NewCommentServiceClient(m.cli.Conn())
 	return client.GetCommentReplies(ctx, in, opts...)
+}
+
+// 更新评论点赞数
+func (m *defaultCommentService) UpdateCommentLikeCount(ctx context.Context, in *UpdateCommentLikeCountRequest, opts ...grpc.CallOption) (*UpdateCommentLikeCountResponse, error) {
+	client := comment.NewCommentServiceClient(m.cli.Conn())
+	return client.UpdateCommentLikeCount(ctx, in, opts...)
 }
 
 // 获取单个评论详情
