@@ -86,7 +86,7 @@ func (r *commentRepository) ListByArticleID(ctx context.Context, articleID int64
 	fmt.Println("文章ID: ", articleID)
 	fmt.Println("页码: ", page)
 	fmt.Println("每页大小: ", pageSize)
-	r.DB.WithContext(ctx).Where("article_id = ? AND parent_id = 0", articleID).Order("like_count DESC, created_at ASC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&comments)
+	r.DB.WithContext(ctx).Where("article_id = ? AND parent_id = 0", articleID).Order("created_at ASC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&comments)
 	// 查询总数
 	r.DB.WithContext(ctx).Model(&model.Comment{}).Where("article_id = ?", articleID).Count(&total)
 	// 构建树形结构并获取回复数量
@@ -117,7 +117,7 @@ func (r *commentRepository) ListByArticleID(ctx context.Context, articleID int64
 func (r *commentRepository) ListReplies(ctx context.Context, parentID int64, page int64, pageSize int64) ([]model.Comment, int64, error) {
 	var replies []model.Comment
 	var total int64
-	r.DB.WithContext(ctx).Where("parent_id = ?", parentID).Order("like_count DESC, created_at ASC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&replies)
+	r.DB.WithContext(ctx).Where("parent_id = ?", parentID).Order("created_at ASC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&replies)
 	return replies, total, nil
 }
 

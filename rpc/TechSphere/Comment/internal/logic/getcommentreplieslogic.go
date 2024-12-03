@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"sort"
 	"strconv"
 
 	"coderhub/model"
@@ -128,6 +129,11 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *comment.GetCommentReplies
 			UpdatedAt: reply.UpdatedAt.Unix(),
 		}
 	}
+
+	// 按照点赞数量进行排序
+	sort.Slice(commentReplies, func(i, j int) bool {
+		return commentReplies[i].LikeCount > commentReplies[j].LikeCount
+	})
 
 	return &comment.GetCommentRepliesResponse{
 		Replies: commentReplies,

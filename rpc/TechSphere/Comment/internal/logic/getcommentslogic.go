@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"sort"
 	"strconv"
 
 	"coderhub/model"
@@ -135,5 +136,9 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 			UpdatedAt:    val.UpdatedAt.Unix(),
 		}
 	}
+	// 按照点赞数量进行排序
+	sort.Slice(rootComments, func(i, j int) bool {
+		return rootComments[i].LikeCount > rootComments[j].LikeCount
+	})
 	return rootComments
 }
