@@ -58,9 +58,6 @@ func (r *ArticlePVRepositoryImpl) CreateArticlePV(articlePV *model.ArticlePV) er
 	}
 
 	if locked {
-		defer r.Redis.Del(lockKey)
-
-		// 数量阈值触发
 		if newCount%r.syncThreshold == 0 {
 			shouldSync = true
 		}
@@ -76,9 +73,29 @@ func (r *ArticlePVRepositoryImpl) CreateArticlePV(articlePV *model.ArticlePV) er
 
 		if shouldSync {
 			go func() {
+				// 在goroutine中处理锁的续期
+				stopChan := make(chan struct{})
+				go func() {
+					ticker := time.NewTicker(10 * time.Second)
+					defer ticker.Stop()
+					for {
+						select {
+						case <-ticker.C:
+							// 每10秒续期一次，将过期时间重置为30秒
+							r.Redis.Expire(lockKey, 30*time.Second)
+						case <-stopChan:
+							return
+						}
+					}
+				}()
+
+				// 执行同步
 				err := r.SyncIncrementalPVToDB()
+				// 同步完成后，关闭续期goroutine并释放锁
+				close(stopChan)
+				r.Redis.Del(lockKey)
+				
 				if err == nil {
-					// 更新最后同步时间
 					r.Redis.Set("article:pv:last_sync_time", time.Now().Format(time.RFC3339))
 				}
 			}()
