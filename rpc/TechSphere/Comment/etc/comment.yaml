@@ -19,8 +19,3 @@ UserService:
     Hosts:
       - etcd:2379
     Key: User.rpc
-RabbitMQ:
-  Host: rabbitmq
-  Port: "5672"
-  Username: rabbitmq
-  Password: 2214380963Wx!!

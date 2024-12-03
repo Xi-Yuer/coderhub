@@ -136,24 +136,6 @@ services:
       retries: 3
     networks:
       - coderhub-network
-  rabbitmq:
-    image: rabbitmq:3.13.7-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      - RABBITMQ_DEFAULT_USER=rabbitmq
-      - RABBITMQ_DEFAULT_PASS=2214380963Wx!!
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "ping"]
-      interval: 10s
-      retries: 5
-      timeout: 5s
-    networks:
-      - coderhub-network
   #  Api 服务
   user-api:
     build:
@@ -274,7 +256,6 @@ services:
       - etcd
       - elasticsearch
       - user-service
-      - rabbitmq
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "8888"] # 使用netcat检查端口是否开放
       interval: 10s
@@ -361,7 +342,6 @@ services:
       - articles-service
       - image-service
       - image-relation-service
-      - rabbitmq
     networks:
       - coderhub-network
     healthcheck:
@@ -389,4 +369,3 @@ volumes:
   redis-data:
   es-data:
   minio-data:
-  rabbitmq-data:

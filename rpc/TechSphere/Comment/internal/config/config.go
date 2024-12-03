@@ -1,6 +1,10 @@
 package config
 
-import "github.com/zeromicro/go-zero/zrpc"
+import (
+	"time"
+
+	"github.com/zeromicro/go-zero/zrpc"
+)
 
 type Config struct {
 	zrpc.RpcServerConf
@@ -9,8 +13,12 @@ type Config struct {
 	UserService          zrpc.RpcClientConf
 	RabbitMQ             struct {
 		Host     string
-		Port     string
-		Username string
-		Password string
+		Port         string
+		Username     string
+		Password     string
+		MaxRetries   int
+		RetryDelay   time.Duration
+		ExchangeName string
+		QueueName    string
 	}
 }
