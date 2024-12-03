@@ -20,7 +20,7 @@ type CommentRepository interface {
 	Delete(ctx context.Context, id int64) error
 	ListByArticleID(ctx context.Context, articleID int64, page int64, pageSize int64) ([]model.Comment, int64, error)
 	ListReplies(ctx context.Context, parentID int64, page int64, pageSize int64) ([]model.Comment, int64, error)
-	UpdateLikeCount(ctx context.Context, id int64, increment int32) error
+	UpdateLikeCount(ctx context.Context, id int64, increment int64) error
 }
 
 var ErrConcurrentUpdate = errors.New("并发更新冲突，请重试")
@@ -82,7 +82,7 @@ func (r *commentRepository) Delete(ctx context.Context, id int64) error {
 }
 
 // UpdateLikeCount 更新点赞数并处理缓存，使用Redis分布式锁
-func (r *commentRepository) UpdateLikeCount(ctx context.Context, id int64, increment int32) error {
+func (r *commentRepository) UpdateLikeCount(ctx context.Context, id int64, increment int64) error {
 	// 重试相关配置
 	maxRetries := 3
 	retryDelay := 100 * time.Millisecond
@@ -179,7 +179,7 @@ func (r *commentRepository) ListByArticleID(ctx context.Context, articleID int64
 	fmt.Println("文章ID: ", articleID)
 	fmt.Println("页码: ", page)
 	fmt.Println("每页大小: ", pageSize)
-	r.DB.WithContext(ctx).Where("article_id = ? AND parent_id = 0", articleID).Order("like_count DESC, created_at DESC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&comments)
+	r.DB.WithContext(ctx).Where("article_id = ? AND parent_id = 0", articleID).Order("like_count DESC, created_at ASC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&comments)
 	// 查询总数
 	r.DB.WithContext(ctx).Model(&model.Comment{}).Where("article_id = ?", articleID).Count(&total)
 	// 构建树形结构并获取回复数量
@@ -210,7 +210,7 @@ func (r *commentRepository) ListByArticleID(ctx context.Context, articleID int64
 func (r *commentRepository) ListReplies(ctx context.Context, parentID int64, page int64, pageSize int64) ([]model.Comment, int64, error) {
 	var replies []model.Comment
 	var total int64
-	r.DB.WithContext(ctx).Where("parent_id = ?", parentID).Order("like_count DESC, created_at DESC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&replies)
+	r.DB.WithContext(ctx).Where("parent_id = ?", parentID).Order("like_count DESC, created_at ASC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&replies)
 	return replies, total, nil
 }
 

@@ -3,28 +3,34 @@ package repository
 import (
 	"coderhub/model"
 	"coderhub/shared/CacheDB"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type ArticleRepository interface {
 	CreateArticle(article *model.Articles) error
 	GetArticleByID(id int64) (*model.Articles, error)
 	UpdateArticle(article *model.Articles) error
+	LikeArticle(id int64, increment int64) error
 	DeleteArticle(id int64) error
 }
 type ArticleRepositoryImpl struct {
-	DB    *gorm.DB
-	Redis CacheDB.RedisDB
+	DB       *gorm.DB
+	Redis    CacheDB.RedisDB
+	minLikes int32
 }
 
 func NewArticleRepositoryImpl(db *gorm.DB, rdb CacheDB.RedisDB) *ArticleRepositoryImpl {
 	return &ArticleRepositoryImpl{
-		DB:    db,
-		Redis: rdb,
+		DB:       db,
+		Redis:    rdb,
+		minLikes: 10,
 	}
 }
 
@@ -101,6 +107,96 @@ func (r *ArticleRepositoryImpl) DeleteArticle(id int64) error {
 		return err
 	}
 	return r.DB.Delete(&model.Articles{}, id).Error
+}
+
+// 给文章点赞（需要考虑高并发，微服务架构）
+func (r *ArticleRepositoryImpl) LikeArticle(id int64, increment int64) error {
+	// 重试相关配置
+	maxRetries := 3
+	retryDelay := 100 * time.Millisecond
+
+	// 锁相关的配置
+	lockKey := fmt.Sprintf("article_lock:%d", id)
+	lockTTL := 3 * time.Second
+
+	// 重试循环
+	for i := 0; i < maxRetries; i++ {
+		lockValue := fmt.Sprintf("%d:%d", id, time.Now().UnixNano())
+
+		// 获取分布式锁
+		acquired, err := r.Redis.SetNX(lockKey, lockValue, lockTTL)
+		if err != nil {
+			return fmt.Errorf("获取分布式锁失败: %w", err)
+		}
+
+		if !acquired {
+			// 如果是最后一次重试，则返回错误
+			if i == maxRetries-1 {
+				return fmt.Errorf("系统繁忙，请稍后重试")
+			}
+			// 等待一段时间后重试
+			time.Sleep(retryDelay)
+			continue
+		}
+
+		// 获取到锁后的处理逻辑...
+		defer func() {
+			// 使用Lua脚本确保安全释放锁
+			script := r.Redis.NewScript(`
+			if redis.call("GET", KEYS[1]) == ARGV[1] then
+				return redis.call("DEL", KEYS[1])
+			end
+			return 0
+		`)
+			_, releaseErr := script.Run(context.Background(), r.Redis.Pipeline(), []string{lockKey}, lockValue).Result()
+			if releaseErr != nil {
+				fmt.Printf("释放锁失败: %v\n", releaseErr)
+			}
+		}()
+
+		// 更新逻辑
+		err = r.DB.WithContext(context.Background()).Transaction(func(tx *gorm.DB) error {
+			var article model.Articles
+			err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&article, id).Error
+			if err != nil {
+				return err
+			}
+
+			// 更新点赞数
+			result := tx.Model(&article).
+				Where("id = ?", id).
+				Updates(map[string]interface{}{
+					"like_count": gorm.Expr("like_count + ?", increment),
+					"version":    gorm.Expr("version + 1"),
+				})
+			if result.RowsAffected == 0 {
+				return errors.New("并发更新失败")
+			}
+
+			// 重新查询最新数据
+			var updatedArticle model.Articles
+			if err := tx.First(&updatedArticle, id).Error; err != nil {
+				return err
+			}
+
+			// 使用最新数据更新缓存
+			if updatedArticle.LikeCount >= int64(r.minLikes) {
+				if err := r.setCache(article.CacheKeyByID(id), &updatedArticle); err != nil {
+					return err // 缓存更新失败时回滚事务
+				}
+			} else {
+				if err := r.delCache(article.CacheKeyByID(id)); err != nil {
+					return err // 缓存删除失败时回滚事务
+				}
+			}
+
+			return nil
+		})
+
+		return err
+	}
+
+	return fmt.Errorf("更新失败，请稍后重试")
 }
 
 func (r *ArticleRepositoryImpl) getCache(key string) (*model.Articles, error) {
