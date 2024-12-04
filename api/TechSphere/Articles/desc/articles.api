@@ -1,4 +1,5 @@
 // goctl api go -api articles.api -dir ../
+// goctl api plugin -plugin goctl-swagger="swagger -filename articles.json" -api articles.api -dir .
 syntax = "v1"
 
 info (
@@ -86,9 +87,15 @@ type (
 	prefix: /api/articles
 )
 service Articles {
+	@doc(
+		summary: "获取文章"
+	)
 	@handler GetArticle
 	get /:id returns (GetArticleResp)
 
+	@doc(
+		summary: "健康检查"
+	)
 	@handler Health
 	get /health returns (HealthResp)
 }
@@ -98,15 +105,27 @@ service Articles {
 	prefix: /api/articles
 )
 service Articles {
+	@doc(
+		summary: "创建文章"
+	)
 	@handler CreateArticle
 	post /create (CreateArticleReq) returns (CreateArticleResp)
 
+	@doc(
+		summary: "更新文章"
+	)
 	@handler UpdateArticle
 	put /:id (UpdateArticleReq) returns (UpdateArticleResp)
 
+	@doc(
+		summary: "删除文章"
+	)
 	@handler DeleteArticle
 	delete /:id returns (DeleteArticleResp)
 
+	@doc(
+		summary: "更新文章点赞数"
+	)
 	@handler UpdateLikeCount
 	post /update_like_count (UpdateLikeCountReq) returns (UpdateLikeCountResp)
 }

@@ -1,4 +1,5 @@
 // goctl api go -api image.api -dir ../
+// goctl api plugin -plugin goctl-swagger="swagger -filename image.json" -api image.api -dir .
 syntax = "v1"
 
 info (
@@ -71,7 +72,9 @@ type (
 	prefix: /api/image
 )
 service Image {
-	@doc "健康检查"
+	@doc(
+		summary: "健康检查"
+	)
 	@handler Health
 	get /health returns (HealthResponse)
 }
@@ -81,19 +84,27 @@ service Image {
 	prefix: /api/image
 )
 service Image {
-	@doc "上传图片"
+	@doc(
+		summary: "上传图片"
+	)
 	@handler Upload
 	post /upload returns (UploadResponse)
 
-	@doc "删除图片"
+	@doc(
+		summary: "删除图片"
+	)
 	@handler Delete
 	post /delete (DeleteRequest) returns (DeleteResponse)
 
-	@doc "获取图片信息"
+	@doc(
+		summary: "获取图片信息"
+	)
 	@handler Get
 	get /get/:image_id (GetRequest) returns (GetResponse)
 
-	@doc "获取用户图片列表"
+	@doc(
+		summary: "获取用户图片列表"
+	)
 	@handler ListByUser
 	get /list (ListByUserRequest) returns (ListByUserResponse)
 }

@@ -1,4 +1,5 @@
 // goctl api go -api user.api -dir ../
+// goctl api plugin -plugin goctl-swagger="swagger -filename user.json" -api user.api -dir .
 syntax = "v1"
 
 info (
@@ -99,19 +100,27 @@ type (
 	prefix: /api/user
 )
 service user-api {
-	// 创建用户
+	@doc(
+		summary: "创建用户"
+	)
 	@handler CreateUser
 	post /register (CreateUserRequest) returns (CreateUserResponse)
 
-	// 获取用户信息
+	@doc(
+		summary: "获取用户信息"
+	)
 	@handler GetUserInfo
 	get /info/:userId returns (GetUserInfoResponse)
 
-	// 用户登录
+	@doc(
+		summary: "用户登录"
+	)
 	@handler AuthenticateUser
 	post /login (AuthenticateUserRequest) returns (AuthenticateUserResponse)
 
-	// 健康检查
+	@doc(
+		summary: "健康检查"
+	)
 	@handler HealthCheck
 	get /health returns (HealthCheckResponse)
 }
@@ -121,23 +130,33 @@ service user-api {
 	prefix: /api/user
 )
 service user-api {
-	// 更新用户信息
+	@doc(
+		summary: "更新用户信息"
+	)
 	@handler UpdateUserInfo
 	put /update (UpdateUserInfoRequest) returns (UpdateUserInfoResponse)
 
-	// 上传用户头像
+	@doc(
+		summary: "上传用户头像"
+	)
 	@handler UploadUserAvatar
 	post /upload-avatar (UploadUserAvatarRequest) returns (UploadUserAvatarResponse)
 
-	// 重置密码
+	@doc(
+		summary: "重置密码"
+	)
 	@handler ResetPassword
 	post /reset-password (ResetPasswordRequest) returns (ResetPasswordResponse)
 
-	// 修改密码
+	@doc(
+		summary: "修改密码"
+	)
 	@handler ChangePassword
 	post /change-password (ChangePasswordRequest) returns (ChangePasswordResponse)
 
-	// 删除用户
+	@doc(
+		summary: "删除用户"
+	)
 	@handler DeleteUser
 	delete /delete/:userId returns (DeleteUserResponse)
 }

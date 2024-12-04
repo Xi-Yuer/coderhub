@@ -1,4 +1,5 @@
 // goctl api go -api comment.api -dir ../
+// goctl api plugin -plugin goctl-swagger="swagger -filename comment.json" -api comment.api -dir .
 syntax = "v1"
 
 info (
@@ -127,27 +128,39 @@ service comment-api {
 	prefix: /api/comments
 )
 service comment-api {
-	@doc "创建评论"
+	@doc(
+		summary: "创建评论"
+	)
 	@handler CreateComment
 	post /create (CreateCommentReq) returns (CreateCommentResp)
 
-	@doc "获取评论列表"
+	@doc(
+		summary: "获取评论列表"
+	)
 	@handler GetComments
 	get /article/:article_id (GetCommentsReq) returns (GetCommentsResp)
 
-	@doc "获取某条评论的子评论列表"
+	@doc(
+		summary: "获取某条评论的子评论列表"
+	)
 	@handler GetCommentReplies
 	get /replies/:comment_id (GetCommentRepliesReq) returns (GetCommentRepliesResp)
 
-	@doc "更新评论点赞数"
+	@doc(
+		summary: "更新评论点赞数"
+	)
 	@handler UpdateCommentLikeCount
 	post /update_like_count (UpdateCommentLikeCountReq) returns (UpdateCommentLikeCountResp)
 
-	@doc "获取单个评论"
+	@doc(
+		summary: "获取单个评论"
+	)
 	@handler GetComment
 	get /:comment_id (GetCommentReq) returns (GetCommentResp)
 
-	@doc "删除评论"
+	@doc(
+		summary: "删除评论"
+	)
 	@handler DeleteComment
 	delete /:comment_id (DeleteCommentReq) returns (DeleteCommentResp)
 }
