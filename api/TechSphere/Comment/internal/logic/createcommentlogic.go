@@ -59,7 +59,7 @@ func (l *CreateCommentLogic) successResp(comment *commentservice.CreateCommentRe
 			ArticleId:    comment.Comment.ArticleId,
 			Content:      comment.Comment.Content,
 			ParentId:     comment.Comment.ParentId,
-			UserInfo:     types.UserInfo{UserId: comment.Comment.UserInfo.UserId, Username: comment.Comment.UserInfo.Username, Avatar: comment.Comment.UserInfo.Avatar},
+			UserInfo:     &types.UserInfo{UserId: comment.Comment.UserInfo.UserId, Username: comment.Comment.UserInfo.Username, Avatar: comment.Comment.UserInfo.Avatar},
 			CreatedAt:    comment.Comment.CreatedAt,
 			UpdatedAt:    comment.Comment.UpdatedAt,
 			Replies:      nil,

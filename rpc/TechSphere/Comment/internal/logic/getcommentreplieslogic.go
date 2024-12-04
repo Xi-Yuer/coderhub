@@ -44,13 +44,20 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *comment.GetCommentReplies
 		}, nil
 	}
 
-	// 收集所有回复ID
+	// 收集所有回复ID和用户ID
 	replyIds := make([]int64, len(replies))
 	userIds := make([]int64, len(replies))
+	replyToUserIds := make([]int64, 0)
 	for i, reply := range replies {
 		replyIds[i] = reply.ID
 		userIds[i] = reply.UserID
+		if reply.ReplyToUID > 0 {
+			replyToUserIds = append(replyToUserIds, reply.ReplyToUID)
+		}
 	}
+
+	// 合并所有需要查询的用户ID
+	allUserIds := append(userIds, replyToUserIds...)
 
 	// 获取图片关联
 	imageRelations, err := l.svcCtx.ImageRelationService.BatchGetImagesByEntity(l.ctx, &imageRelation.BatchGetImagesByEntityRequest{
@@ -75,9 +82,9 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *comment.GetCommentReplies
 		}
 	}
 
-	// 获取用户信息
+	// 获取所有用户信息（包括评论者和被回复者）
 	users, err := l.svcCtx.UserService.BatchGetUserByID(l.ctx, &userservice.BatchGetUserByIDRequest{
-		UserIds: userIds,
+		UserIds: allUserIds,
 	})
 	if err != nil {
 		l.Logger.Errorf("获取用户信息失败: %v", err)
@@ -85,7 +92,7 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *comment.GetCommentReplies
 	}
 
 	// 添加调试日志
-	l.Logger.Infof("用户ID列表: %v", userIds)
+	l.Logger.Infof("用户ID列表: %v", allUserIds)
 	l.Logger.Infof("获取到的用户信息: %+v", users)
 
 	// 构建用户信息映射
@@ -94,10 +101,13 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *comment.GetCommentReplies
 		for _, user := range users.UserInfos {
 			if user != nil {
 				l.Logger.Infof("映射用户信息: userId=%d, userName=%s", user.UserId, user.UserName)
-				userInfos[user.UserId] = &comment.UserInfo{
-					UserId:   user.UserId,
-					Username: user.UserName,
-					Avatar:   user.Avatar,
+				// 如果用户信息不存在，则添加到映射中
+				if _, ok := userInfos[user.UserId]; !ok {
+					userInfos[user.UserId] = &comment.UserInfo{
+						UserId:   user.UserId,
+						Username: user.UserName,
+						Avatar:   user.Avatar,
+					}
 				}
 			}
 		}
@@ -110,23 +120,23 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *comment.GetCommentReplies
 		return nil, err
 	}
 
-	// 构建回复列表
+	// 构建回复列表时添加被回复者信息
 	commentReplies := make([]*comment.Comment, len(replies))
 	for i, reply := range replies {
-		// 确保每个回复的图片列表被初始化
 		if _, ok := replyImages[reply.ID]; !ok {
 			replyImages[reply.ID] = make([]*comment.CommentImage, 0)
 		}
 		commentReplies[i] = &comment.Comment{
-			Id:        reply.ID,
-			ArticleId: reply.ArticleID,
-			Content:   reply.Content,
-			ParentId:  reply.ParentID,
-			UserInfo:  userInfos[reply.UserID],
-			LikeCount: int32(likeCountMap[reply.ID]),
-			Images:    replyImages[reply.ID],
-			CreatedAt: reply.CreatedAt.Unix(),
-			UpdatedAt: reply.UpdatedAt.Unix(),
+			Id:              reply.ID,
+			ArticleId:       reply.ArticleID,
+			Content:         reply.Content,
+			ParentId:        reply.ParentID,
+			UserInfo:        userInfos[reply.UserID],
+			ReplyToUserInfo: userInfos[reply.ReplyToUID],
+			LikeCount:       int32(likeCountMap[reply.ID]),
+			Images:          replyImages[reply.ID],
+			CreatedAt:       reply.CreatedAt.Unix(),
+			UpdatedAt:       reply.UpdatedAt.Unix(),
 		}
 	}
 

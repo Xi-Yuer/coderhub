@@ -57,6 +57,15 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 		}
 	}
 
+	var replyToUserInfo *types.UserInfo
+	if comment.Comment.ReplyToUserInfo != nil {
+		replyToUserInfo = &types.UserInfo{
+			UserId:   comment.Comment.ReplyToUserInfo.UserId,
+			Username: comment.Comment.ReplyToUserInfo.Username,
+			Avatar:   comment.Comment.ReplyToUserInfo.Avatar,
+		}
+	}
+
 	// 获取图片
 	images := make([]types.CommentImage, len(comment.Comment.Images))
 	for i, image := range comment.Comment.Images {
@@ -73,17 +82,18 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 			Message: conf.HttpMessage.MsgOK,
 		},
 		Data: types.Comment{
-			Id:           comment.Comment.Id,
-			ArticleId:    comment.Comment.ArticleId,
-			Content:      comment.Comment.Content,
-			ParentId:     comment.Comment.ParentId,
-			UserInfo:     *userInfo,
-			CreatedAt:    comment.Comment.CreatedAt,
-			UpdatedAt:    comment.Comment.UpdatedAt,
-			Replies:      nil,
-			RepliesCount: comment.Comment.RepliesCount,
-			LikeCount:    comment.Comment.LikeCount,
-			Images:       images,
+			Id:              comment.Comment.Id,
+			ArticleId:       comment.Comment.ArticleId,
+			Content:         comment.Comment.Content,
+			ParentId:        comment.Comment.ParentId,
+			UserInfo:        userInfo,
+			CreatedAt:       comment.Comment.CreatedAt,
+			UpdatedAt:       comment.Comment.UpdatedAt,
+			Replies:         nil,
+			RepliesCount:    comment.Comment.RepliesCount,
+			ReplyToUserInfo: replyToUserInfo,
+			LikeCount:       comment.Comment.LikeCount,
+			Images:          images,
 		},
 	}, nil
 }

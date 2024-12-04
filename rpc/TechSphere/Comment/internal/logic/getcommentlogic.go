@@ -51,6 +51,17 @@ func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.Ge
 		return nil, err
 	}
 
+	// 获取被回复者的信息
+	replyUserInfo := &userservice.GetUserInfoResponse{}
+	if commentModel.ReplyToUID != 0 {
+		replyUserInfo, err = l.svcCtx.UserService.GetUserInfo(l.ctx, &userservice.GetUserInfoRequest{
+			UserId: commentModel.ReplyToUID,
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	images := make([]*comment.CommentImage, 0)
 	// 将图片关联转换为评论图片
 	for _, val := range imageRelations.Relations {
@@ -77,10 +88,17 @@ func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.Ge
 				Username: user.UserName,
 				Avatar:   user.Avatar,
 			},
-			CreatedAt: commentModel.CreatedAt.Unix(),
-			UpdatedAt: commentModel.UpdatedAt.Unix(),
-			LikeCount: int32(likeCount),
-			Images:    images,
+			ReplyToUserInfo: &comment.UserInfo{
+				UserId:   replyUserInfo.UserId,
+				Username: replyUserInfo.UserName,
+				Avatar:   replyUserInfo.Avatar,
+			},
+			CreatedAt:    commentModel.CreatedAt.Unix(),
+			UpdatedAt:    commentModel.UpdatedAt.Unix(),
+			Replies:      nil,
+			RepliesCount: 0,
+			LikeCount:    int32(likeCount),
+			Images:       images,
 		},
 	}, nil
 }

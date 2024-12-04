@@ -31,6 +31,9 @@ func (r *imageRelationRepository) Create(ctx context.Context, imageRelation *mod
 }
 
 func (r *imageRelationRepository) BatchCreate(ctx context.Context, imageRelations []*model.ImageRelation) error {
+	if len(imageRelations) == 0 {
+		return nil
+	}
 	return r.DB.WithContext(ctx).Create(&imageRelations).Error
 }
 

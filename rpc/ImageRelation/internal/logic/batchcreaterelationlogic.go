@@ -26,6 +26,13 @@ func NewBatchCreateRelationLogic(ctx context.Context, svcCtx *svc.ServiceContext
 
 // BatchCreateRelation 批量创建图片关系
 func (l *BatchCreateRelationLogic) BatchCreateRelation(in *imageRelation.BatchCreateRelationRequest) (*imageRelation.BatchCreateRelationResponse, error) {
+	// 检查输入切片是否为空
+	if len(in.Relations) == 0 {
+		return &imageRelation.BatchCreateRelationResponse{
+			Relations: []*imageRelation.ImageRelation{},
+		}, nil
+	}
+
 	imageRelations := make([]*model.ImageRelation, len(in.Relations))
 	for i, relation := range in.Relations {
 		imageRelations[i] = &model.ImageRelation{

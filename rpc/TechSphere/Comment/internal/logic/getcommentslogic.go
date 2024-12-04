@@ -82,10 +82,12 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 		}
 	}
 
-	// 获取用户信息
+	// 收集所有评论者和被回复者ID
 	userIds := make([]int64, len(comments))
+	replyToUserIds := make([]int64, len(comments))
 	for i, val := range comments {
 		userIds[i] = val.UserID
+		replyToUserIds[i] = val.ReplyToUID
 	}
 	users, err := l.svcCtx.UserService.BatchGetUserByID(l.ctx, &userservice.BatchGetUserByIDRequest{
 		UserIds: userIds,
@@ -100,10 +102,13 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 		for _, user := range users.UserInfos {
 			if user != nil {
 				l.Logger.Infof("映射用户信息: userId=%d, userName=%s", user.UserId, user.UserName)
-				userInfos[user.UserId] = &comment.UserInfo{
-					UserId:   user.UserId,
-					Username: user.UserName,
-					Avatar:   user.Avatar,
+				// 如果用户信息不存在，则添加到映射中
+				if _, ok := userInfos[user.UserId]; !ok {
+					userInfos[user.UserId] = &comment.UserInfo{
+						UserId:   user.UserId,
+						Username: user.UserName,
+						Avatar:   user.Avatar,
+					}
 				}
 			}
 		}
@@ -123,17 +128,18 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*comment.Commen
 		}
 
 		rootComments[i] = &comment.Comment{
-			Id:           val.ID,
-			ArticleId:    val.ArticleID,
-			Content:      val.Content,
-			ParentId:     val.ParentID,
-			UserInfo:     userInfos[val.UserID],
-			Replies:      l.buildTree(val.Replies),
-			RepliesCount: int64(val.ReplyCount),
-			LikeCount:    int32(likeCountMap[val.ID]),
-			Images:       commentImages[val.ID],
-			CreatedAt:    val.CreatedAt.Unix(),
-			UpdatedAt:    val.UpdatedAt.Unix(),
+			Id:              val.ID,
+			ArticleId:       val.ArticleID,
+			Content:         val.Content,
+			ParentId:        val.ParentID,
+			UserInfo:        userInfos[val.UserID],
+			ReplyToUserInfo: userInfos[val.ReplyToUID],
+			CreatedAt:       val.CreatedAt.Unix(),
+			UpdatedAt:       val.UpdatedAt.Unix(),
+			Replies:         l.buildTree(val.Replies),
+			RepliesCount:    int64(val.ReplyCount),
+			LikeCount:       int32(likeCountMap[val.ID]),
+			Images:          commentImages[val.ID],
 		}
 	}
 	// 按照点赞数量进行排序

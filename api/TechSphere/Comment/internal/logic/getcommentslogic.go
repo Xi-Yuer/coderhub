@@ -76,16 +76,26 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 			})
 		}
 
+		var replyToUserInfo *types.UserInfo
+		if val.ReplyToUserInfo != nil {
+			replyToUserInfo = &types.UserInfo{
+				UserId:   val.ReplyToUserInfo.UserId,
+				Username: val.ReplyToUserInfo.Username,
+				Avatar:   val.ReplyToUserInfo.Avatar,
+			}
+		}
+
 		rootComments[i] = &types.Comment{
 			Id:        val.Id,
 			ArticleId: val.ArticleId,
 			Content:   val.Content,
 			ParentId:  val.ParentId,
-			UserInfo: types.UserInfo{
+			UserInfo: &types.UserInfo{
 				UserId:   val.UserInfo.UserId,
 				Username: val.UserInfo.Username,
 				Avatar:   val.UserInfo.Avatar,
 			},
+			ReplyToUserInfo: replyToUserInfo,
 			CreatedAt:    val.CreatedAt,
 			UpdatedAt:    val.UpdatedAt,
 			Replies:      l.buildTree(val.Replies),

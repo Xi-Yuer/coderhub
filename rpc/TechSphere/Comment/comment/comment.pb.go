@@ -127,17 +127,18 @@ type Comment struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id           int64           `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                         // 评论ID
-	ArticleId    int64           `protobuf:"varint,2,opt,name=article_id,json=articleId,proto3" json:"article_id,omitempty"`          // 文章ID
-	Content      string          `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`                                // 评论内容
-	ParentId     int64           `protobuf:"varint,4,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`             // 父评论ID，用于嵌套评论
-	UserInfo     *UserInfo       `protobuf:"bytes,5,opt,name=user_info,json=userInfo,proto3" json:"user_info,omitempty"`              // 评论者信息
-	CreatedAt    int64           `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`          // 创建时间
-	UpdatedAt    int64           `protobuf:"varint,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`          // 更新时间
-	Replies      []*Comment      `protobuf:"bytes,8,rep,name=replies,proto3" json:"replies,omitempty"`                                // 子评论列表
-	RepliesCount int64           `protobuf:"varint,9,opt,name=replies_count,json=repliesCount,proto3" json:"replies_count,omitempty"` // 子评论数量
-	LikeCount    int32           `protobuf:"varint,10,opt,name=like_count,json=likeCount,proto3" json:"like_count,omitempty"`         // 点赞数
-	Images       []*CommentImage `protobuf:"bytes,11,rep,name=images,proto3" json:"images,omitempty"`                                 // 评论包含的图片列表
+	Id              int64           `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                     // 评论ID
+	ArticleId       int64           `protobuf:"varint,2,opt,name=article_id,json=articleId,proto3" json:"article_id,omitempty"`                      // 文章ID
+	Content         string          `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`                                            // 评论内容
+	ParentId        int64           `protobuf:"varint,4,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`                         // 父评论ID，用于嵌套评论
+	UserInfo        *UserInfo       `protobuf:"bytes,5,opt,name=user_info,json=userInfo,proto3" json:"user_info,omitempty"`                          // 评论者信息
+	ReplyToUserInfo *UserInfo       `protobuf:"bytes,6,opt,name=reply_to_user_info,json=replyToUserInfo,proto3" json:"reply_to_user_info,omitempty"` // 被回复的用户信息（可选）
+	CreatedAt       int64           `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                      // 创建时间
+	UpdatedAt       int64           `protobuf:"varint,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                      // 更新时间
+	Replies         []*Comment      `protobuf:"bytes,9,rep,name=replies,proto3" json:"replies,omitempty"`                                            // 子评论列表
+	RepliesCount    int64           `protobuf:"varint,10,opt,name=replies_count,json=repliesCount,proto3" json:"replies_count,omitempty"`            // 子评论数量
+	LikeCount       int32           `protobuf:"varint,11,opt,name=like_count,json=likeCount,proto3" json:"like_count,omitempty"`                     // 点赞数
+	Images          []*CommentImage `protobuf:"bytes,12,rep,name=images,proto3" json:"images,omitempty"`                                             // 评论包含的图片列表
 }
 
 func (x *Comment) Reset() {
@@ -201,6 +202,13 @@ func (x *Comment) GetParentId() int64 {
 func (x *Comment) GetUserInfo() *UserInfo {
 	if x != nil {
 		return x.UserInfo
+	}
+	return nil
+}
+
+func (x *Comment) GetReplyToUserInfo() *UserInfo {
+	if x != nil {
+		return x.ReplyToUserInfo
 	}
 	return nil
 }
@@ -935,7 +943,7 @@ var file_comment_proto_rawDesc = []byte{
 	0x64, 0x22, 0x3a, 0x0a, 0x1e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65,
 	0x6e, 0x74, 0x4c, 0x69, 0x6b, 0x65, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f,
 	0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x22, 0xfc, 0x02,
+	0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x22, 0xbc, 0x03,
 	0x0a, 0x07, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18,
 	0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x61, 0x72, 0x74,
 	0x69, 0x63, 0x6c, 0x65, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x61,
@@ -946,18 +954,22 @@ var file_comment_proto_rawDesc = []byte{
 	0x2e, 0x0a, 0x09, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x6e, 0x66, 0x6f, 0x18, 0x05, 0x20, 0x01,
 	0x28, 0x0b, 0x32, 0x11, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x55, 0x73, 0x65,
 	0x72, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x12,
-	0x1d, 0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x61, 0x74, 0x18, 0x06, 0x20,
+	0x3e, 0x0a, 0x12, 0x72, 0x65, 0x70, 0x6c, 0x79, 0x5f, 0x74, 0x6f, 0x5f, 0x75, 0x73, 0x65, 0x72,
+	0x5f, 0x69, 0x6e, 0x66, 0x6f, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x63, 0x6f,
+	0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x0f,
+	0x72, 0x65, 0x70, 0x6c, 0x79, 0x54, 0x6f, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x12,
+	0x1d, 0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x61, 0x74, 0x18, 0x07, 0x20,
 	0x01, 0x28, 0x03, 0x52, 0x09, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x12, 0x1d,
-	0x0a, 0x0a, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x61, 0x74, 0x18, 0x07, 0x20, 0x01,
+	0x0a, 0x0a, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x61, 0x74, 0x18, 0x08, 0x20, 0x01,
 	0x28, 0x03, 0x52, 0x09, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x12, 0x2a, 0x0a,
-	0x07, 0x72, 0x65, 0x70, 0x6c, 0x69, 0x65, 0x73, 0x18, 0x08, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x10,
+	0x07, 0x72, 0x65, 0x70, 0x6c, 0x69, 0x65, 0x73, 0x18, 0x09, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x10,
 	0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74,
 	0x52, 0x07, 0x72, 0x65, 0x70, 0x6c, 0x69, 0x65, 0x73, 0x12, 0x23, 0x0a, 0x0d, 0x72, 0x65, 0x70,
-	0x6c, 0x69, 0x65, 0x73, 0x5f, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x09, 0x20, 0x01, 0x28, 0x03,
+	0x6c, 0x69, 0x65, 0x73, 0x5f, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x03,
 	0x52, 0x0c, 0x72, 0x65, 0x70, 0x6c, 0x69, 0x65, 0x73, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x1d,
-	0x0a, 0x0a, 0x6c, 0x69, 0x6b, 0x65, 0x5f, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x0a, 0x20, 0x01,
+	0x0a, 0x0a, 0x6c, 0x69, 0x6b, 0x65, 0x5f, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x0b, 0x20, 0x01,
 	0x28, 0x05, 0x52, 0x09, 0x6c, 0x69, 0x6b, 0x65, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x2d, 0x0a,
-	0x06, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x18, 0x0b, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x15, 0x2e,
+	0x06, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x18, 0x0c, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x15, 0x2e,
 	0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x49,
 	0x6d, 0x61, 0x67, 0x65, 0x52, 0x06, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x22, 0x57, 0x0a, 0x08,
 	0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72,
@@ -1098,29 +1110,30 @@ var file_comment_proto_goTypes = []any{
 }
 var file_comment_proto_depIdxs = []int32{
 	3,  // 0: comment.Comment.user_info:type_name -> comment.UserInfo
-	2,  // 1: comment.Comment.replies:type_name -> comment.Comment
-	14, // 2: comment.Comment.images:type_name -> comment.CommentImage
-	2,  // 3: comment.CreateCommentResponse.comment:type_name -> comment.Comment
-	2,  // 4: comment.GetCommentsResponse.comments:type_name -> comment.Comment
-	2,  // 5: comment.GetCommentRepliesResponse.replies:type_name -> comment.Comment
-	2,  // 6: comment.GetCommentResponse.comment:type_name -> comment.Comment
-	4,  // 7: comment.CommentService.CreateComment:input_type -> comment.CreateCommentRequest
-	6,  // 8: comment.CommentService.GetComments:input_type -> comment.GetCommentsRequest
-	8,  // 9: comment.CommentService.GetCommentReplies:input_type -> comment.GetCommentRepliesRequest
-	0,  // 10: comment.CommentService.UpdateCommentLikeCount:input_type -> comment.UpdateCommentLikeCountRequest
-	10, // 11: comment.CommentService.GetComment:input_type -> comment.GetCommentRequest
-	12, // 12: comment.CommentService.DeleteComment:input_type -> comment.DeleteCommentRequest
-	5,  // 13: comment.CommentService.CreateComment:output_type -> comment.CreateCommentResponse
-	7,  // 14: comment.CommentService.GetComments:output_type -> comment.GetCommentsResponse
-	9,  // 15: comment.CommentService.GetCommentReplies:output_type -> comment.GetCommentRepliesResponse
-	1,  // 16: comment.CommentService.UpdateCommentLikeCount:output_type -> comment.UpdateCommentLikeCountResponse
-	11, // 17: comment.CommentService.GetComment:output_type -> comment.GetCommentResponse
-	13, // 18: comment.CommentService.DeleteComment:output_type -> comment.DeleteCommentResponse
-	13, // [13:19] is the sub-list for method output_type
-	7,  // [7:13] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	3,  // 1: comment.Comment.reply_to_user_info:type_name -> comment.UserInfo
+	2,  // 2: comment.Comment.replies:type_name -> comment.Comment
+	14, // 3: comment.Comment.images:type_name -> comment.CommentImage
+	2,  // 4: comment.CreateCommentResponse.comment:type_name -> comment.Comment
+	2,  // 5: comment.GetCommentsResponse.comments:type_name -> comment.Comment
+	2,  // 6: comment.GetCommentRepliesResponse.replies:type_name -> comment.Comment
+	2,  // 7: comment.GetCommentResponse.comment:type_name -> comment.Comment
+	4,  // 8: comment.CommentService.CreateComment:input_type -> comment.CreateCommentRequest
+	6,  // 9: comment.CommentService.GetComments:input_type -> comment.GetCommentsRequest
+	8,  // 10: comment.CommentService.GetCommentReplies:input_type -> comment.GetCommentRepliesRequest
+	0,  // 11: comment.CommentService.UpdateCommentLikeCount:input_type -> comment.UpdateCommentLikeCountRequest
+	10, // 12: comment.CommentService.GetComment:input_type -> comment.GetCommentRequest
+	12, // 13: comment.CommentService.DeleteComment:input_type -> comment.DeleteCommentRequest
+	5,  // 14: comment.CommentService.CreateComment:output_type -> comment.CreateCommentResponse
+	7,  // 15: comment.CommentService.GetComments:output_type -> comment.GetCommentsResponse
+	9,  // 16: comment.CommentService.GetCommentReplies:output_type -> comment.GetCommentRepliesResponse
+	1,  // 17: comment.CommentService.UpdateCommentLikeCount:output_type -> comment.UpdateCommentLikeCountResponse
+	11, // 18: comment.CommentService.GetComment:output_type -> comment.GetCommentResponse
+	13, // 19: comment.CommentService.DeleteComment:output_type -> comment.DeleteCommentResponse
+	14, // [14:20] is the sub-list for method output_type
+	8,  // [8:14] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_comment_proto_init() }

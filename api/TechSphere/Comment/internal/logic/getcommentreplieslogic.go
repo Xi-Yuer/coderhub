@@ -44,22 +44,31 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(req *types.GetCommentRepliesR
 				ThumbnailUrl: img.ThumbnailUrl,
 			}
 		}
+		var replyToUserInfo *types.UserInfo
+		if val.ReplyToUserInfo != nil {
+			replyToUserInfo = &types.UserInfo{
+				UserId:   val.ReplyToUserInfo.UserId,
+				Username: val.ReplyToUserInfo.Username,
+				Avatar:   val.ReplyToUserInfo.Avatar,
+			}
+		}
 		replies[i] = &types.Comment{
 			Id:        val.Id,
 			ArticleId: val.ArticleId,
 			Content:   val.Content,
 			ParentId:  val.ParentId,
-			UserInfo: types.UserInfo{
+			UserInfo: &types.UserInfo{
 				UserId:   val.UserInfo.UserId,
 				Username: val.UserInfo.Username,
 				Avatar:   val.UserInfo.Avatar,
 			},
-			CreatedAt:    val.CreatedAt,
-			UpdatedAt:    val.UpdatedAt,
-			Replies:      nil,
-			RepliesCount: val.RepliesCount,
-			LikeCount:    val.LikeCount,
-			Images:       images,
+			ReplyToUserInfo: replyToUserInfo,
+			CreatedAt:       val.CreatedAt,
+			UpdatedAt:       val.UpdatedAt,
+			Replies:         nil,
+			RepliesCount:    val.RepliesCount,
+			LikeCount:       val.LikeCount,
+			Images:          images,
 		}
 	}
 

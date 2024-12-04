@@ -22,17 +22,18 @@ type (
 	}
 	// 评论实体
 	Comment {
-		Id           int64          `json:"id"` // 评论ID
-		ArticleId    int64          `json:"article_id"` // 文章ID
-		Content      string         `json:"content"` // 评论内容
-		ParentId     int64          `json:"parent_id"` // 父评论ID
-		UserInfo     UserInfo       `json:"user_info"` // 评论者信息
-		CreatedAt    int64          `json:"created_at"` // 创建时间
-		UpdatedAt    int64          `json:"updated_at"` // 更新时间
-		Replies      []*Comment     `json:"replies"` // 子评论列表
-		RepliesCount int64          `json:"replies_count"` // 子评论数量
-		LikeCount    int32          `json:"like_count"` // 点赞数
-		Images       []CommentImage `json:"images"` // 评论图片列表
+		Id              int64          `json:"id"` // 评论ID
+		ArticleId       int64          `json:"article_id"` // 文章ID
+		Content         string         `json:"content"` // 评论内容
+		ParentId        int64          `json:"parent_id"` // 父评论ID
+		UserInfo        *UserInfo      `json:"user_info"` // 评论者信息
+		CreatedAt       int64          `json:"created_at"` // 创建时间
+		UpdatedAt       int64          `json:"updated_at"` // 更新时间
+		Replies         []*Comment     `json:"replies"` // 子评论列表
+		ReplyToUserInfo *UserInfo      `json:"reply_to_user_info"` // 被回复者信息
+		RepliesCount    int64          `json:"replies_count"` // 子评论数量
+		LikeCount       int32          `json:"like_count"` // 点赞数
+		Images          []CommentImage `json:"images"` // 评论图片列表
 	}
 	// 评论者信息
 	UserInfo {

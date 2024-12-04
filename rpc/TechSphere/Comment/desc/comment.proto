@@ -37,12 +37,13 @@ message Comment {
   string content = 3;              // 评论内容
   int64 parent_id = 4;             // 父评论ID，用于嵌套评论
   UserInfo user_info = 5;          // 评论者信息
-  int64 created_at = 6;            // 创建时间
-  int64 updated_at = 7;            // 更新时间
-  repeated Comment replies = 8;     // 子评论列表
-  int64 replies_count = 9;          // 子评论数量
-  int32 like_count = 10;            // 点赞数
-  repeated CommentImage images = 11;  // 评论包含的图片列表
+  UserInfo reply_to_user_info = 6;  // 被回复的用户信息（可选）
+  int64 created_at = 7;            // 创建时间
+  int64 updated_at = 8;            // 更新时间
+  repeated Comment replies = 9;     // 子评论列表
+  int64 replies_count = 10;          // 子评论数量
+  int32 like_count = 11;            // 点赞数
+  repeated CommentImage images = 12;  // 评论包含的图片列表
 }
 
 // 评论者信息
