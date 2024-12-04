@@ -168,13 +168,8 @@ func (l *UpdateArticleLogic) updateArticleFields(article *model.Articles, in *ar
 		// 批量创建新的图片关联
 		relations := make([]*imageRelation.CreateRelationRequest, len(in.ImageIds))
 		for i, imageId := range in.ImageIds {
-			imageIdInt, err := strconv.ParseInt(imageId, 10, 64)
-			if err != nil {
-				l.Logger.Errorf("转换图片ID失败: %v", err)
-				continue
-			}
 			relations[i] = &imageRelation.CreateRelationRequest{
-				ImageId:    imageIdInt,
+				ImageId:    imageId,
 				EntityId:   article.ID,
 				EntityType: model.ImageRelationArticleContent,
 			}

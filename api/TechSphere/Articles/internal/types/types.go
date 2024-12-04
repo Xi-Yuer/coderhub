@@ -10,7 +10,7 @@ type Article struct {
 	Content      string   `json:"content" form:"content"`           // 内容
 	Summary      string   `json:"summary" form:"summary"`           // 摘要
 	ImageUrls    []string `json:"imageUrls" form:"imageUrls"`       // 图片 URL 列表
-	CoverImage   string   `json:"coverImage" form:"coverImage"`     // 封面图片 URL
+	CoverImage   *string  `json:"coverImage" form:"coverImage"`     // 封面图片 URL
 	AuthorId     int64    `json:"authorId" form:"authorId"`         // 作者 ID
 	Tags         []string `json:"tags" form:"tags"`                 // 标签列表
 	ViewCount    int64    `json:"viewCount" form:"viewCount"`       // 阅读次数
@@ -26,8 +26,8 @@ type CreateArticleReq struct {
 	Title        string   `json:"title"`                           // 标题
 	Content      string   `json:"content"`                         // 内容
 	Summary      string   `json:"summary"`                         // 摘要
-	ImageIds     []string `json:"imageIds"`                        // 图片 URL 列表
-	CoverImageID string   `json:"coverImageID"`                    // 封面图片 URL
+	ImageIds     []int64  `json:"imageIds"`                        // 图片 URL 列表
+	CoverImageID int64    `json:"coverImageID"`                    // 封面图片 URL
 	Tags         []string `json:"tags"`                            // 标签列表
 	Status       string   `json:"status,options=draft|published"`  // 文章状态
 }
@@ -69,8 +69,8 @@ type UpdateArticleReq struct {
 	Title        string   `json:"title"`        // 标题
 	Content      string   `json:"content"`      // 内容
 	Summary      string   `json:"summary"`      // 摘要
-	ImageIds     []string `json:"imageIds"`     // 图片 URL 列表
-	CoverImageID string   `json:"coverImageID"` // 封面图片 URL
+	ImageIds     []int64  `json:"imageIds"`     // 图片 URL 列表
+	CoverImageID int64    `json:"coverImageID"` // 封面图片 URL
 	Tags         []string `json:"tags"`         // 标签列表
 	Status       string   `json:"status"`       // 文章状态
 }

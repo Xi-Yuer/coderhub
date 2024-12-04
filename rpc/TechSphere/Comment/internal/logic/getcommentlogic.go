@@ -83,6 +83,7 @@ func (l *GetCommentLogic) GetComment(in *comment.GetCommentRequest) (*comment.Ge
 			ArticleId: commentModel.ArticleID,
 			Content:   commentModel.Content,
 			ParentId:  commentModel.ParentID,
+			RootId:    commentModel.RootID,
 			UserInfo: &comment.UserInfo{
 				UserId:   user.UserId,
 				Username: user.UserName,

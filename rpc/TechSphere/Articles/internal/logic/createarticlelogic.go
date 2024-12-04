@@ -9,7 +9,6 @@ import (
 	"coderhub/shared/Validator"
 	"context"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -58,10 +57,11 @@ func (l *CreateArticleLogic) CreateArticle(in *articles.CreateArticleRequest) (*
 
 	// 生成文章ID
 	articleID := SnowFlake.GenID()
-	// 获取封面图片
-	coverImageId, err := strconv.ParseInt(in.CoverImageId, 10, 64)
-	if err != nil {
-		return nil, fmt.Errorf("封面图片ID转换失败: %w", err)
+
+	// 文章 Tags，因为Tags 可能是空的，所以需要判断
+	tags := ""
+	if len(in.Tags) > 0 {
+		tags = strings.Join(in.Tags, ",")
 	}
 
 	// 创建文章模型
@@ -72,13 +72,13 @@ func (l *CreateArticleLogic) CreateArticle(in *articles.CreateArticleRequest) (*
 		Content:  in.Content,
 		Summary:  in.Summary,
 		AuthorID: in.AuthorId,
-		Tags:     strings.Join(in.Tags, ","),
+		Tags:     tags,
 		Status:   in.Status,
 	}
 
 	// 创建封面图片关联
 	coverImageRelation := &model.ImageRelation{
-		ImageID:    coverImageId,
+		ImageID:    in.CoverImageId,
 		EntityID:   articleID,
 		EntityType: model.ImageRelationArticleCover,
 		Sort:       0,
@@ -87,12 +87,8 @@ func (l *CreateArticleLogic) CreateArticle(in *articles.CreateArticleRequest) (*
 	// 创建正文配图关联
 	imageRelations := make([]*model.ImageRelation, len(in.ImageIds))
 	for i, imageId := range in.ImageIds {
-		imageIdInt, err := strconv.ParseInt(imageId, 10, 64)
-		if err != nil {
-			return nil, fmt.Errorf("图片ID转换失败: %w", err)
-		}
 		imageRelations[i] = &model.ImageRelation{
-			ImageID:    imageIdInt,
+			ImageID:    imageId,
 			EntityID:   articleID,
 			EntityType: model.ImageRelationArticleContent,
 			Sort:       int32(i),

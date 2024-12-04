@@ -364,15 +364,15 @@ type CreateArticleRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type         string   `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`                                       // 内容类型
-	Title        string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`                                     // 标题
-	Content      string   `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`                                 // 内容
-	Summary      string   `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`                                 // 摘要
-	ImageIds     []string `protobuf:"bytes,5,rep,name=image_ids,json=imageIds,proto3" json:"image_ids,omitempty"`               // 图片ID列表
-	CoverImageId string   `protobuf:"bytes,6,opt,name=cover_image_id,json=coverImageId,proto3" json:"cover_image_id,omitempty"` // 封面图片ID
-	AuthorId     int64    `protobuf:"varint,7,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`              // 作者 ID
-	Tags         []string `protobuf:"bytes,8,rep,name=tags,proto3" json:"tags,omitempty"`                                       // 标签列表
-	Status       string   `protobuf:"bytes,9,opt,name=status,proto3" json:"status,omitempty"`                                   // 文章状态
+	Type         string   `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`                                        // 内容类型
+	Title        string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`                                      // 标题
+	Content      string   `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`                                  // 内容
+	Summary      string   `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`                                  // 摘要
+	ImageIds     []int64  `protobuf:"varint,5,rep,packed,name=image_ids,json=imageIds,proto3" json:"image_ids,omitempty"`        // 图片ID列表
+	CoverImageId int64    `protobuf:"varint,6,opt,name=cover_image_id,json=coverImageId,proto3" json:"cover_image_id,omitempty"` // 封面图片ID
+	AuthorId     int64    `protobuf:"varint,7,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`               // 作者 ID
+	Tags         []string `protobuf:"bytes,8,rep,name=tags,proto3" json:"tags,omitempty"`                                        // 标签列表
+	Status       string   `protobuf:"bytes,9,opt,name=status,proto3" json:"status,omitempty"`                                    // 文章状态
 }
 
 func (x *CreateArticleRequest) Reset() {
@@ -433,18 +433,18 @@ func (x *CreateArticleRequest) GetSummary() string {
 	return ""
 }
 
-func (x *CreateArticleRequest) GetImageIds() []string {
+func (x *CreateArticleRequest) GetImageIds() []int64 {
 	if x != nil {
 		return x.ImageIds
 	}
 	return nil
 }
 
-func (x *CreateArticleRequest) GetCoverImageId() string {
+func (x *CreateArticleRequest) GetCoverImageId() int64 {
 	if x != nil {
 		return x.CoverImageId
 	}
-	return ""
+	return 0
 }
 
 func (x *CreateArticleRequest) GetAuthorId() int64 {
@@ -520,14 +520,14 @@ type UpdateArticleRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id           int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                          // 文章 ID
-	Title        string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`                                     // 标题
-	Content      string   `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`                                 // 内容
-	Summary      string   `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`                                 // 摘要
-	ImageIds     []string `protobuf:"bytes,5,rep,name=image_ids,json=imageIds,proto3" json:"image_ids,omitempty"`               // 图片ID列表
-	CoverImageId string   `protobuf:"bytes,6,opt,name=cover_image_id,json=coverImageId,proto3" json:"cover_image_id,omitempty"` // 封面图片ID
-	Tags         []string `protobuf:"bytes,7,rep,name=tags,proto3" json:"tags,omitempty"`                                       // 标签列表
-	Status       string   `protobuf:"bytes,8,opt,name=status,proto3" json:"status,omitempty"`                                   // 文章状态
+	Id           int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                           // 文章 ID
+	Title        string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`                                      // 标题
+	Content      string   `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`                                  // 内容
+	Summary      string   `protobuf:"bytes,4,opt,name=summary,proto3" json:"summary,omitempty"`                                  // 摘要
+	ImageIds     []int64  `protobuf:"varint,5,rep,packed,name=image_ids,json=imageIds,proto3" json:"image_ids,omitempty"`        // 图片ID列表
+	CoverImageId int64    `protobuf:"varint,6,opt,name=cover_image_id,json=coverImageId,proto3" json:"cover_image_id,omitempty"` // 封面图片ID
+	Tags         []string `protobuf:"bytes,7,rep,name=tags,proto3" json:"tags,omitempty"`                                        // 标签列表
+	Status       string   `protobuf:"bytes,8,opt,name=status,proto3" json:"status,omitempty"`                                    // 文章状态
 }
 
 func (x *UpdateArticleRequest) Reset() {
@@ -588,18 +588,18 @@ func (x *UpdateArticleRequest) GetSummary() string {
 	return ""
 }
 
-func (x *UpdateArticleRequest) GetImageIds() []string {
+func (x *UpdateArticleRequest) GetImageIds() []int64 {
 	if x != nil {
 		return x.ImageIds
 	}
 	return nil
 }
 
-func (x *UpdateArticleRequest) GetCoverImageId() string {
+func (x *UpdateArticleRequest) GetCoverImageId() int64 {
 	if x != nil {
 		return x.CoverImageId
 	}
-	return ""
+	return 0
 }
 
 func (x *UpdateArticleRequest) GetTags() []string {
@@ -920,9 +920,9 @@ var file_articles_proto_rawDesc = []byte{
 	0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x6d, 0x6d, 0x61,
 	0x72, 0x79, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x73, 0x75, 0x6d, 0x6d, 0x61, 0x72,
 	0x79, 0x12, 0x1b, 0x0a, 0x09, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x5f, 0x69, 0x64, 0x73, 0x18, 0x05,
-	0x20, 0x03, 0x28, 0x09, 0x52, 0x08, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x49, 0x64, 0x73, 0x12, 0x24,
+	0x20, 0x03, 0x28, 0x03, 0x52, 0x08, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x49, 0x64, 0x73, 0x12, 0x24,
 	0x0a, 0x0e, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x5f, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x5f, 0x69, 0x64,
-	0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x49, 0x6d, 0x61,
+	0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0c, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x49, 0x6d, 0x61,
 	0x67, 0x65, 0x49, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x5f, 0x69,
 	0x64, 0x18, 0x07, 0x20, 0x01, 0x28, 0x03, 0x52, 0x08, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x49,
 	0x64, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x61, 0x67, 0x73, 0x18, 0x08, 0x20, 0x03, 0x28, 0x09, 0x52,
@@ -938,9 +938,9 @@ var file_articles_proto_rawDesc = []byte{
 	0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x12,
 	0x18, 0x0a, 0x07, 0x73, 0x75, 0x6d, 0x6d, 0x61, 0x72, 0x79, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09,
 	0x52, 0x07, 0x73, 0x75, 0x6d, 0x6d, 0x61, 0x72, 0x79, 0x12, 0x1b, 0x0a, 0x09, 0x69, 0x6d, 0x61,
-	0x67, 0x65, 0x5f, 0x69, 0x64, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x09, 0x52, 0x08, 0x69, 0x6d,
+	0x67, 0x65, 0x5f, 0x69, 0x64, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x03, 0x52, 0x08, 0x69, 0x6d,
 	0x61, 0x67, 0x65, 0x49, 0x64, 0x73, 0x12, 0x24, 0x0a, 0x0e, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x5f,
-	0x69, 0x6d, 0x61, 0x67, 0x65, 0x5f, 0x69, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c,
+	0x69, 0x6d, 0x61, 0x67, 0x65, 0x5f, 0x69, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0c,
 	0x63, 0x6f, 0x76, 0x65, 0x72, 0x49, 0x6d, 0x61, 0x67, 0x65, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04,
 	0x74, 0x61, 0x67, 0x73, 0x18, 0x07, 0x20, 0x03, 0x28, 0x09, 0x52, 0x04, 0x74, 0x61, 0x67, 0x73,
 	0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09,

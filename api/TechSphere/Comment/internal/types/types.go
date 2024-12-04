@@ -7,6 +7,7 @@ type Comment struct {
 	Id              int64          `json:"id"`                 // 评论ID
 	ArticleId       int64          `json:"article_id"`         // 文章ID
 	Content         string         `json:"content"`            // 评论内容
+	RootId          int64          `json:"root_id"`            // 根评论ID
 	ParentId        int64          `json:"parent_id"`          // 父评论ID
 	UserInfo        *UserInfo      `json:"user_info"`          // 评论者信息
 	CreatedAt       int64          `json:"created_at"`         // 创建时间
@@ -27,6 +28,7 @@ type CommentImage struct {
 type CreateCommentReq struct {
 	ArticleId  int64    `json:"article_id"`   // 文章ID
 	Content    string   `json:"content"`      // 评论内容
+	RootId     int64    `json:"root_id"`      // 根评论ID
 	ParentId   int64    `json:"parent_id"`    // 父评论ID（可选）
 	ReplyToUID int64    `json:"reply_to_uid"` // 回复的目标评论ID（可选）
 	ImageIds   []string `json:"image_ids"`    // 图片ID列表
@@ -63,7 +65,7 @@ type GetCommentReq struct {
 
 type GetCommentResp struct {
 	Response
-	Data Comment `json:"data"` // 评论详情
+	Data *Comment `json:"data"` // 评论详情
 }
 
 type GetCommentsReq struct {

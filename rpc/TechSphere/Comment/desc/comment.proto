@@ -36,14 +36,15 @@ message Comment {
   int64 article_id = 2;            // 文章ID
   string content = 3;              // 评论内容
   int64 parent_id = 4;             // 父评论ID，用于嵌套评论
-  UserInfo user_info = 5;          // 评论者信息
-  UserInfo reply_to_user_info = 6;  // 被回复的用户信息（可选）
-  int64 created_at = 7;            // 创建时间
-  int64 updated_at = 8;            // 更新时间
-  repeated Comment replies = 9;     // 子评论列表
-  int64 replies_count = 10;          // 子评论数量
-  int32 like_count = 11;            // 点赞数
-  repeated CommentImage images = 12;  // 评论包含的图片列表
+  int64 root_id = 5;              // 根评论ID（可选）
+  UserInfo user_info = 6;          // 评论者信息
+  UserInfo reply_to_user_info = 7;  // 被回复的用户信息（可选）
+  int64 created_at = 8;            // 创建时间
+  int64 updated_at = 9;            // 更新时间
+  repeated Comment replies = 10;     // 子评论列表
+  int64 replies_count = 11;          // 子评论数量
+  int32 like_count = 12;            // 点赞数
+  repeated CommentImage images = 13;  // 评论包含的图片列表
 }
 
 // 评论者信息
@@ -58,9 +59,10 @@ message CreateCommentRequest {
   int64 article_id = 1;            // 文章ID
   string content = 2;              // 评论内容
   int64 parent_id = 3;             // 父评论ID（可选）
-  int64 user_id = 4;               // 评论者ID
-  int64 reply_to_uid = 5;         // 被回复的用户ID（可选）
-  repeated string image_ids = 6;      // 图片ID列表
+  int64 root_id = 4;              // 根评论ID（可选）
+  int64 user_id = 5;               // 评论者ID
+  int64 reply_to_uid = 6;         // 被回复的用户ID（可选）
+  repeated string image_ids = 7;      // 图片ID列表
 }
 
 message CreateCommentResponse {

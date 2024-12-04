@@ -81,11 +81,12 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 			Code:    conf.HttpCode.HttpStatusOK,
 			Message: conf.HttpMessage.MsgOK,
 		},
-		Data: types.Comment{
+		Data: &types.Comment{
 			Id:              comment.Comment.Id,
 			ArticleId:       comment.Comment.ArticleId,
 			Content:         comment.Comment.Content,
 			ParentId:        comment.Comment.ParentId,
+			RootId:          comment.Comment.RootId,
 			UserInfo:        userInfo,
 			CreatedAt:       comment.Comment.CreatedAt,
 			UpdatedAt:       comment.Comment.UpdatedAt,

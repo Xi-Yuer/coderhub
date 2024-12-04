@@ -5,6 +5,7 @@ import (
 
 	"coderhub/api/TechSphere/Comment/internal/svc"
 	"coderhub/api/TechSphere/Comment/internal/types"
+	"coderhub/conf"
 	"coderhub/rpc/TechSphere/Comment/comment"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -32,8 +33,13 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(req *types.GetCommentRepliesR
 		PageSize:  req.PageSize,
 	})
 	if err != nil {
-		return nil, err
+		return l.errorResp(err)
 	}
+
+	return l.successResp(reply)
+}
+
+func (l *GetCommentRepliesLogic) successResp(reply *comment.GetCommentRepliesResponse) (*types.GetCommentRepliesResp, error) {
 	replies := make([]*types.Comment, len(reply.Replies))
 	for i, val := range reply.Replies {
 		images := make([]types.CommentImage, len(val.Images))
@@ -57,6 +63,7 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(req *types.GetCommentRepliesR
 			ArticleId: val.ArticleId,
 			Content:   val.Content,
 			ParentId:  val.ParentId,
+			RootId:    val.RootId,
 			UserInfo: &types.UserInfo{
 				UserId:   val.UserInfo.UserId,
 				Username: val.UserInfo.Username,
@@ -71,12 +78,23 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(req *types.GetCommentRepliesR
 			Images:          images,
 		}
 	}
-
 	return &types.GetCommentRepliesResp{
-		Response: types.Response{},
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
 		Data: types.List{
 			List:  replies,
 			Total: reply.Total,
 		},
 	}, nil
+}
+
+func (l *GetCommentRepliesLogic) errorResp(err error) (*types.GetCommentRepliesResp, error) {
+	return &types.GetCommentRepliesResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpBadRequest,
+			Message: conf.HttpMessage.MsgFailed,
+		},
+	}, err
 }

@@ -17,7 +17,7 @@ type CommentRepository interface {
 	GetByID(ctx context.Context, id int64) (*model.Comment, error)
 	Delete(ctx context.Context, id int64) error
 	ListByArticleID(ctx context.Context, articleID int64, page int64, pageSize int64) ([]model.Comment, int64, error)
-	ListReplies(ctx context.Context, parentID int64, page int64, pageSize int64) ([]model.Comment, int64, error)
+	ListReplies(ctx context.Context, rootID int64, page int64, pageSize int64) ([]model.Comment, int64, error)
 	CountByArticleID(ctx context.Context, articleID int64) (int64, error)
 }
 
@@ -87,16 +87,18 @@ func (r *commentRepository) ListByArticleID(ctx context.Context, articleID int64
 	fmt.Println("文章ID: ", articleID)
 	fmt.Println("页码: ", page)
 	fmt.Println("每页大小: ", pageSize)
-	r.DB.WithContext(ctx).Where("article_id = ? AND parent_id = 0", articleID).Order("created_at ASC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&comments)
-	// 查询总数
+	// 查询顶级评论
+	r.DB.WithContext(ctx).Where("article_id = ? AND root_id = 0", articleID).Order("created_at ASC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&comments)
+	// 查询评论总数
 	r.DB.WithContext(ctx).Model(&model.Comment{}).Where("article_id = ?", articleID).Count(&total)
 	// 构建树形结构并获取回复数量
 	for i := range comments {
-		if comments[i].ParentID == 0 {
+		if comments[i].RootID == 0 {
 			// 获取回复总数
 			var replyCount int64
+			// 查询回复总数
 			if err := r.DB.WithContext(ctx).Model(&model.Comment{}).
-				Where("parent_id = ?", comments[i].ID).
+				Where("root_id = ?", comments[i].ID).
 				Count(&replyCount).Error; err != nil {
 				return nil, 0, err
 			}
@@ -114,11 +116,13 @@ func (r *commentRepository) ListByArticleID(ctx context.Context, articleID int64
 	return comments, total, nil
 }
 
-// ListReplies 获取评论的回复列表(分页)，
-func (r *commentRepository) ListReplies(ctx context.Context, parentID int64, page int64, pageSize int64) ([]model.Comment, int64, error) {
+// ListReplies 获取评论的回复列表(分页)，这里评论一定是顶级评论的回复
+func (r *commentRepository) ListReplies(ctx context.Context, rootID int64, page int64, pageSize int64) ([]model.Comment, int64, error) {
 	var replies []model.Comment
 	var total int64
-	r.DB.WithContext(ctx).Where("parent_id = ?", parentID).Order("created_at ASC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&replies)
+	r.DB.WithContext(ctx).Where("root_id = ?", rootID).Order("created_at ASC").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&replies)
+	// 查询回复总数
+	r.DB.WithContext(ctx).Model(&model.Comment{}).Where("root_id = ?", rootID).Count(&total)
 	return replies, total, nil
 }
 

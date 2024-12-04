@@ -118,6 +118,13 @@ func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.
 	}
 
 	// 转换为响应格式
+	tags := make([]string, 0)
+	if article.Tags != "" {
+		tags = strings.Split(article.Tags, ",")
+	} else {
+		// 如果Tags为空，则返回空数组
+		tags = []string{}
+	}
 	response := &articles.GetArticleResponse{
 		Article: &articles.Article{
 			Id:           article.ID,
@@ -128,7 +135,7 @@ func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.
 			Images:       articleImages,
 			CoverImage:   coverImage,
 			AuthorId:     article.AuthorID,
-			Tags:         strings.Split(article.Tags, ","),
+			Tags:         tags,
 			ViewCount:    articlePV.Count,
 			LikeCount:    likeCount,
 			CommentCount: commentCount,

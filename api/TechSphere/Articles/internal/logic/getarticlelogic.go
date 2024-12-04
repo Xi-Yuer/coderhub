@@ -95,7 +95,7 @@ func (l *GetArticleLogic) convertToArticleType(article *articles.Article) *types
 		Title:        article.Title,
 		Content:      article.Content,
 		Summary:      article.Summary,
-		CoverImage:   coverImageUrl,
+		CoverImage:   &coverImageUrl,
 		ImageUrls:    imageUrls,
 		AuthorId:     article.AuthorId,
 		Tags:         article.Tags,

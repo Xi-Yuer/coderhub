@@ -28,7 +28,7 @@ func NewGetCommentRepliesLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 	}
 }
 
-// GetCommentReplies 获取评论回复列表
+// GetCommentReplies 获取评论回复列表,这里评论应该需要是顶级评论的回复
 func (l *GetCommentRepliesLogic) GetCommentReplies(in *comment.GetCommentRepliesRequest) (*comment.GetCommentRepliesResponse, error) {
 	// 获取回复列表
 	replies, total, err := l.svcCtx.CommentRepository.ListReplies(l.ctx, in.CommentId, int64(in.Page), int64(in.PageSize))
@@ -131,6 +131,7 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *comment.GetCommentReplies
 			ArticleId:       reply.ArticleID,
 			Content:         reply.Content,
 			ParentId:        reply.ParentID,
+			RootId:          reply.RootID,
 			UserInfo:        userInfos[reply.UserID],
 			ReplyToUserInfo: userInfos[reply.ReplyToUID],
 			LikeCount:       int32(likeCountMap[reply.ID]),

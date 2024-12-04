@@ -35,6 +35,7 @@ func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*c
 		ArticleID:  in.ArticleId,
 		Content:    in.Content,
 		ParentID:   in.ParentId,
+		RootID:     in.RootId,
 		UserID:     in.UserId,
 		ReplyToUID: in.ReplyToUid,
 	}
@@ -77,6 +78,7 @@ func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*c
 			ArticleId:    commentModel.ArticleID,
 			Content:      commentModel.Content,
 			ParentId:     commentModel.ParentID,
+			RootId:       commentModel.RootID,
 			UserInfo:     &comment.UserInfo{UserId: user.UserId, Username: user.UserName, Avatar: user.Avatar},
 			CreatedAt:    commentModel.CreatedAt.Unix(),
 			UpdatedAt:    commentModel.UpdatedAt.Unix(),

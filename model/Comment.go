@@ -12,6 +12,7 @@ type Comment struct {
 	ID         int64          `gorm:"<-:create;primaryKey" json:"id"`                  // 评论ID
 	ArticleID  int64          `gorm:"index" json:"article_id"`                         // 文章ID
 	Content    string         `gorm:"type:text;not null" json:"content"`               // 评论内容
+	RootID     int64          `gorm:"default:0;index" json:"root_id"`                  // 根评论ID，0表示顶级评论
 	ParentID   int64          `gorm:"default:0;index" json:"parent_id"`                // 父评论ID，0表示顶级评论
 	UserID     int64          `gorm:"index" json:"user_id"`                            // 评论者ID
 	CreatedAt  time.Time      `gorm:"<-:create" json:"created_at"`                     // 创建时间

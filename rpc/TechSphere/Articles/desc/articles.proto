@@ -49,8 +49,8 @@ message CreateArticleRequest {
   string title = 2;                 // 标题
   string content = 3;               // 内容
   string summary = 4;               // 摘要
-  repeated string image_ids = 5;    // 图片ID列表
-  string cover_image_id = 6;        // 封面图片ID
+  repeated int64 image_ids = 5;    // 图片ID列表
+  int64 cover_image_id = 6;        // 封面图片ID
   int64 author_id = 7;             // 作者 ID
   repeated string tags = 8;         // 标签列表
   string status = 9;               // 文章状态
@@ -67,8 +67,8 @@ message UpdateArticleRequest {
   string title = 2;                 // 标题
   string content = 3;               // 内容
   string summary = 4;               // 摘要
-  repeated string image_ids = 5;    // 图片ID列表
-  string cover_image_id = 6;        // 封面图片ID
+  repeated int64 image_ids = 5;    // 图片ID列表
+  int64 cover_image_id = 6;        // 封面图片ID
   repeated string tags = 7;         // 标签列表
   string status = 8;               // 文章状态
 }
