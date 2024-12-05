@@ -15,6 +15,30 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 获取用户粉丝列表
+				Method:  http.MethodGet,
+				Path:    "/get_user_fans",
+				Handler: GetUserFansHandler(serverCtx),
+			},
+			{
+				// 获取用户关注列表
+				Method:  http.MethodGet,
+				Path:    "/get_user_follows",
+				Handler: GetUserFollowsHandler(serverCtx),
+			},
+			{
+				// 健康检查
+				Method:  http.MethodGet,
+				Path:    "/health",
+				Handler: HealthHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/user_follow"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
 				// 创建关注关系
 				Method:  http.MethodPost,
 				Path:    "/create_user_follow",
@@ -28,27 +52,9 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				// 获取互相关注列表
-				Method:  http.MethodPost,
+				Method:  http.MethodGet,
 				Path:    "/get_mutual_follows",
 				Handler: GetMutualFollowsHandler(serverCtx),
-			},
-			{
-				// 获取用户粉丝列表
-				Method:  http.MethodPost,
-				Path:    "/get_user_fans",
-				Handler: GetUserFansHandler(serverCtx),
-			},
-			{
-				// 获取用户关注列表
-				Method:  http.MethodPost,
-				Path:    "/get_user_follows",
-				Handler: GetUserFollowsHandler(serverCtx),
-			},
-			{
-				// 健康检查
-				Method:  http.MethodGet,
-				Path:    "/health",
-				Handler: HealthHandler(serverCtx),
 			},
 			{
 				// 检查是否关注
@@ -57,6 +63,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: IsUserFollowedHandler(serverCtx),
 			},
 		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/user_follow"),
 	)
 }

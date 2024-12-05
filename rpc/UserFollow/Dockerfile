@@ -30,4 +30,4 @@ COPY --from=builder /app/rpc/UserFollow/etc /app/bin/etc
 EXPOSE 8888
 
 # 定义容器启动时运行的命令
-CMD ["/app/bin/cmd", "-f", "/app/bin/etc/user_follow.yaml"]
+CMD ["/app/bin/cmd", "-f", "/app/bin/etc/userfollow.yaml"]

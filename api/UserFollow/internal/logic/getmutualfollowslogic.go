@@ -5,6 +5,9 @@ import (
 
 	"coderhub/api/UserFollow/internal/svc"
 	"coderhub/api/UserFollow/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/UserFollow/userfollowservice"
+	"coderhub/shared/MetaData"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,8 +27,48 @@ func NewGetMutualFollowsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-func (l *GetMutualFollowsLogic) GetMutualFollows(req *types.GetMutualFollowsReq) (resp *types.GetMutualFollowsResp, err error) {
-	// todo: add your logic here and delete this line
+func (l *GetMutualFollowsLogic) GetMutualFollows() (resp *types.GetMutualFollowsResp, err error) {
+	UserID, err := MetaData.GetUserID(l.ctx)
+	if err != nil {
+		return l.errorResp(err)
+	}
 
-	return
+	mutualFollowsResp, err := l.svcCtx.UserFollowService.GetMutualFollows(l.ctx, &userfollowservice.GetMutualFollowsReq{
+		UserId: UserID,
+	})
+	if err != nil {
+		return l.errorResp(err)
+	}
+
+	return l.successResp(mutualFollowsResp)
+}
+
+func (l *GetMutualFollowsLogic) successResp(mutualFollowsResp *userfollowservice.GetMutualFollowsResp) (*types.GetMutualFollowsResp, error) {
+	userFollowList := make([]types.UserFollowInfo, 0, len(mutualFollowsResp.MutualFollows))
+	for _, mutualFollow := range mutualFollowsResp.MutualFollows {
+		userFollowList = append(userFollowList, types.UserFollowInfo{
+			UserId:   mutualFollow.Id,
+			Username: mutualFollow.Username,
+			Avatar:   mutualFollow.Avatar,
+		})
+	}
+	return &types.GetMutualFollowsResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: &types.UserFollowList{
+			List:  userFollowList,
+			Total: mutualFollowsResp.Total,
+		},
+	}, nil
+}
+
+func (l *GetMutualFollowsLogic) errorResp(err error) (*types.GetMutualFollowsResp, error) {
+	return &types.GetMutualFollowsResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpBadRequest,
+			Message: err.Error(),
+		},
+	}, nil
 }

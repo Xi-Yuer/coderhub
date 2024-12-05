@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 
+	"coderhub/model"
 	"coderhub/rpc/UserFollow/internal/svc"
 	"coderhub/rpc/UserFollow/user_follow"
 
@@ -23,9 +24,17 @@ func NewDeleteUserFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-// 删除用户关注关系
+// DeleteUserFollow 删除用户关注关系
 func (l *DeleteUserFollowLogic) DeleteUserFollow(in *user_follow.DeleteUserFollowReq) (*user_follow.DeleteUserFollowResp, error) {
-	// todo: add your logic here and delete this line
+	err := l.svcCtx.UserFollowRepository.DeleteUserFollow(&model.UserFollow{
+		FollowerID: in.FollowerId,
+		FollowedID: in.FollowedId,
+	})
+	if err != nil {
+		return nil, err
+	}
 
-	return &user_follow.DeleteUserFollowResp{}, nil
+	return &user_follow.DeleteUserFollowResp{
+		Success: true,
+	}, nil
 }

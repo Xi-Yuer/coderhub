@@ -5,6 +5,9 @@ import (
 
 	"coderhub/api/UserFollow/internal/svc"
 	"coderhub/api/UserFollow/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/UserFollow/userfollowservice"
+	"coderhub/shared/MetaData"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +28,35 @@ func NewIsUserFollowedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Is
 }
 
 func (l *IsUserFollowedLogic) IsUserFollowed(req *types.IsUserFollowedReq) (resp *types.IsUserFollowedResp, err error) {
-	// todo: add your logic here and delete this line
+	UserID, err := MetaData.GetUserID(l.ctx)
+	if err != nil {
+		return l.errorResp(err)
+	}
+	isUserFollowedResp, err := l.svcCtx.UserFollowService.IsUserFollowed(l.ctx, &userfollowservice.IsUserFollowedReq{
+		FollowerId: UserID,
+		FollowedId: req.FollowedId,
+	})
+	if err != nil {
+		return l.errorResp(err)
+	}
+	return l.successResp(isUserFollowedResp)
+}
 
-	return
+func (l *IsUserFollowedLogic) successResp(isUserFollowedResp *userfollowservice.IsUserFollowedResp) (*types.IsUserFollowedResp, error) {
+	return &types.IsUserFollowedResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: isUserFollowedResp.IsFollowed,
+	}, nil
+}
+
+func (l *IsUserFollowedLogic) errorResp(err error) (*types.IsUserFollowedResp, error) {
+	return &types.IsUserFollowedResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpBadRequest,
+			Message: err.Error(),
+		},
+	}, nil
 }

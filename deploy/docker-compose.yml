@@ -108,6 +108,8 @@ services:
         condition: service_healthy
       comment-api:
         condition: service_healthy
+      user-follow-api:
+        condition: service_healthy
     networks:
       - coderhub-network
     volumes:
@@ -217,6 +219,31 @@ services:
       timeout: 10s
     restart: always
 
+  user-follow-api:
+    build:
+      context: ..
+      dockerfile: ./api/UserFollow/Dockerfile
+    container_name: user-follow-api
+    depends_on:
+      - etcd
+      - mysql
+      - redis
+      - user-follow-service
+    networks:
+      - coderhub-network
+    healthcheck:
+      test: [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:8888/api/user_follow/health",
+        ] # 修改为实际的健康检查端点
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    restart: always
+
   # RPC 服务
   user-service:
     build:
@@ -231,7 +258,7 @@ services:
     networks:
       - coderhub-network
     environment:
-      REDIS_HOST: redis # 使用服务名称作为主机名
+      REDIS_HOST: redis
       REDIS_PORT: 6379
       ETCD_HOST: etcd
       ETCD_PORT: 2379
@@ -264,7 +291,7 @@ services:
       timeout: 10s
     restart: always
     environment:
-      REDIS_HOST: redis # 使用服务名称作为主机名
+      REDIS_HOST: redis
       REDIS_PORT: 6379
       ETCD_HOST: etcd
       ETCD_PORT: 2379
@@ -295,7 +322,7 @@ services:
       timeout: 10s
     restart: always
     environment:
-      REDIS_HOST: redis # 使用服务名称作为主机名
+      REDIS_HOST: redis
       REDIS_PORT: 6379
       ETCD_HOST: etcd
       ETCD_PORT: 2379
@@ -322,7 +349,7 @@ services:
       timeout: 10s
     restart: always
     environment:
-      REDIS_HOST: redis # 使用服务名称作为主机名
+      REDIS_HOST: redis
       REDIS_PORT: 6379
       ETCD_HOST: etcd
       ETCD_PORT: 2379
@@ -352,12 +379,32 @@ services:
       timeout: 10s
     restart: always
     environment:
-      REDIS_HOST: redis # 使用服务名称作为主机名
+      REDIS_HOST: redis
       REDIS_PORT: 6379
       ETCD_HOST: etcd
       ETCD_PORT: 2379
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
+
+  user-follow-service:
+    build:
+      context: ..
+      dockerfile: ./rpc/UserFollow/Dockerfile
+    container_name: user-follow-service
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+      - user-service
+    networks:
+      - coderhub-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8888"] # 使用netcat检查端口是否开放
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    restart: always
 
 networks:
   coderhub-network:

@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 
+	"coderhub/rpc/User/user"
 	"coderhub/rpc/UserFollow/internal/svc"
 	"coderhub/rpc/UserFollow/user_follow"
 
@@ -23,9 +24,37 @@ func NewGetMutualFollowsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-// 获取互相关注列表
+// GetMutualFollows 获取互相关注列表
 func (l *GetMutualFollowsLogic) GetMutualFollows(in *user_follow.GetMutualFollowsReq) (*user_follow.GetMutualFollowsResp, error) {
-	// todo: add your logic here and delete this line
+	// 获取互相关注列表(ID)
+	mutualFollows, err := l.svcCtx.UserFollowRepository.GetMutualFollows(in.UserId, in.Page, in.PageSize)
+	if err != nil {
+		return nil, err
+	}
 
-	return &user_follow.GetMutualFollowsResp{}, nil
+	// 获取互相关注列表(User)
+	userIDs := make([]int64, 0, len(mutualFollows))
+	for _, follow := range mutualFollows {
+		userIDs = append(userIDs, follow.FollowedID)
+	}
+	users, err := l.svcCtx.UserService.BatchGetUserByID(l.ctx, &user.BatchGetUserByIDRequest{
+		UserIds: userIDs,
+	})
+	if err != nil {
+		return nil, err
+	}
+	// 转换为user_follow.UserInfo
+	userInfos := make([]*user_follow.UserInfo, 0, len(users.UserInfos))
+	for _, user := range users.UserInfos {
+		userInfos = append(userInfos, &user_follow.UserInfo{
+			Id:       user.UserId,
+			Username: user.UserName,
+			Avatar:   user.Avatar,
+		})
+	}
+
+	return &user_follow.GetMutualFollowsResp{
+		MutualFollows: userInfos,
+		Total:         int64(len(mutualFollows)),
+	}, nil
 }

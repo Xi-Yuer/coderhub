@@ -41,6 +41,11 @@
         ],
         "tags": [
           "UserFollow"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
         ]
       }
     },
@@ -69,11 +74,16 @@
         ],
         "tags": [
           "UserFollow"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
         ]
       }
     },
     "/api/user_follow/get_mutual_follows": {
-      "post": {
+      "get": {
         "summary": "获取互相关注列表",
         "operationId": "GetMutualFollows",
         "responses": {
@@ -84,24 +94,18 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "body",
-            "description": " 获取互相关注列表请求",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/GetMutualFollowsReq"
-            }
-          }
-        ],
         "tags": [
           "UserFollow"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
         ]
       }
     },
     "/api/user_follow/get_user_fans": {
-      "post": {
+      "get": {
         "summary": "获取用户粉丝列表",
         "operationId": "GetUserFans",
         "responses": {
@@ -114,13 +118,28 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "description": " 获取用户粉丝列表请求",
-            "in": "body",
+            "name": "user_id",
+            "description": " 用户ID",
+            "in": "query",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/GetUserFansReq"
-            }
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "description": " 页码",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页数量",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "tags": [
@@ -129,7 +148,7 @@
       }
     },
     "/api/user_follow/get_user_follows": {
-      "post": {
+      "get": {
         "summary": "获取用户关注列表",
         "operationId": "GetUserFollows",
         "responses": {
@@ -142,13 +161,28 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "description": " 获取用户关注列表请求",
-            "in": "body",
+            "name": "user_id",
+            "description": " 用户ID",
+            "in": "query",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/GetUserFollowsReq"
-            }
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "description": " 页码",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页数量",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "tags": [
@@ -198,6 +232,11 @@
         ],
         "tags": [
           "UserFollow"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
         ]
       }
     }
@@ -206,11 +245,6 @@
     "CreateUserFollowReq": {
       "type": "object",
       "properties": {
-        "user_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 关注者ID"
-        },
         "followed_id": {
           "type": "integer",
           "format": "int64",
@@ -219,7 +253,6 @@
       },
       "title": "CreateUserFollowReq",
       "required": [
-        "user_id",
         "followed_id"
       ]
     },
@@ -249,11 +282,6 @@
     "DeleteUserFollowReq": {
       "type": "object",
       "properties": {
-        "user_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 取消关注者ID"
-        },
         "followed_id": {
           "type": "integer",
           "format": "int64",
@@ -262,7 +290,6 @@
       },
       "title": "DeleteUserFollowReq",
       "required": [
-        "user_id",
         "followed_id"
       ]
     },
@@ -287,20 +314,6 @@
       "title": "DeleteUserFollowResp",
       "required": [
         "data"
-      ]
-    },
-    "GetMutualFollowsReq": {
-      "type": "object",
-      "properties": {
-        "user_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 用户ID"
-        }
-      },
-      "title": "GetMutualFollowsReq",
-      "required": [
-        "user_id"
       ]
     },
     "GetMutualFollowsResp": {
@@ -436,11 +449,6 @@
     "IsUserFollowedReq": {
       "type": "object",
       "properties": {
-        "user_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 关注者ID"
-        },
         "followed_id": {
           "type": "integer",
           "format": "int64",
@@ -449,7 +457,6 @@
       },
       "title": "IsUserFollowedReq",
       "required": [
-        "user_id",
         "followed_id"
       ]
     },

@@ -4,7 +4,6 @@
 package types
 
 type CreateUserFollowReq struct {
-	UserId     int64 `json:"user_id"`     // 关注者ID
 	FollowedId int64 `json:"followed_id"` // 被关注者ID
 }
 
@@ -14,7 +13,6 @@ type CreateUserFollowResp struct {
 }
 
 type DeleteUserFollowReq struct {
-	UserId     int64 `json:"user_id"`     // 取消关注者ID
 	FollowedId int64 `json:"followed_id"` // 被取消关注者ID
 }
 
@@ -23,13 +21,9 @@ type DeleteUserFollowResp struct {
 	Data bool `json:"data"` // 操作是否成功
 }
 
-type GetMutualFollowsReq struct {
-	UserId int64 `json:"user_id"` // 用户ID
-}
-
 type GetMutualFollowsResp struct {
 	Response
-	Data UserFollowList `json:"data"`
+	Data *UserFollowList `json:"data"`
 }
 
 type GetUserFansReq struct {
@@ -40,7 +34,7 @@ type GetUserFansReq struct {
 
 type GetUserFansResp struct {
 	Response
-	Data UserFollowedList `json:"data"`
+	Data *UserFollowedList `json:"data"`
 }
 
 type GetUserFollowsReq struct {
@@ -51,7 +45,7 @@ type GetUserFollowsReq struct {
 
 type GetUserFollowsResp struct {
 	Response
-	Data UserFollowList `json:"data"`
+	Data *UserFollowList `json:"data"`
 }
 
 type HealthResponse struct {
@@ -59,7 +53,6 @@ type HealthResponse struct {
 }
 
 type IsUserFollowedReq struct {
-	UserId     int64 `json:"user_id"`     // 关注者ID
 	FollowedId int64 `json:"followed_id"` // 被关注者ID
 }
 

@@ -6,14 +6,12 @@ import (
 
 type UserFollow struct {
 	gorm.Model
-	FollowerID int64 `gorm:"index"` // 关注者ID
-	FollowedID int64 `gorm:"index"` // 被关注者ID
+	FollowerID int64 `gorm:"index;uniqueIndex:idx_follower_followed"` // 关注者ID
+	FollowedID int64 `gorm:"index;uniqueIndex:idx_follower_followed"` // 被关注者ID
 
-	// 联合唯一键
-	UNIQUEKEY UserFollowUniqueKey `gorm:"uniqueIndex:idx_user_follow_unique,composite:follower_followed"`
-}
-
-type UserFollowUniqueKey struct {
-	FollowerID int64
-	FollowedID int64
+	// 联合唯一索引
+	_ struct {
+		FollowerID int64
+		FollowedID int64
+	} `gorm:"uniqueIndex:idx_follower_followed"`
 }

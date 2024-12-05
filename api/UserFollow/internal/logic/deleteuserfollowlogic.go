@@ -5,6 +5,9 @@ import (
 
 	"coderhub/api/UserFollow/internal/svc"
 	"coderhub/api/UserFollow/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/UserFollow/userfollowservice"
+	"coderhub/shared/MetaData"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +28,35 @@ func NewDeleteUserFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *DeleteUserFollowLogic) DeleteUserFollow(req *types.DeleteUserFollowReq) (resp *types.DeleteUserFollowResp, err error) {
-	// todo: add your logic here and delete this line
+	UserID, err := MetaData.GetUserID(l.ctx)
+	if err != nil {
+		return l.errorResp(err)
+	}
+	_, err = l.svcCtx.UserFollowService.DeleteUserFollow(l.ctx, &userfollowservice.DeleteUserFollowReq{
+		FollowerId: UserID,
+		FollowedId: req.FollowedId,
+	})
+	if err != nil {
+		return l.errorResp(err)
+	}
 
-	return
+	return l.successResp()
+}
+
+func (l *DeleteUserFollowLogic) successResp() (*types.DeleteUserFollowResp, error) {
+	return &types.DeleteUserFollowResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+	}, nil
+}
+
+func (l *DeleteUserFollowLogic) errorResp(err error) (*types.DeleteUserFollowResp, error) {
+	return &types.DeleteUserFollowResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpBadRequest,
+			Message: err.Error(),
+		},
+	}, nil
 }

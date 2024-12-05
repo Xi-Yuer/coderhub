@@ -15,17 +15,17 @@ type UserFollowRepository interface {
 	// 删除用户关注关系
 	DeleteUserFollow(userFollow *model.UserFollow) error
 	// 查询用户关注的所有用户
-	GetUserFollows(followerID int64, page int, pageSize int) ([]*model.UserFollow, error)
+	GetUserFollows(followerID int64, page int32, pageSize int32) ([]*model.UserFollow, error)
 	// 批量查询用户关注的所有用户
-	BatchGetUserFollows(followerID int64, page int, pageSize int) ([]*model.UserFollow, error)
+	BatchGetUserFollows(followerID int64, page int32, pageSize int32) ([]*model.UserFollow, error)
 	// 查询某用户的粉丝列表
-	GetUserFans(followedID int64, page int, pageSize int) ([]*model.UserFollow, error)
+	GetUserFans(followedID int64, page int32, pageSize int32) ([]*model.UserFollow, error)
 	// 批量查询某用户的粉丝列表
-	BatchGetUserFans(followedID int64, page int, pageSize int) ([]*model.UserFollow, error)
+	BatchGetUserFans(followedID int64, page int32, pageSize int32) ([]*model.UserFollow, error)
 	// 判断两个用户是否存在关注关系
 	IsUserFollowed(followerID int64, followedID int64) (bool, error)
 	// 查询互相关注的用户
-	GetMutualFollows(userID int64, page int, pageSize int) ([]*model.UserFollow, error)
+	GetMutualFollows(userID int64, page int32, pageSize int32) ([]*model.UserFollow, error)
 }
 
 func NewUserFollowRepositoryImpl(db *gorm.DB, rdb CacheDB.RedisDB) *UserFollowRepositoryImpl {
@@ -47,23 +47,23 @@ func (r *UserFollowRepositoryImpl) CreateUserFollow(userFollow *model.UserFollow
 
 // 删除用户关注关系
 func (r *UserFollowRepositoryImpl) DeleteUserFollow(userFollow *model.UserFollow) error {
-	return r.DB.Delete(userFollow).Error
+	return r.DB.Delete(userFollow).Where("follower_id = ? AND followed_id = ?", userFollow.FollowerID, userFollow.FollowedID).Error
 }
 
 // 查询用户关注的所有用户
-func (r *UserFollowRepositoryImpl) GetUserFollows(followerID int64, page int, pageSize int) ([]*model.UserFollow, error) {
+func (r *UserFollowRepositoryImpl) GetUserFollows(followerID int64, page int32, pageSize int32) ([]*model.UserFollow, error) {
 	var userFollows []*model.UserFollow
-	return userFollows, r.DB.Where("follower_id = ?", followerID).Offset((page - 1) * pageSize).Limit(pageSize).Find(&userFollows).Error
+	return userFollows, r.DB.Where("follower_id = ?", followerID).Offset((int(page) - 1) * int(pageSize)).Limit(int(pageSize)).Find(&userFollows).Error
 }
 
 // 批量查询用户关注的所有用户
-func (r *UserFollowRepositoryImpl) BatchGetUserFollows(followerID int64, page int, pageSize int) ([]*model.UserFollow, error) {
+func (r *UserFollowRepositoryImpl) BatchGetUserFollows(followerID int64, page int32, pageSize int32) ([]*model.UserFollow, error) {
 	var userFollows []*model.UserFollow
-	return userFollows, r.DB.Where("follower_id = ?", followerID).Offset((page - 1) * pageSize).Limit(pageSize).Find(&userFollows).Error
+	return userFollows, r.DB.Where("follower_id = ?", followerID).Offset((int(page) - 1) * int(pageSize)).Limit(int(pageSize)).Find(&userFollows).Error
 }
 
 // 查询某用户的粉丝列表(热点用户（如明星）可能有数千万粉丝，查询时可能导致数据库压力大。可以将热点用户的粉丝列表缓存到 Redis 中。)
-func (r *UserFollowRepositoryImpl) GetUserFans(followedID int64, page int, pageSize int) ([]*model.UserFollow, error) {
+func (r *UserFollowRepositoryImpl) GetUserFans(followedID int64, page int32, pageSize int32) ([]*model.UserFollow, error) {
 	var userFollows []*model.UserFollow
 	// 先从 Redis 中查询
 	cacheKey := fmt.Sprintf("user_fans:%d", followedID)
@@ -76,7 +76,7 @@ func (r *UserFollowRepositoryImpl) GetUserFans(followedID int64, page int, pageS
 		}
 	}
 	// 如果 Redis 中没有数据，则从数据库中查询
-	err = r.DB.Where("followed_id = ?", followedID).Offset((page - 1) * pageSize).Limit(pageSize).Find(&userFollows).Error
+	err = r.DB.Where("followed_id = ?", followedID).Offset((int(page) - 1) * int(pageSize)).Limit(int(pageSize)).Find(&userFollows).Error
 	if err == nil {
 		// 将查询结果序列化并缓存到 Redis 中
 		bytes, _ := json.Marshal(userFollows)
@@ -87,9 +87,9 @@ func (r *UserFollowRepositoryImpl) GetUserFans(followedID int64, page int, pageS
 }
 
 // 批量查询某用户的粉丝列表
-func (r *UserFollowRepositoryImpl) BatchGetUserFans(followedID int64, page int, pageSize int) ([]*model.UserFollow, error) {
+func (r *UserFollowRepositoryImpl) BatchGetUserFans(followedID int64, page int32, pageSize int32) ([]*model.UserFollow, error) {
 	var userFollows []*model.UserFollow
-	return userFollows, r.DB.Where("followed_id = ?", followedID).Offset((page - 1) * pageSize).Limit(pageSize).Find(&userFollows).Error
+	return userFollows, r.DB.Where("followed_id = ?", followedID).Offset((int(page) - 1) * int(pageSize)).Limit(int(pageSize)).Find(&userFollows).Error
 }
 
 // 判断两个用户是否存在关注关系
@@ -99,7 +99,7 @@ func (r *UserFollowRepositoryImpl) IsUserFollowed(followerID int64, followedID i
 }
 
 // 查询互相关注的用户
-func (r *UserFollowRepositoryImpl) GetMutualFollows(userID int64, page int, pageSize int) ([]*model.UserFollow, error) {
+func (r *UserFollowRepositoryImpl) GetMutualFollows(userID int64, page int32, pageSize int32) ([]*model.UserFollow, error) {
 	var userFollows []*model.UserFollow
-	return userFollows, r.DB.Where("follower_id = ? AND followed_id = ?", userID, userID).Offset((page - 1) * pageSize).Limit(pageSize).Find(&userFollows).Error
+	return userFollows, r.DB.Where("follower_id = ? AND followed_id = ?", userID, userID).Offset((int(page) - 1) * int(pageSize)).Limit(int(pageSize)).Find(&userFollows).Error
 }

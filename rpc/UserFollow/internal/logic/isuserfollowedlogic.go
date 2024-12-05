@@ -25,7 +25,11 @@ func NewIsUserFollowedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Is
 
 // 检查是否关注
 func (l *IsUserFollowedLogic) IsUserFollowed(in *user_follow.IsUserFollowedReq) (*user_follow.IsUserFollowedResp, error) {
-	// todo: add your logic here and delete this line
+	// 检查是否关注
+	isFollowed, err := l.svcCtx.UserFollowRepository.IsUserFollowed(in.FollowerId, in.FollowedId)
+	if err != nil {
+		return nil, err
+	}
 
-	return &user_follow.IsUserFollowedResp{}, nil
+	return &user_follow.IsUserFollowedResp{IsFollowed: isFollowed}, nil
 }

@@ -31,4 +31,4 @@ COPY --from=builder /app/api/UserFollow/etc /app/bin/etc
 EXPOSE 8888
 
 # 定义容器启动时运行的命令
-CMD ["/app/bin/cmd", "-f", "/app/bin/etc/user_follow-api.yaml"]
+CMD ["/app/bin/cmd", "-f", "/app/bin/etc/userfollow.yaml"]
