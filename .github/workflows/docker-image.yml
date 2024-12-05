@@ -44,13 +44,15 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Build the Docker image
-        timeout-minutes: 15
-        run: docker build . --file ${{ matrix.image.dockerfile }} --tag ${{ matrix.image.name }}:$(date +%s)
-        continue-on-error: true
-
-      - name: Push Docker image to Docker Hub
-        timeout-minutes: 10
+      - name: Build and Push Docker image
+        timeout-minutes: 25
         run: |
-          docker tag ${{ matrix.image.name }}:$(date +%s) ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.image.name }}:latest
+          # 保存时间戳到变量中
+          TIMESTAMP=$(date +%s)
+          # 构建镜像
+          docker build . --file ${{ matrix.image.dockerfile }} --tag ${{ matrix.image.name }}:${TIMESTAMP}
+          # 打标签
+          docker tag ${{ matrix.image.name }}:${TIMESTAMP} ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.image.name }}:latest
+          # 推送镜像
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.image.name }}:latest
+        continue-on-error: true
