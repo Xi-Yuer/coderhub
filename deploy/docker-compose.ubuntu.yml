@@ -156,6 +156,13 @@ services:
       start_period: 30s
       timeout: 10s
     restart: always
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ETCD_HOST: etcd
+      ETCD_PORT: 2379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
 
   articles-api:
     image: 2214380963/articles-service:latest
@@ -174,6 +181,13 @@ services:
       start_period: 30s
       timeout: 10s
     restart: always
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ETCD_HOST: etcd
+      ETCD_PORT: 2379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
 
   comment-api:
     image: 2214380963/comments-api:latest
@@ -192,6 +206,13 @@ services:
       start_period: 30s
       timeout: 10s
     restart: always
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ETCD_HOST: etcd
+      ETCD_PORT: 2379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
 
   image-api:
     image: 2214380963/images-service:latest
@@ -210,6 +231,13 @@ services:
       start_period: 30s
       timeout: 10s
     restart: always
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ETCD_HOST: etcd
+      ETCD_PORT: 2379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
 
   user-follow-api:
     image: 2214380963/user-follow-service:latest
@@ -222,17 +250,19 @@ services:
     networks:
       - coderhub-network
     healthcheck:
-      test: [
-          "CMD",
-          "curl",
-          "-f",
-          "http://localhost:8888/api/user_follow/health",
-        ] # 修改为实际的健康检查端点
+      test: ["CMD", "curl", "-f", "http://localhost:8888/api/user_follow/health"]
       interval: 10s
       retries: 10
       start_period: 30s
       timeout: 10s
     restart: always
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ETCD_HOST: etcd
+      ETCD_PORT: 2379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
 
   # RPC 服务
   user-service:
@@ -377,12 +407,19 @@ services:
     networks:
       - coderhub-network
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "8888"] # 使用netcat检查端口是否开放
+      test: ["CMD", "nc", "-z", "localhost", "8888"]
       interval: 10s
       retries: 10
       start_period: 30s
       timeout: 10s
     restart: always
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ETCD_HOST: etcd
+      ETCD_PORT: 2379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
 
 networks:
   coderhub-network:
