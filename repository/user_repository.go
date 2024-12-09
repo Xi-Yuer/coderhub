@@ -109,7 +109,8 @@ func (r *UserRepositoryImpl) UpdateUser(user *model.User) error {
 	return r.DB.Transaction(func(tx *gorm.DB) error {
 		// 获取旧数据用于清理缓存
 		var oldUser model.User
-		if err := tx.First(&oldUser, user.ID).Error; err != nil {
+		if err := tx.First(&oldUser, "id = ?", user.ID).Error; err != nil {
+			fmt.Println("get oldUser err", err)
 			return err
 		}
 
