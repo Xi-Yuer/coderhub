@@ -4,7 +4,6 @@ import (
 	"coderhub/model"
 	"coderhub/shared/CacheDB"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -138,19 +137,4 @@ func (r *commentRepository) CountByArticleID(ctx context.Context, articleID int6
 		return 0, err
 	}
 	return count, nil
-}
-
-// 内部辅助方法
-func (r *commentRepository) cacheComment(comment *model.Comment) error {
-	data, err := json.Marshal(comment)
-	if err != nil {
-		return err
-	}
-	cacheKey := comment.CacheKeyByID(comment.ID)
-	return r.Redis.Set(cacheKey, string(data))
-}
-
-func (r *commentRepository) deleteCache(id int64) error {
-	cacheKey := (&model.Comment{}).CacheKeyByID(id)
-	return r.Redis.Del(cacheKey)
 }

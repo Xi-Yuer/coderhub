@@ -46,6 +46,19 @@ func (v *Validator) Email(email string) *Validator {
 	return v
 }
 
+func (v *Validator) Token(token string) *Validator {
+	if !TokenRegex.MatchString(token) {
+		v.errors = append(v.errors, "token格式错误：需要符合token格式")
+	}
+	return v
+}
+func (v *Validator) ConfirmPassword(password string, confirmPassword string) *Validator {
+	if password != confirmPassword {
+		v.errors = append(v.errors, "确认密码与密码不一致")
+	}
+	return v
+}
+
 func (v *Validator) Title(title string) *Validator {
 	if !TitleRegex.MatchString(title) {
 		v.errors = append(v.errors, "标题格式错误：需要1-255位")

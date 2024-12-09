@@ -8,6 +8,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -41,13 +42,20 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(in *user.UpdateUserInfoRequest) (*u
 		return nil, errors.New("用户不存在")
 	}
 
+	fmt.Printf("in:%#v\n", in)
+	oldUser, err := l.svcCtx.UserRepository.GetUserByID(UserInfo.UserId)
+	if err != nil {
+		return nil, err
+	}
 	if err := l.svcCtx.UserRepository.UpdateUser(&model.User{
-		NickName: sql.NullString{
-			String: in.Nickname,
-		},
-		Email: sql.NullString{
-			String: in.Email,
-		},
+		ID:       UserInfo.UserId,
+		UserName: oldUser.UserName,
+		Password: oldUser.Password,
+		NickName: sql.NullString{String: in.Nickname, Valid: in.Nickname != ""},
+		Email:    sql.NullString{String: in.Email, Valid: in.Email != ""},
+		Avatar:   oldUser.Avatar,
+		Status:   oldUser.Status,
+		IsAdmin:  oldUser.IsAdmin,
 	}); err != nil {
 		return nil, err
 	}

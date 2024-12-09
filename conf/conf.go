@@ -2,6 +2,18 @@ package conf
 
 var JWTSecret = "User-api-secret"
 
+var GoMail = struct {
+	Username string
+	Password string
+	Host     string
+	Port     int
+}{
+	Username: "2214380963@qq.com",
+	Password: "uylmxoxamqsddjfc",
+	Host:     "smtp.qq.com",
+	Port:     587,
+}
+
 var HttpCode = struct {
 	HttpStatusOK      int32
 	HttpForbidden     int32

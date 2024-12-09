@@ -53,8 +53,9 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(req *types.UpdateUserInfoRequest) (
 
 	return &types.UpdateUserInfoResponse{
 		Response: types.Response{
-			Code:    conf.HttpCode.HttpBadRequest,
+			Code:    conf.HttpCode.HttpStatusOK,
 			Message: conf.HttpMessage.MsgOK,
 		},
+		Data: true,
 	}, nil
 }

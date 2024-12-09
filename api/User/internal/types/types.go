@@ -63,6 +63,18 @@ type ImageInfo struct {
 	CreatedAt    string `json:"created_at"`    // 创建时间
 }
 
+type ResetPasswordByLinkRequest struct {
+	Email           string `form:"email"`
+	Password        string `form:"password"`
+	ConfirmPassword string `form:"confirmPassword"`
+	Token           string `form:"token"`
+}
+
+type ResetPasswordByLinkResponse struct {
+	Response
+	Data bool `json:"data"`
+}
+
 type ResetPasswordRequest struct {
 	Email       string `form:"email"`
 	NewPassword string `form:"newPassword"`
@@ -76,6 +88,15 @@ type ResetPasswordResponse struct {
 type Response struct {
 	Code    int32  `json:"code"`    // 状态码
 	Message string `json:"message"` // 提示信息
+}
+
+type SendResetPasswordLinkRequest struct {
+	Email string `form:"email"`
+}
+
+type SendResetPasswordLinkResponse struct {
+	Response
+	Data bool `json:"data"`
 }
 
 type UpdateUserInfoRequest struct {

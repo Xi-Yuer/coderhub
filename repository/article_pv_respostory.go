@@ -3,6 +3,7 @@ package repository
 import (
 	"coderhub/model"
 	"coderhub/shared/CacheDB"
+	"errors"
 	"fmt"
 	"strconv"
 	"time"
@@ -27,6 +28,7 @@ func NewArticlePVRepositoryImpl(db *gorm.DB, rdb CacheDB.RedisDB) *ArticlePVRepo
 	return &ArticlePVRepositoryImpl{
 		DB:            db,
 		Redis:         rdb,
+		lastSyncTime:  time.Now(),
 		syncThreshold: 100,
 	}
 }
@@ -82,7 +84,7 @@ func (r *ArticlePVRepositoryImpl) CreateArticlePV(articlePV *model.ArticlePV) er
 						select {
 						case <-ticker.C:
 							// 每10秒续期一次，将过期时间重置为30秒
-							r.Redis.Expire(lockKey, 30*time.Second)
+							_ = r.Redis.Expire(lockKey, 30*time.Second)
 						case <-stopChan:
 							return
 						}
@@ -93,10 +95,10 @@ func (r *ArticlePVRepositoryImpl) CreateArticlePV(articlePV *model.ArticlePV) er
 				err := r.SyncIncrementalPVToDB()
 				// 同步完成后，关闭续期goroutine并释放锁
 				close(stopChan)
-				r.Redis.Del(lockKey)
-				
+				_ = r.Redis.Del(lockKey)
+
 				if err == nil {
-					r.Redis.Set("article:pv:last_sync_time", time.Now().Format(time.RFC3339))
+					_ = r.Redis.Set("article:pv:last_sync_time", time.Now().Format(time.RFC3339))
 				}
 			}()
 		}
@@ -117,7 +119,7 @@ func (r *ArticlePVRepositoryImpl) GetArticlePVByArticleID(articleID int64) (*mod
 	var articlePV model.ArticlePV
 	err = r.DB.Where("article_id = ?", articleID).First(&articlePV).Error
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &model.ArticlePV{ArticleID: articleID, Count: 0}, nil
 		}
 		return nil, err
@@ -155,21 +157,13 @@ func (r *ArticlePVRepositoryImpl) SyncIncrementalPVToDB() error {
 		}
 
 		// 更新数据库
-		err = r.DB.Exec(`
-			INSERT INTO article_pvs (article_id, count, last_sync_at, updated_at, created_at)
-			VALUES (?, ?, NOW(), NOW(), NOW())
-			ON DUPLICATE KEY UPDATE 
-			count = ?,
-			last_sync_at = NOW(),
-			updated_at = NOW()
-		`, articleID, count, count).Error
-
+		err = r.DB.Model(&model.ArticlePV{}).Where("article_id = ?", articleID).Update("count", count).Error
 		if err != nil {
 			continue
 		}
 
 		// 同步成功后从待同步集合中删除
-		r.Redis.SRem("article:pv:need_sync", articleIDStr)
+		_ = r.Redis.SRem("article:pv:need_sync", articleIDStr)
 	}
 
 	return nil

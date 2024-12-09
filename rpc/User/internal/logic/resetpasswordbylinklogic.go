@@ -2,9 +2,12 @@ package logic
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"coderhub/rpc/User/internal/svc"
 	"coderhub/rpc/User/user"
+	"coderhub/shared/BcryptUtil"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +28,36 @@ func NewResetPasswordByLinkLogic(ctx context.Context, svcCtx *svc.ServiceContext
 
 // 通过链接重置密码
 func (l *ResetPasswordByLinkLogic) ResetPasswordByLink(in *user.ResetPasswordByLinkRequest) (*user.ResetPasswordByLinkResponse, error) {
-	// todo: add your logic here and delete this line
+	err := l.svcCtx.Validator.Email(in.Email).Password(in.Password).ConfirmPassword(in.Password, in.ConfirmPassword).Token(in.Token).Check()
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
 
-	return &user.ResetPasswordByLinkResponse{}, nil
+	// 1. 获取redis中的token
+	token, err := l.svcCtx.RedisDB.Get(fmt.Sprintf("reset_password:%s", in.Email))
+	if err != nil {
+		return nil, err
+	}
+	// 2. 判断token是否正确
+	if token != in.Token {
+		return nil, fmt.Errorf("token不正确")
+	}
+	// 3. 删除redis中的token
+	err = l.svcCtx.RedisDB.Del(fmt.Sprintf("reset_password:%s", in.Email))
+	if err != nil {
+		return nil, err
+	}
+	// 4. 更新用户密码
+	password, err := BcryptUtil.PasswordHash(in.Password)
+	if err != nil {
+		return nil, err
+	}
+	err = l.svcCtx.UserRepository.ResetPassword(in.Email, password)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user.ResetPasswordByLinkResponse{
+		Success: true,
+	}, nil
 }

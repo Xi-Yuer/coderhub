@@ -15,24 +15,40 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 健康检查
 				Method:  http.MethodGet,
 				Path:    "/health",
 				Handler: HealthCheckHandler(serverCtx),
 			},
 			{
+				// 获取用户信息
 				Method:  http.MethodGet,
 				Path:    "/info/:userId",
 				Handler: GetUserInfoHandler(serverCtx),
 			},
 			{
+				// 用户登录
 				Method:  http.MethodPost,
 				Path:    "/login",
 				Handler: AuthenticateUserHandler(serverCtx),
 			},
 			{
+				// 创建用户
 				Method:  http.MethodPost,
 				Path:    "/register",
 				Handler: CreateUserHandler(serverCtx),
+			},
+			{
+				// 通过链接重置密码
+				Method:  http.MethodPost,
+				Path:    "/reset-password-by-link",
+				Handler: ResetPasswordByLinkHandler(serverCtx),
+			},
+			{
+				// 发送重置密码链接
+				Method:  http.MethodPost,
+				Path:    "/send-reset-password-link",
+				Handler: SendResetPasswordLinkHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/user"),
@@ -41,26 +57,31 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 修改密码
 				Method:  http.MethodPost,
 				Path:    "/change-password",
 				Handler: ChangePasswordHandler(serverCtx),
 			},
 			{
+				// 删除用户
 				Method:  http.MethodDelete,
 				Path:    "/delete/:userId",
 				Handler: DeleteUserHandler(serverCtx),
 			},
 			{
+				// 重置密码
 				Method:  http.MethodPost,
 				Path:    "/reset-password",
 				Handler: ResetPasswordHandler(serverCtx),
 			},
 			{
+				// 更新用户信息
 				Method:  http.MethodPut,
 				Path:    "/update",
 				Handler: UpdateUserInfoHandler(serverCtx),
 			},
 			{
+				// 上传用户头像
 				Method:  http.MethodPost,
 				Path:    "/upload-avatar",
 				Handler: UploadUserAvatarHandler(serverCtx),

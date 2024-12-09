@@ -14,8 +14,10 @@ type UserRepository interface {
 	CreateUser(user *model.User) error
 	GetUserByName(name string) (*model.User, error)
 	GetUserByID(id int64) (*model.User, error)
+	FindOneByEmail(email string) (*model.User, error)
 	BatchGetUserByID(ids []int64) ([]*model.User, error)
 	UpdateUser(user *model.User) error
+	ResetPassword(email string, password string) error
 	DeleteUser(id int64) error
 }
 
@@ -96,44 +98,59 @@ func (r *UserRepositoryImpl) GetUserByID(id int64) (*model.User, error) {
 	return &user, nil
 }
 
+func (r *UserRepositoryImpl) FindOneByEmail(email string) (*model.User, error) {
+	var user model.User
+	return &user, r.DB.Where("email = ?", email).First(&user).Error
+}
+
 func (r *UserRepositoryImpl) BatchGetUserByID(ids []int64) ([]*model.User, error) {
 	var users []*model.User
 	return users, r.DB.Where("id IN (?)", ids).Find(&users).Error
 }
 
 func (r *UserRepositoryImpl) UpdateUser(user *model.User) error {
-	if user.ID <= 0 {
-		return errors.New("无效的用户ID")
-	}
-
 	return r.DB.Transaction(func(tx *gorm.DB) error {
 		// 获取旧数据用于清理缓存
 		var oldUser model.User
-		if err := tx.First(&oldUser, "id = ?", user.ID).Error; err != nil {
-			fmt.Println("get oldUser err", err)
-			return err
+		if err := tx.First(&oldUser, user.ID).Error; err != nil {
+			return fmt.Errorf("获取用户失败: %w", err)
 		}
 
-		// 更新数据
-		if err := tx.Model(user).Updates(user).Error; err != nil {
-			return err
+		if err := tx.Save(user).Error; err != nil {
+			return fmt.Errorf("更新用户失败: %w", err)
 		}
-
 		// 清理所有相关缓存
 		keys := []string{
-			oldUser.CacheKeyByID(oldUser.ID),
-			oldUser.CacheKeyByName(oldUser.UserName),
+			user.CacheKeyByID(user.ID),
 			user.CacheKeyByName(user.UserName),
 		}
 
 		for _, key := range keys {
-			if err := r.delCache(key); err != nil {
-				return err
-			}
+			fmt.Println("delCache", key)
+			_ = r.delCache(key)
 		}
 
 		return nil
 	})
+}
+
+func (r *UserRepositoryImpl) ResetPassword(email string, password string) error {
+	// 获取旧数据用于清理缓存
+	var oldUser model.User
+	if err := r.DB.First(&oldUser, email).Error; err != nil {
+		return fmt.Errorf("获取用户失败: %w", err)
+	}
+	// 清理所有相关缓存
+	keys := []string{
+		oldUser.CacheKeyByID(oldUser.ID),
+		oldUser.CacheKeyByName(oldUser.UserName),
+	}
+
+	for _, key := range keys {
+		fmt.Println("delCache", key)
+		_ = r.delCache(key)
+	}
+	return r.DB.Model(&model.User{}).Where("email = ?", email).Update("password", password).Error
 }
 
 func (r *UserRepositoryImpl) DeleteUser(id int64) error {

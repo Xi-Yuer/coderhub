@@ -25,4 +25,6 @@ var (
 	AuthorIDRegex = regexp.MustCompile(`^\d+$`)
 	// ArticleCoverImageRegex 封面图片不能为空，必须符合URL格式
 	ArticleCoverImageRegex = regexp.MustCompile(`^https?://\S+$`)
+	// TokenRegex token不能为空
+	TokenRegex = regexp.MustCompile(`^\d+$`)
 )

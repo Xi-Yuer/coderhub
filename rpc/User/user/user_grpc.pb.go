@@ -31,6 +31,7 @@ const (
 	UserService_UploadAvatar_FullMethodName          = "/user.UserService/UploadAvatar"
 	UserService_ChangePassword_FullMethodName        = "/user.UserService/ChangePassword"
 	UserService_ResetPassword_FullMethodName         = "/user.UserService/ResetPassword"
+	UserService_ResetPasswordByLink_FullMethodName   = "/user.UserService/ResetPasswordByLink"
 	UserService_DeleteUser_FullMethodName            = "/user.UserService/DeleteUser"
 )
 
@@ -55,8 +56,10 @@ type UserServiceClient interface {
 	UploadAvatar(ctx context.Context, in *UploadAvatarRequest, opts ...grpc.CallOption) (*UploadAvatarResponse, error)
 	// 修改密码
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
-	// 重置密码
+	// 重置密码, 通过邮箱发送重置密码链接
 	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
+	// 通过链接重置密码
+	ResetPasswordByLink(ctx context.Context, in *ResetPasswordByLinkRequest, opts ...grpc.CallOption) (*ResetPasswordByLinkResponse, error)
 	// 删除用户
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 }
@@ -169,6 +172,16 @@ func (c *userServiceClient) ResetPassword(ctx context.Context, in *ResetPassword
 	return out, nil
 }
 
+func (c *userServiceClient) ResetPasswordByLink(ctx context.Context, in *ResetPasswordByLinkRequest, opts ...grpc.CallOption) (*ResetPasswordByLinkResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResetPasswordByLinkResponse)
+	err := c.cc.Invoke(ctx, UserService_ResetPasswordByLink_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeleteUserResponse)
@@ -200,8 +213,10 @@ type UserServiceServer interface {
 	UploadAvatar(context.Context, *UploadAvatarRequest) (*UploadAvatarResponse, error)
 	// 修改密码
 	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
-	// 重置密码
+	// 重置密码, 通过邮箱发送重置密码链接
 	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error)
+	// 通过链接重置密码
+	ResetPasswordByLink(context.Context, *ResetPasswordByLinkRequest) (*ResetPasswordByLinkResponse, error)
 	// 删除用户
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -243,6 +258,9 @@ func (UnimplementedUserServiceServer) ChangePassword(context.Context, *ChangePas
 }
 func (UnimplementedUserServiceServer) ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
+}
+func (UnimplementedUserServiceServer) ResetPasswordByLink(context.Context, *ResetPasswordByLinkRequest) (*ResetPasswordByLinkResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetPasswordByLink not implemented")
 }
 func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
@@ -448,6 +466,24 @@ func _UserService_ResetPassword_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_ResetPasswordByLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetPasswordByLinkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ResetPasswordByLink(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ResetPasswordByLink_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ResetPasswordByLink(ctx, req.(*ResetPasswordByLinkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteUserRequest)
 	if err := dec(in); err != nil {
@@ -512,6 +548,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ResetPassword",
 			Handler:    _UserService_ResetPassword_Handler,
+		},
+		{
+			MethodName: "ResetPasswordByLink",
+			Handler:    _UserService_ResetPasswordByLink_Handler,
 		},
 		{
 			MethodName: "DeleteUser",

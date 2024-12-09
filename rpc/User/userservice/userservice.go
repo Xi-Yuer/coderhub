@@ -31,6 +31,8 @@ type (
 	GetUserInfoByUsernameRequest = user.GetUserInfoByUsernameRequest
 	GetUserInfoRequest           = user.GetUserInfoRequest
 	GetUserInfoResponse          = user.GetUserInfoResponse
+	ResetPasswordByLinkRequest   = user.ResetPasswordByLinkRequest
+	ResetPasswordByLinkResponse  = user.ResetPasswordByLinkResponse
 	ResetPasswordRequest         = user.ResetPasswordRequest
 	ResetPasswordResponse        = user.ResetPasswordResponse
 	UpdateUserInfoRequest        = user.UpdateUserInfoRequest
@@ -57,8 +59,10 @@ type (
 		UploadAvatar(ctx context.Context, in *UploadAvatarRequest, opts ...grpc.CallOption) (*UploadAvatarResponse, error)
 		// 修改密码
 		ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
-		// 重置密码
+		// 重置密码, 通过邮箱发送重置密码链接
 		ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
+		// 通过链接重置密码
+		ResetPasswordByLink(ctx context.Context, in *ResetPasswordByLinkRequest, opts ...grpc.CallOption) (*ResetPasswordByLinkResponse, error)
 		// 删除用户
 		DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 	}
@@ -127,10 +131,16 @@ func (m *defaultUserService) ChangePassword(ctx context.Context, in *ChangePassw
 	return client.ChangePassword(ctx, in, opts...)
 }
 
-// 重置密码
+// 重置密码, 通过邮箱发送重置密码链接
 func (m *defaultUserService) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error) {
 	client := user.NewUserServiceClient(m.cli.Conn())
 	return client.ResetPassword(ctx, in, opts...)
+}
+
+// 通过链接重置密码
+func (m *defaultUserService) ResetPasswordByLink(ctx context.Context, in *ResetPasswordByLinkRequest, opts ...grpc.CallOption) (*ResetPasswordByLinkResponse, error) {
+	client := user.NewUserServiceClient(m.cli.Conn())
+	return client.ResetPasswordByLink(ctx, in, opts...)
 }
 
 // 删除用户

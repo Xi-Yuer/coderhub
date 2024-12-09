@@ -31,8 +31,11 @@ service UserService {
   // 修改密码
   rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse);
 
-  // 重置密码
+  // 重置密码, 通过邮箱发送重置密码链接
   rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse);
+
+  // 通过链接重置密码
+  rpc ResetPasswordByLink (ResetPasswordByLinkRequest) returns (ResetPasswordByLinkResponse);
 
   // 删除用户
   rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
@@ -103,8 +106,18 @@ message GenerateTokenResponse {string token = 1;}
 message ChangePasswordRequest {int64 user_id = 1; string old_password = 2; string new_password = 3;}
 message ChangePasswordResponse {bool success = 1;}
 
-message ResetPasswordRequest {string email = 1; string new_password = 2;}
+// 重置密码请求，通过邮箱发送重置密码链接
+message ResetPasswordRequest {string email = 1;}
 message ResetPasswordResponse {bool success = 1;}
+
+// 通过链接重置密码
+message ResetPasswordByLinkRequest {
+  string email = 1;
+  string password = 2;
+  string confirm_password = 3;
+  string token = 4;
+}
+message ResetPasswordByLinkResponse {bool success = 1;}
 
 message DeleteUserRequest {int64 user_id = 1;}
 message DeleteUserResponse {bool success = 1;}

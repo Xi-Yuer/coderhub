@@ -217,6 +217,68 @@
         ]
       }
     },
+    "/api/user/reset-password-by-link": {
+      "post": {
+        "summary": "通过链接重置密码",
+        "operationId": "ResetPasswordByLink",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ResetPasswordByLinkResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 通过链接重置密码",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ResetPasswordByLinkRequest"
+            }
+          }
+        ],
+        "tags": [
+          "user-api"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/api/user/send-reset-password-link": {
+      "post": {
+        "summary": "发送重置密码链接",
+        "operationId": "SendResetPasswordLink",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/SendResetPasswordLinkResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 发送重置密码链接",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SendResetPasswordLinkRequest"
+            }
+          }
+        ],
+        "tags": [
+          "user-api"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
     "/api/user/update": {
       "put": {
         "summary": "更新用户信息",
@@ -501,6 +563,52 @@
         "created_at"
       ]
     },
+    "ResetPasswordByLinkRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "confirmPassword": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      },
+      "title": "ResetPasswordByLinkRequest",
+      "required": [
+        "email",
+        "password",
+        "confirmPassword",
+        "token"
+      ]
+    },
+    "ResetPasswordByLinkResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "ResetPasswordByLinkResponse",
+      "required": [
+        "data"
+      ]
+    },
     "ResetPasswordRequest": {
       "type": "object",
       "properties": {
@@ -556,6 +664,40 @@
       "required": [
         "code",
         "message"
+      ]
+    },
+    "SendResetPasswordLinkRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      },
+      "title": "SendResetPasswordLinkRequest",
+      "required": [
+        "email"
+      ]
+    },
+    "SendResetPasswordLinkResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "SendResetPasswordLinkResponse",
+      "required": [
+        "data"
       ]
     },
     "UpdateUserInfoRequest": {

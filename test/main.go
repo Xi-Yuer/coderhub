@@ -1,16 +1,10 @@
 package main
 
 import (
-	"coderhub/shared/BcryptUtil"
-	"fmt"
+	"coderhub/shared/GoMail"
 )
 
 func main() {
-	passwordHash, _ := BcryptUtil.PasswordHash("123")
-	err := BcryptUtil.CompareHashAndPassword("123", passwordHash)
-	if err {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println("ok")
+	g := GoMail.NewGoMail()
+	g.SendWithHTML("2214380963@qq.com", "邮箱密码重置", "https://www.baidu.com")
 }

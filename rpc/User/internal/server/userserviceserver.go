@@ -76,10 +76,16 @@ func (s *UserServiceServer) ChangePassword(ctx context.Context, in *user.ChangeP
 	return l.ChangePassword(in)
 }
 
-// 重置密码
+// 重置密码, 通过邮箱发送重置密码链接
 func (s *UserServiceServer) ResetPassword(ctx context.Context, in *user.ResetPasswordRequest) (*user.ResetPasswordResponse, error) {
 	l := logic.NewResetPasswordLogic(ctx, s.svcCtx)
 	return l.ResetPassword(in)
+}
+
+// 通过链接重置密码
+func (s *UserServiceServer) ResetPasswordByLink(ctx context.Context, in *user.ResetPasswordByLinkRequest) (*user.ResetPasswordByLinkResponse, error) {
+	l := logic.NewResetPasswordByLinkLogic(ctx, s.svcCtx)
+	return l.ResetPasswordByLink(in)
 }
 
 // 删除用户
