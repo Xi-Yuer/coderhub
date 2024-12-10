@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"coderhub/shared/utils"
 	"context"
 	"fmt"
 	"strconv"
@@ -8,8 +9,6 @@ import (
 	"coderhub/rpc/ImageRelation/imageRelation"
 	"coderhub/rpc/TechSphere/Comment/comment"
 	"coderhub/rpc/TechSphere/Comment/internal/svc"
-	"coderhub/shared/MetaData"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -34,7 +33,7 @@ func (l *DeleteCommentLogic) DeleteComment(in *comment.DeleteCommentRequest) (*c
 		userId string
 		err    error
 	)
-	if userId, err = MetaData.GetUserMetaData(l.ctx); err != nil {
+	if userId, err = utils.GetUserMetaData(l.ctx); err != nil {
 		return nil, err
 	}
 

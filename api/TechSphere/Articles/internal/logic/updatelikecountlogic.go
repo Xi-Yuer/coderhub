@@ -1,15 +1,13 @@
 package logic
 
 import (
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/TechSphere/Articles/internal/svc"
 	"coderhub/api/TechSphere/Articles/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/TechSphere/Articles/articles"
-	"coderhub/shared/MetaData"
-	"coderhub/shared/Validator"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -28,13 +26,13 @@ func NewUpdateLikeCountLogic(ctx context.Context, svcCtx *svc.ServiceContext) *U
 }
 
 func (l *UpdateLikeCountLogic) UpdateLikeCount(req *types.UpdateLikeCountReq) (resp *types.UpdateLikeCountResp, err error) {
-	userId, err := MetaData.GetUserID(l.ctx)
+	userId, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err), nil
 	}
-	ctx := MetaData.SetUserMetaData(l.ctx)
+	ctx := utils.SetUserMetaData(l.ctx)
 
-	if err := Validator.New().ArticleID(req.Id).Check(); err != nil {
+	if err := utils.New().ArticleID(req.Id).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
 

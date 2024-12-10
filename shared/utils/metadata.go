@@ -1,4 +1,4 @@
-package MetaData
+package utils
 
 import (
 	"context"

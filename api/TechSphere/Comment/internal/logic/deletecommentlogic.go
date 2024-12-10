@@ -2,7 +2,7 @@ package logic
 
 import (
 	"coderhub/rpc/TechSphere/Comment/commentservice"
-	"coderhub/shared/MetaData"
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/TechSphere/Comment/internal/svc"
@@ -29,11 +29,11 @@ func NewDeleteCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Del
 
 func (l *DeleteCommentLogic) DeleteComment(req *types.DeleteCommentReq) (resp *types.DeleteCommentResp, err error) {
 	// 权限校验
-	_, err = MetaData.GetUserID(l.ctx)
+	_, err = utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err)
 	}
-	ctx := MetaData.SetUserMetaData(l.ctx) // 设置元数据
+	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 
 	_, err = l.svcCtx.CommentService.DeleteComment(ctx, &commentservice.DeleteCommentRequest{
 		CommentId: req.CommentId,

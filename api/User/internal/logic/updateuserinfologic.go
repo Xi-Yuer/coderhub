@@ -3,7 +3,7 @@ package logic
 import (
 	"coderhub/conf"
 	"coderhub/rpc/User/user"
-	"coderhub/shared/MetaData"
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/User/internal/svc"
@@ -27,8 +27,8 @@ func NewUpdateUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 }
 
 func (l *UpdateUserInfoLogic) UpdateUserInfo(req *types.UpdateUserInfoRequest) (resp *types.UpdateUserInfoResponse, err error) {
-	ctx := MetaData.SetUserMetaData(l.ctx)
-	userID, err := MetaData.GetUserID(l.ctx)
+	ctx := utils.SetUserMetaData(l.ctx)
+	userID, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return &types.UpdateUserInfoResponse{
 			Response: types.Response{

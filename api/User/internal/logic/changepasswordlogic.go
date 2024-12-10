@@ -5,8 +5,7 @@ import (
 	"coderhub/api/User/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/User/user"
-	"coderhub/shared/MetaData"
-	"coderhub/shared/Validator"
+	"coderhub/shared/utils"
 	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -27,7 +26,7 @@ func NewChangePasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ch
 }
 
 func (l *ChangePasswordLogic) ChangePassword(req *types.ChangePasswordRequest) (resp *types.ChangePasswordResponse, err error) {
-	if err := Validator.New().Password(req.OldPassword).Password(req.NewPassword).Check(); err != nil {
+	if err := utils.New().Password(req.OldPassword).Password(req.NewPassword).Check(); err != nil {
 		return &types.ChangePasswordResponse{
 			Response: types.Response{
 				Code:    conf.HttpCode.HttpBadRequest,
@@ -37,7 +36,7 @@ func (l *ChangePasswordLogic) ChangePassword(req *types.ChangePasswordRequest) (
 		}, nil
 	}
 
-	userID, err := MetaData.GetUserID(l.ctx)
+	userID, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return &types.ChangePasswordResponse{
 			Response: types.Response{
@@ -46,7 +45,7 @@ func (l *ChangePasswordLogic) ChangePassword(req *types.ChangePasswordRequest) (
 			},
 		}, nil
 	}
-	ctx := MetaData.SetUserMetaData(l.ctx) // 设置元数据
+	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 	response, err := l.svcCtx.UserService.ChangePassword(ctx, &user.ChangePasswordRequest{
 		UserId:      userID,
 		OldPassword: req.OldPassword,

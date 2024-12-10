@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"coderhub/shared/utils"
 	"context"
 	"errors"
 	"fmt"
@@ -11,8 +12,6 @@ import (
 	"coderhub/rpc/ImageRelation/imageRelation"
 	"coderhub/rpc/TechSphere/Articles/articles"
 	"coderhub/rpc/TechSphere/Articles/internal/svc"
-	"coderhub/shared/Validator"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -31,7 +30,7 @@ func NewGetArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetArt
 }
 func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.GetArticleResponse, error) {
 	// 参数校验
-	if err := Validator.New().ArticleID(in.Id).Check(); err != nil {
+	if err := utils.New().ArticleID(in.Id).Check(); err != nil {
 		return nil, errors.New(err.Error())
 	}
 

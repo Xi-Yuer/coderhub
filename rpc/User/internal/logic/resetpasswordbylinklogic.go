@@ -1,14 +1,13 @@
 package logic
 
 import (
+	"coderhub/shared/security"
 	"context"
 	"errors"
 	"fmt"
 
 	"coderhub/rpc/User/internal/svc"
 	"coderhub/rpc/User/user"
-	"coderhub/shared/BcryptUtil"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -48,7 +47,7 @@ func (l *ResetPasswordByLinkLogic) ResetPasswordByLink(in *user.ResetPasswordByL
 		return nil, err
 	}
 	// 4. 更新用户密码
-	password, err := BcryptUtil.PasswordHash(in.Password)
+	password, err := security.PasswordHash(in.Password)
 	if err != nil {
 		return nil, err
 	}

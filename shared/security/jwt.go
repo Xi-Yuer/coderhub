@@ -1,4 +1,4 @@
-package JWT
+package security
 
 import (
 	"coderhub/conf"

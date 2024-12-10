@@ -2,8 +2,7 @@ package logic
 
 import (
 	"coderhub/model"
-	"coderhub/shared/MetaData"
-	"coderhub/shared/Validator"
+	"coderhub/shared/utils"
 	"context"
 	"errors"
 	"fmt"
@@ -45,7 +44,7 @@ func (l *DeleteArticleLogic) DeleteArticle(in *articles.DeleteArticleRequest) (*
 		userId string
 		err    error
 	)
-	if userId, err = MetaData.GetUserMetaData(l.ctx); err != nil {
+	if userId, err = utils.GetUserMetaData(l.ctx); err != nil {
 		return nil, err
 	}
 
@@ -83,7 +82,7 @@ func (l *DeleteArticleLogic) DeleteArticle(in *articles.DeleteArticleRequest) (*
 
 // validateRequest 验证删除请求的参数
 func (l *DeleteArticleLogic) validateRequest(in *articles.DeleteArticleRequest) error {
-	if err := Validator.New().ArticleID(in.Id).Check(); err != nil {
+	if err := utils.New().ArticleID(in.Id).Check(); err != nil {
 		l.Logger.Errorf(ErrValidationFailed, err)
 		return fmt.Errorf(ErrValidationFailed, err)
 	}

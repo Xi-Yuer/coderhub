@@ -1,4 +1,4 @@
-package CacheDB
+package storage
 
 import (
 	"context"

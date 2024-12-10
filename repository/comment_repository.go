@@ -2,7 +2,7 @@ package repository
 
 import (
 	"coderhub/model"
-	"coderhub/shared/CacheDB"
+	"coderhub/shared/storage"
 	"context"
 	"errors"
 	"fmt"
@@ -25,12 +25,12 @@ var ErrConcurrentUpdate = errors.New("并发更新冲突，请重试")
 // commentRepository 评论仓储实现
 type commentRepository struct {
 	DB       *gorm.DB
-	Redis    CacheDB.RedisDB
+	Redis    storage.RedisDB
 	minLikes int32
 }
 
 // NewCommentRepository 创建评论仓储实例
-func NewCommentRepository(db *gorm.DB, rdb CacheDB.RedisDB) CommentRepository {
+func NewCommentRepository(db *gorm.DB, rdb storage.RedisDB) CommentRepository {
 	return &commentRepository{
 		DB:       db,
 		Redis:    rdb,

@@ -5,7 +5,7 @@ import (
 	"coderhub/model"
 	"coderhub/rpc/Image/image"
 	"coderhub/rpc/Image/internal/svc"
-	"coderhub/shared/SnowFlake"
+	"coderhub/shared/utils"
 	"context"
 	"fmt"
 	"time"
@@ -44,7 +44,7 @@ func (l *UploadLogic) Upload(in *image.UploadRequest) (*image.ImageInfo, error) 
 	}
 
 	// 插入数据库
-	ID := SnowFlake.GenID()
+	ID := utils.GenID()
 	err = l.svcCtx.ImageRepository.Create(l.ctx, &model.Image{
 		ID:           ID,
 		BucketName:   l.svcCtx.Config.Minio.Bucket,

@@ -1,14 +1,13 @@
 package logic
 
 import (
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/TechSphere/Comment/internal/svc"
 	"coderhub/api/TechSphere/Comment/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/TechSphere/Comment/comment"
-	"coderhub/shared/MetaData"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -28,11 +27,11 @@ func NewUpdateCommentLikeCountLogic(ctx context.Context, svcCtx *svc.ServiceCont
 }
 
 func (l *UpdateCommentLikeCountLogic) UpdateCommentLikeCount(req *types.UpdateCommentLikeCountReq) (resp *types.UpdateCommentLikeCountResp, err error) {
-	userId, err := MetaData.GetUserID(l.ctx)
+	userId, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err), nil
 	}
-	ctx := MetaData.SetUserMetaData(l.ctx)
+	ctx := utils.SetUserMetaData(l.ctx)
 
 	if _, err := l.svcCtx.CommentService.UpdateCommentLikeCount(ctx, &comment.UpdateCommentLikeCountRequest{
 		CommentId: req.CommentId,

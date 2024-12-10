@@ -4,9 +4,8 @@ import (
 	"coderhub/model"
 	"coderhub/rpc/User/internal/svc"
 	"coderhub/rpc/User/user"
-	"coderhub/shared/BcryptUtil"
-	"coderhub/shared/MetaData"
-	"coderhub/shared/Validator"
+	"coderhub/shared/security"
+	"coderhub/shared/utils"
 	"context"
 	"errors"
 	"fmt"
@@ -31,7 +30,7 @@ func NewChangePasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ch
 
 // ChangePassword 修改密码
 func (l *ChangePasswordLogic) ChangePassword(in *user.ChangePasswordRequest) (*user.ChangePasswordResponse, error) {
-	if err := Validator.New().Password(in.OldPassword).Password(in.NewPassword).Check(); err != nil {
+	if err := utils.New().Password(in.OldPassword).Password(in.NewPassword).Check(); err != nil {
 		return nil, err
 	}
 
@@ -40,7 +39,7 @@ func (l *ChangePasswordLogic) ChangePassword(in *user.ChangePasswordRequest) (*u
 		err    error
 	)
 	// 从 metadata 中获取 userId
-	if userId, err = MetaData.GetUserMetaData(l.ctx); err != nil {
+	if userId, err = utils.GetUserMetaData(l.ctx); err != nil {
 		return nil, err
 	}
 
@@ -54,12 +53,12 @@ func (l *ChangePasswordLogic) ChangePassword(in *user.ChangePasswordRequest) (*u
 	}
 
 	// 验证旧密码是否正确
-	if !BcryptUtil.CompareHashAndPassword(userInfo.Password, in.OldPassword) {
+	if !security.CompareHashAndPassword(userInfo.Password, in.OldPassword) {
 		return nil, errors.New("旧密码不正确")
 	}
 
 	// 对新密码进行哈希处理
-	hashedNewPassword, err := BcryptUtil.PasswordHash(in.NewPassword)
+	hashedNewPassword, err := security.PasswordHash(in.NewPassword)
 	if err != nil {
 		return nil, err
 	}

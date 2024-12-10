@@ -1,5 +1,4 @@
-// Minio 仓储系统 对文件的存储封装
-package Minio
+package storage
 
 import (
 	"bytes"

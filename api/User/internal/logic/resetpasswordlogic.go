@@ -2,8 +2,7 @@ package logic
 
 import (
 	"coderhub/conf"
-	"coderhub/shared/MetaData"
-	"coderhub/shared/Validator"
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/User/internal/svc"
@@ -27,7 +26,7 @@ func NewResetPasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Res
 }
 
 func (l *ResetPasswordLogic) ResetPassword(req *types.ResetPasswordRequest) (resp *types.ResetPasswordResponse, err error) {
-	if err := Validator.New().Password(req.Email).Password(req.NewPassword).Check(); err != nil {
+	if err := utils.New().Password(req.Email).Password(req.NewPassword).Check(); err != nil {
 		return &types.ResetPasswordResponse{
 			Response: types.Response{
 				Code:    conf.HttpCode.HttpBadRequest,
@@ -37,7 +36,7 @@ func (l *ResetPasswordLogic) ResetPassword(req *types.ResetPasswordRequest) (res
 		}, nil
 	}
 
-	_, err = MetaData.GetUserID(l.ctx)
+	_, err = utils.GetUserID(l.ctx)
 	if err != nil {
 		return &types.ResetPasswordResponse{
 			Response: types.Response{
@@ -46,7 +45,7 @@ func (l *ResetPasswordLogic) ResetPassword(req *types.ResetPasswordRequest) (res
 			},
 		}, nil
 	}
-	_ = MetaData.SetUserMetaData(l.ctx) // 设置元数据
+	_ = utils.SetUserMetaData(l.ctx) // 设置元数据
 
 	return
 }

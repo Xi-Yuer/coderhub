@@ -4,7 +4,7 @@ import (
 	"coderhub/model"
 	"coderhub/rpc/User/internal/svc"
 	"coderhub/rpc/User/user"
-	"coderhub/shared/MetaData"
+	"coderhub/shared/utils"
 	"context"
 	"database/sql"
 	"errors"
@@ -29,7 +29,7 @@ func NewUpdateUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 }
 
 func (l *UpdateUserInfoLogic) UpdateUserInfo(in *user.UpdateUserInfoRequest) (*user.UpdateUserInfoResponse, error) {
-	if userId, err := MetaData.GetUserMetaData(l.ctx); err != nil || userId != strconv.FormatInt(in.UserId, 10) {
+	if userId, err := utils.GetUserMetaData(l.ctx); err != nil || userId != strconv.FormatInt(in.UserId, 10) {
 		return nil, errors.New("非法操作")
 	}
 	UserInfo, err := NewGetUserInfoLogic(l.ctx, l.svcCtx).GetUserInfo(&user.GetUserInfoRequest{

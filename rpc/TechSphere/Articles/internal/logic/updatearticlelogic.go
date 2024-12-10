@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"coderhub/shared/utils"
 	"context"
 	"fmt"
 	"strconv"
@@ -11,9 +12,6 @@ import (
 	"coderhub/rpc/ImageRelation/imageRelation"
 	"coderhub/rpc/TechSphere/Articles/articles"
 	"coderhub/rpc/TechSphere/Articles/internal/svc"
-	"coderhub/shared/MetaData"
-	"coderhub/shared/Validator"
-
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -95,7 +93,7 @@ func (l *UpdateArticleLogic) UpdateArticle(in *articles.UpdateArticleRequest) (*
 // validateArticleUpdate 验证文章更新请求
 func (l *UpdateArticleLogic) validateArticleUpdate(req *articles.UpdateArticleRequest) error {
 	// 基础字段验证
-	if err := Validator.New().
+	if err := utils.New().
 		ArticleID(req.Id).
 		Title(req.Title).
 		Summary(req.Summary).
@@ -115,7 +113,7 @@ func (l *UpdateArticleLogic) validateArticleUpdate(req *articles.UpdateArticleRe
 
 // getUserID 获取并转换用户ID
 func (l *UpdateArticleLogic) getUserID() (int64, error) {
-	userId, err := MetaData.GetUserMetaData(l.ctx)
+	userId, err := utils.GetUserMetaData(l.ctx)
 	if err != nil {
 		l.Logger.Errorf(ErrUserMetaFailed, err)
 		return 0, fmt.Errorf(ErrUserMetaFailed, err)

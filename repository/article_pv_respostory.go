@@ -2,7 +2,7 @@ package repository
 
 import (
 	"coderhub/model"
-	"coderhub/shared/CacheDB"
+	"coderhub/shared/storage"
 	"errors"
 	"fmt"
 	"strconv"
@@ -19,12 +19,12 @@ type ArticlePVRepository interface {
 
 type ArticlePVRepositoryImpl struct {
 	DB            *gorm.DB
-	Redis         CacheDB.RedisDB
+	Redis         storage.RedisDB
 	lastSyncTime  time.Time
 	syncThreshold int64
 }
 
-func NewArticlePVRepositoryImpl(db *gorm.DB, rdb CacheDB.RedisDB) *ArticlePVRepositoryImpl {
+func NewArticlePVRepositoryImpl(db *gorm.DB, rdb storage.RedisDB) *ArticlePVRepositoryImpl {
 	return &ArticlePVRepositoryImpl{
 		DB:            db,
 		Redis:         rdb,

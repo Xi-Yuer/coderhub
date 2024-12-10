@@ -1,4 +1,4 @@
-package SQL
+package storage
 
 import (
 	"coderhub/model"

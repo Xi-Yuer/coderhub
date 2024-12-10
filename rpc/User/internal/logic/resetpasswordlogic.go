@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"coderhub/shared/utils"
 	"context"
 	"fmt"
 	"strconv"
@@ -8,8 +9,6 @@ import (
 
 	"coderhub/rpc/User/internal/svc"
 	"coderhub/rpc/User/user"
-	"coderhub/shared/SnowFlake"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -41,7 +40,7 @@ func (l *ResetPasswordLogic) ResetPassword(in *user.ResetPasswordRequest) (*user
 		return nil, fmt.Errorf("用户邮箱不存在")
 	}
 	// 2. 生成重置密码链接
-	token := SnowFlake.GenID()
+	token := utils.GenID()
 	// 3. 将token存入redis, 过期时间为10分钟
 	err = l.svcCtx.RedisDB.SetWithTTL(fmt.Sprintf("reset_password:%s", in.Email), strconv.FormatInt(token, 10), 10*time.Minute)
 	if err != nil {

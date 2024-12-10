@@ -1,4 +1,4 @@
-package SnowFlake
+package utils
 
 import (
 	"fmt"

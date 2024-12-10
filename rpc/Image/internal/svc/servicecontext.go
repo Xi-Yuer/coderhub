@@ -3,19 +3,18 @@ package svc
 import (
 	"coderhub/repository"
 	"coderhub/rpc/Image/internal/config"
-	"coderhub/shared/Minio"
-	"coderhub/shared/SQL"
+	"coderhub/shared/storage"
 	"fmt"
 )
 
 type ServiceContext struct {
 	Config          config.Config
 	ImageRepository repository.ImageRepository
-	Minio           *Minio.Minio
+	Minio           *storage.Minio
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	minioClient := Minio.NewMinio(
+	minioClient := storage.NewMinio(
 		c.Minio.Endpoint,
 		c.Minio.AccessKey,
 		c.Minio.SecretKey,
@@ -31,7 +30,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	return &ServiceContext{
 		Config:          c,
-		ImageRepository: repository.NewImageRepository(SQL.NewGorm()),
+		ImageRepository: repository.NewImageRepository(storage.NewGorm()),
 		Minio:           minioClient,
 	}
 }

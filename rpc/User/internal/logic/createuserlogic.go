@@ -4,9 +4,8 @@ import (
 	"coderhub/model"
 	"coderhub/rpc/User/internal/svc"
 	"coderhub/rpc/User/user"
-	"coderhub/shared/BcryptUtil"
-	"coderhub/shared/SnowFlake"
-	"coderhub/shared/Validator"
+	"coderhub/shared/security"
+	"coderhub/shared/utils"
 	"context"
 	"errors"
 
@@ -28,7 +27,7 @@ func NewCreateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateUserLogic) CreateUser(in *user.CreateUserRequest) (*user.CreateUserResponse, error) {
-	if err := Validator.New().Username(in.Username).Password(in.PasswordHash).Check(); err != nil {
+	if err := utils.New().Username(in.Username).Password(in.PasswordHash).Check(); err != nil {
 		return nil, err
 	}
 
@@ -37,8 +36,8 @@ func (l *CreateUserLogic) CreateUser(in *user.CreateUserRequest) (*user.CreateUs
 		return nil, errors.New("用户已存在")
 	}
 
-	ID := SnowFlake.GenID()
-	Password, _ := BcryptUtil.PasswordHash(in.PasswordHash)
+	ID := utils.GenID()
+	Password, _ := security.PasswordHash(in.PasswordHash)
 	if err := l.svcCtx.UserRepository.CreateUser(&model.User{
 		ID:       ID,
 		UserName: in.Username,

@@ -5,8 +5,7 @@ import (
 	"coderhub/api/TechSphere/Articles/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/TechSphere/Articles/articles"
-	"coderhub/shared/MetaData"
-	"coderhub/shared/Validator"
+	"coderhub/shared/utils"
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -32,7 +31,7 @@ func (l *CreateArticleLogic) CreateArticle(req *types.CreateArticleReq) (*types.
 	}
 
 	// 2. 获取用户ID
-	userId, err := MetaData.GetUserID(l.ctx)
+	userId, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err), nil
 	}
@@ -72,7 +71,7 @@ func (l *CreateArticleLogic) successResp(articleId int64) *types.CreateArticleRe
 }
 
 func (l *CreateArticleLogic) validateArticleData(req *types.CreateArticleReq) error {
-	return Validator.New().
+	return utils.New().
 		Title(req.Title).
 		Content(req.Content).
 		ArticleType(req.Type).

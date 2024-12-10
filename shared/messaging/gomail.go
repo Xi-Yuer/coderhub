@@ -1,4 +1,4 @@
-package GoMail
+package messaging
 
 import (
 	"coderhub/conf"

@@ -6,7 +6,7 @@ import (
 	"coderhub/rpc/TechSphere/Comment/comment"
 	"coderhub/rpc/TechSphere/Comment/internal/svc"
 	"coderhub/rpc/User/userservice"
-	"coderhub/shared/SnowFlake"
+	"coderhub/shared/utils"
 	"context"
 	"strconv"
 
@@ -29,7 +29,7 @@ func NewCreateCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 
 // CreateComment 创建评论
 func (l *CreateCommentLogic) CreateComment(in *comment.CreateCommentRequest) (*comment.CreateCommentResponse, error) {
-	CommentID := SnowFlake.GenID()
+	CommentID := utils.GenID()
 	commentModel := &model.Comment{
 		ID:         CommentID,
 		ArticleID:  in.ArticleId,

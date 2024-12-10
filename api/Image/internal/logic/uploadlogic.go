@@ -5,7 +5,7 @@ import (
 	"coderhub/api/Image/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/Image/image"
-	"coderhub/shared/MetaData"
+	"coderhub/shared/utils"
 	"context"
 	"io"
 	"mime/multipart"
@@ -47,7 +47,7 @@ func (l *UploadLogic) Upload() (resp *types.UploadResponse, err error) {
 		}
 	}(file)
 
-	userId, err := MetaData.GetUserID(l.ctx)
+	userId, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err)
 	}

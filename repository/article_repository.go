@@ -2,7 +2,7 @@ package repository
 
 import (
 	"coderhub/model"
-	"coderhub/shared/CacheDB"
+	"coderhub/shared/storage"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -18,11 +18,11 @@ type ArticleRepository interface {
 }
 type ArticleRepositoryImpl struct {
 	DB       *gorm.DB
-	Redis    CacheDB.RedisDB
+	Redis    storage.RedisDB
 	minLikes int32
 }
 
-func NewArticleRepositoryImpl(db *gorm.DB, rdb CacheDB.RedisDB) *ArticleRepositoryImpl {
+func NewArticleRepositoryImpl(db *gorm.DB, rdb storage.RedisDB) *ArticleRepositoryImpl {
 	return &ArticleRepositoryImpl{
 		DB:       db,
 		Redis:    rdb,

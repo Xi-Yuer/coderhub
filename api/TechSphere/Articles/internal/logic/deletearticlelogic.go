@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"coderhub/shared/MetaData"
+	"coderhub/shared/utils"
 	"context"
 	"strconv"
 
@@ -9,8 +9,6 @@ import (
 	"coderhub/api/TechSphere/Articles/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/TechSphere/Articles/articles"
-	"coderhub/shared/Validator"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -29,13 +27,13 @@ func NewDeleteArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Del
 }
 
 func (l *DeleteArticleLogic) DeleteArticle(req *types.DeleteArticleReq) (*types.DeleteArticleResp, error) {
-	_, err := MetaData.GetUserID(l.ctx)
+	_, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err), nil
 	}
-	ctx := MetaData.SetUserMetaData(l.ctx) // 设置元数据
+	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 
-	if err := Validator.New().ArticleID(req.Id).Check(); err != nil {
+	if err := utils.New().ArticleID(req.Id).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
 
@@ -72,7 +70,7 @@ func (l *DeleteArticleLogic) successResp() *types.DeleteArticleResp {
 }
 
 func (l *DeleteArticleLogic) deleteArticle(ctx context.Context, articleId int64) error {
-	userID, err := MetaData.GetUserID(l.ctx)
+	userID, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return err
 	}

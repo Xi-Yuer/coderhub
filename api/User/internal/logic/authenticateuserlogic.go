@@ -5,7 +5,7 @@ import (
 	"coderhub/api/User/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/User/user"
-	"coderhub/shared/Validator"
+	"coderhub/shared/utils"
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +25,7 @@ func NewAuthenticateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *AuthenticateUserLogic) AuthenticateUser(req *types.AuthenticateUserRequest) (resp *types.AuthenticateUserResponse, err error) {
-	if err := Validator.New().Username(req.Username).Password(req.Password).Check(); err != nil {
+	if err := utils.New().Username(req.Username).Password(req.Password).Check(); err != nil {
 		return &types.AuthenticateUserResponse{
 			Response: types.Response{
 				Code:    conf.HttpCode.HttpBadRequest,

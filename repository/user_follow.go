@@ -2,7 +2,7 @@ package repository
 
 import (
 	"coderhub/model"
-	"coderhub/shared/CacheDB"
+	"coderhub/shared/storage"
 	"encoding/json"
 	"fmt"
 
@@ -28,7 +28,7 @@ type UserFollowRepository interface {
 	GetMutualFollows(userID int64, page int32, pageSize int32) ([]*model.UserFollow, error)
 }
 
-func NewUserFollowRepositoryImpl(db *gorm.DB, rdb CacheDB.RedisDB) *UserFollowRepositoryImpl {
+func NewUserFollowRepositoryImpl(db *gorm.DB, rdb storage.RedisDB) *UserFollowRepositoryImpl {
 	return &UserFollowRepositoryImpl{
 		DB:    db,
 		Redis: rdb,
@@ -37,7 +37,7 @@ func NewUserFollowRepositoryImpl(db *gorm.DB, rdb CacheDB.RedisDB) *UserFollowRe
 
 type UserFollowRepositoryImpl struct {
 	DB    *gorm.DB
-	Redis CacheDB.RedisDB
+	Redis storage.RedisDB
 }
 
 // 创建用户关注关系

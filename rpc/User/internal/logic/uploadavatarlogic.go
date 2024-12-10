@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"coderhub/shared/utils"
 	"context"
 	"database/sql"
 	"fmt"
@@ -11,8 +12,6 @@ import (
 	"coderhub/rpc/ImageRelation/imagerelationservice"
 	"coderhub/rpc/User/internal/svc"
 	"coderhub/rpc/User/user"
-	"coderhub/shared/MetaData"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -38,7 +37,7 @@ func (l *UploadAvatarLogic) UploadAvatar(in *user.UploadAvatarRequest) (*user.Up
 		err    error
 	)
 	// 从 metadata 中获取 userId
-	if userId, err = MetaData.GetUserMetaData(l.ctx); err != nil {
+	if userId, err = utils.GetUserMetaData(l.ctx); err != nil {
 		return nil, err
 	}
 

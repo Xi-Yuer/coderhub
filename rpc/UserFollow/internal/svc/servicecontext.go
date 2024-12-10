@@ -4,9 +4,7 @@ import (
 	"coderhub/repository"
 	"coderhub/rpc/User/userservice"
 	"coderhub/rpc/UserFollow/internal/config"
-	"coderhub/shared/CacheDB"
-	"coderhub/shared/SQL"
-
+	"coderhub/shared/storage"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
@@ -17,13 +15,13 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	redisDB, err := CacheDB.NewRedisDB(CacheDB.DefaultConfig())
+	redisDB, err := storage.NewRedisDB(storage.DefaultConfig())
 	if err != nil {
 		panic(err)
 	}
 	return &ServiceContext{
 		Config:               c,
 		UserService:          userservice.NewUserService(zrpc.MustNewClient(c.UserService)),
-		UserFollowRepository: repository.NewUserFollowRepositoryImpl(SQL.NewGorm(), redisDB),
+		UserFollowRepository: repository.NewUserFollowRepositoryImpl(storage.NewGorm(), redisDB),
 	}
 }

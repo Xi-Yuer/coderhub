@@ -5,8 +5,7 @@ import (
 	"coderhub/rpc/ImageRelation/imagerelationservice"
 	"coderhub/rpc/TechSphere/Articles/articles"
 	"coderhub/rpc/TechSphere/Articles/internal/svc"
-	"coderhub/shared/SnowFlake"
-	"coderhub/shared/Validator"
+	"coderhub/shared/utils"
 	"context"
 	"fmt"
 	"strings"
@@ -31,7 +30,7 @@ func NewCreateArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 // validateCreateArticleRequest 验证文章创建请求
 func (l *CreateArticleLogic) validateCreateArticleRequest(req *articles.CreateArticleRequest) error {
 	// 验证基本字段
-	if err := Validator.New().
+	if err := utils.New().
 		Title(req.Title).
 		Summary(req.Summary).
 		Content(req.Content).
@@ -56,7 +55,7 @@ func (l *CreateArticleLogic) CreateArticle(in *articles.CreateArticleRequest) (*
 	}
 
 	// 生成文章ID
-	articleID := SnowFlake.GenID()
+	articleID := utils.GenID()
 
 	// 文章 Tags，因为Tags 可能是空的，所以需要判断
 	tags := ""

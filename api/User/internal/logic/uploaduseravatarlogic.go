@@ -5,7 +5,7 @@ import (
 	"coderhub/api/User/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/User/userservice"
-	"coderhub/shared/MetaData"
+	"coderhub/shared/utils"
 	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -27,11 +27,11 @@ func NewUploadUserAvatarLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *UploadUserAvatarLogic) UploadUserAvatar(in *types.UploadUserAvatarRequest) (resp *types.UploadUserAvatarResponse, err error) {
 	// 权限验证
-	userID, err := MetaData.GetUserID(l.ctx)
+	userID, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err)
 	}
-	ctx := MetaData.SetUserMetaData(l.ctx) // 设置元数据
+	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 
 	// 上传图片
 	response, err := l.svcCtx.UserService.UploadAvatar(ctx, &userservice.UploadAvatarRequest{

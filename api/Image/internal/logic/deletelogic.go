@@ -1,14 +1,13 @@
 package logic
 
 import (
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/Image/internal/svc"
 	"coderhub/api/Image/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/Image/image"
-	"coderhub/shared/MetaData"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -29,11 +28,11 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 
 func (l *DeleteLogic) Delete(req *types.DeleteRequest) (resp *types.DeleteResponse, err error) {
 	// 权限校验
-	_, err = MetaData.GetUserID(l.ctx)
+	_, err = utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err)
 	}
-	ctx := MetaData.SetUserMetaData(l.ctx) // 设置元数据
+	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 
 	_, err = l.svcCtx.ImageService.Delete(ctx, &image.DeleteRequest{
 		ImageId: req.ImageId,

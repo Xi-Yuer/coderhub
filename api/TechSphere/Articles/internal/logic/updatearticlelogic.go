@@ -5,8 +5,7 @@ import (
 	"coderhub/api/TechSphere/Articles/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/TechSphere/Articles/articles"
-	"coderhub/shared/MetaData"
-	"coderhub/shared/Validator"
+	"coderhub/shared/utils"
 	"context"
 	"errors"
 
@@ -28,13 +27,13 @@ func NewUpdateArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upd
 }
 
 func (l *UpdateArticleLogic) UpdateArticle(req *types.UpdateArticleReq) (*types.UpdateArticleResp, error) {
-	userId, err := MetaData.GetUserID(l.ctx)
+	userId, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err), nil
 	}
-	ctx := MetaData.SetUserMetaData(l.ctx) // 设置元数据
+	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 	// 1. 参数验证
-	if err := Validator.New().ArticleID(req.Id).Check(); err != nil {
+	if err := utils.New().ArticleID(req.Id).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
 

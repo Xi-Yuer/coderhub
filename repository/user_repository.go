@@ -2,7 +2,7 @@ package repository
 
 import (
 	"coderhub/model"
-	"coderhub/shared/CacheDB"
+	"coderhub/shared/storage"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -21,7 +21,7 @@ type UserRepository interface {
 	DeleteUser(id int64) error
 }
 
-func NewUserRepositoryImpl(db *gorm.DB, rdb CacheDB.RedisDB) *UserRepositoryImpl {
+func NewUserRepositoryImpl(db *gorm.DB, rdb storage.RedisDB) *UserRepositoryImpl {
 	return &UserRepositoryImpl{
 		DB:    db,
 		Redis: rdb,
@@ -30,7 +30,7 @@ func NewUserRepositoryImpl(db *gorm.DB, rdb CacheDB.RedisDB) *UserRepositoryImpl
 
 type UserRepositoryImpl struct {
 	DB    *gorm.DB
-	Redis CacheDB.RedisDB
+	Redis storage.RedisDB
 }
 
 func (r *UserRepositoryImpl) CreateUser(user *model.User) error {

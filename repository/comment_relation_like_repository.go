@@ -2,7 +2,7 @@ package repository
 
 import (
 	"coderhub/model"
-	"coderhub/shared/CacheDB"
+	"coderhub/shared/storage"
 	"context"
 
 	"gorm.io/gorm"
@@ -19,10 +19,10 @@ type CommentRelationLikeRepository interface {
 
 type commentRelationLikeRepository struct {
 	DB    *gorm.DB
-	Redis CacheDB.RedisDB
+	Redis storage.RedisDB
 }
 
-func NewCommentRelationLikeRepository(db *gorm.DB, redis CacheDB.RedisDB) CommentRelationLikeRepository {
+func NewCommentRelationLikeRepository(db *gorm.DB, redis storage.RedisDB) CommentRelationLikeRepository {
 	return &commentRelationLikeRepository{
 		DB:    db,
 		Redis: redis,

@@ -1,14 +1,13 @@
 package logic
 
 import (
+	"coderhub/shared/utils"
 	"context"
 	"fmt"
 	"strconv"
 
 	"coderhub/rpc/Image/image"
 	"coderhub/rpc/Image/internal/svc"
-	"coderhub/shared/MetaData"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -33,7 +32,7 @@ func (l *DeleteLogic) Delete(in *image.DeleteRequest) (*image.DeleteResponse, er
 		userId string
 		err    error
 	)
-	if userId, err = MetaData.GetUserMetaData(l.ctx); err != nil {
+	if userId, err = utils.GetUserMetaData(l.ctx); err != nil {
 		return nil, err
 	}
 

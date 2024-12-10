@@ -6,9 +6,7 @@ import (
 	"coderhub/rpc/ImageRelation/imagerelationservice"
 	"coderhub/rpc/TechSphere/Comment/internal/config"
 	"coderhub/rpc/User/userservice"
-	"coderhub/shared/CacheDB"
-	"coderhub/shared/SQL"
-
+	"coderhub/shared/storage"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
@@ -22,7 +20,7 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	redisDB, err := CacheDB.NewRedisDB(CacheDB.DefaultConfig())
+	redisDB, err := storage.NewRedisDB(storage.DefaultConfig())
 	if err != nil {
 		panic(err)
 	}
@@ -31,7 +29,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		ImageRelationService:          imagerelationservice.NewImageRelationService(zrpc.MustNewClient(c.ImageRelationService)),
 		ImageService:                  imageservice.NewImageService(zrpc.MustNewClient(c.ImageService)),
 		UserService:                   userservice.NewUserService(zrpc.MustNewClient(c.UserService)),
-		CommentRepository:             repository.NewCommentRepository(SQL.NewGorm(), redisDB),
-		CommentRelationLikeRepository: repository.NewCommentRelationLikeRepository(SQL.NewGorm(), redisDB),
+		CommentRepository:             repository.NewCommentRepository(storage.NewGorm(), redisDB),
+		CommentRelationLikeRepository: repository.NewCommentRelationLikeRepository(storage.NewGorm(), redisDB),
 	}
 }
