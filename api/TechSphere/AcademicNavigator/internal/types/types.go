@@ -28,6 +28,16 @@ type AddAcademicNavigatorResp struct {
 	Data bool `json:"data"` // 是否添加成功
 }
 
+type CancelLikeAcademicNavigatorReq struct {
+	UserId int64 `json:"user_id"` // 用户 ID
+	Id     int64 `path:"id"`      // 学术导航 ID
+}
+
+type CancelLikeAcademicNavigatorResp struct {
+	Response
+	Data bool `json:"data"` // 是否取消点赞成功
+}
+
 type DeleteAcademicNavigatorReq struct {
 	Id int64 `path:"id"` // 学术导航 ID
 }
@@ -38,14 +48,14 @@ type DeleteAcademicNavigatorResp struct {
 }
 
 type GetAcademicNavigatorReq struct {
-	UserId    int64  `json:"user_id"`   // 用户 ID
-	Education string `json:"education"` // 学历
-	Content   string `json:"content"`   // 内容
-	Major     string `json:"major"`     // 专业
-	School    string `json:"school"`    // 学校
-	WorkExp   string `json:"work_exp"`  // 工作经验
-	Page      int64  `json:"page"`      // 页码
-	PageSize  int64  `json:"page_size"` // 每页大小
+	UserId    int64  `json:"user_id,optional"`   // 用户 ID
+	Education string `json:"education,optional"` // 学历
+	Content   string `json:"content,optional"`   // 内容
+	Major     string `json:"major,optional"`     // 专业
+	School    string `json:"school,optional"`    // 学校
+	WorkExp   string `json:"work_exp,optional"`  // 工作经验
+	Page      int64  `json:"page"`               // 页码
+	PageSize  int64  `json:"page_size"`          // 每页大小
 }
 
 type GetAcademicNavigatorResp struct {
@@ -61,6 +71,16 @@ type HealthResp struct {
 type List struct {
 	Total int64               `json:"total"` // 总数
 	Items []AcademicNavigator `json:"items"` // 学术导航列表
+}
+
+type PostAcademicNavigatorLikeReq struct {
+	UserId int64 `json:"user_id"` // 用户 ID
+	Id     int64 `path:"id"`      // 学术导航 ID
+}
+
+type PostAcademicNavigatorLikeResp struct {
+	Response
+	Data bool `json:"data"` // 是否点赞成功
 }
 
 type Response struct {

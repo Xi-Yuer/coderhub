@@ -14,3 +14,68 @@ message AddAcademicNavigatorRequest {
   string school = 5;                // 学校
   string work_exp = 6;              // 工作经验
 }
+
+// 获取学术导航
+message GetAcademicNavigatorRequest {
+  int64 user_id = 1;               // 用户 ID
+  string education = 2;            // 学历
+  string major = 3;                 // 专业
+  string school = 4;                // 学校
+  string work_exp = 5;              // 工作经验
+  int64 page = 6;                   // 页码
+  int64 page_size = 7;              // 每页大小
+}
+
+// 删除学术导航
+message DeleteAcademicNavigatorRequest {
+  int64 id = 1;                     // 学术导航 ID
+  int64 user_id = 2;               // 用户 ID
+}
+
+
+message Response {
+  bool success = 1;                 // 是否成功
+}
+
+message AcademicNavigator {
+  int64 id = 1;                     // 学术导航 ID
+  int64 user_id = 2;               // 用户 ID
+  string content = 3;               // 内容
+  string education = 4;            // 学历
+  string major = 5;                 // 专业
+  string school = 6;                // 学校
+  string work_exp = 7;              // 工作经验
+  int64 like_count = 8;              // 点赞数
+  int64 created_at = 9;            // 创建时间
+  int64 updated_at = 10;            // 更新时间
+}
+
+message GetAcademicNavigatorResponse {
+  repeated AcademicNavigator academic_navigator = 1; // 学术导航
+  int64 total = 2; // 总数
+}
+
+// 点赞学术导航
+message LikeAcademicNavigatorRequest {
+  int64 id = 1;                     // 学术导航 ID
+  int64 user_id = 2;               // 用户 ID
+}
+
+// 取消点赞学术导航
+message CancelLikeAcademicNavigatorRequest {
+  int64 id = 1;                     // 学术导航 ID
+  int64 user_id = 2;               // 用户 ID
+}
+
+service AcademicNavigatorService {
+  // 新增学术导航
+  rpc AddAcademicNavigator(AddAcademicNavigatorRequest) returns (Response) {}
+  // 获取学术导航
+  rpc GetAcademicNavigator(GetAcademicNavigatorRequest) returns (GetAcademicNavigatorResponse) {}
+  // 删除学术导航
+  rpc DeleteAcademicNavigator(DeleteAcademicNavigatorRequest) returns (Response) {}
+  // 点赞学术导航
+  rpc LikeAcademicNavigator(LikeAcademicNavigatorRequest) returns (Response) {}
+  // 取消点赞学术导航
+  rpc CancelLikeAcademicNavigator(CancelLikeAcademicNavigatorRequest) returns (Response) {}
+}

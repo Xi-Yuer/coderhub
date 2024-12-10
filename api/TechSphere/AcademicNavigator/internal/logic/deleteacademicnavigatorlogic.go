@@ -5,6 +5,8 @@ import (
 
 	"coderhub/api/TechSphere/AcademicNavigator/internal/svc"
 	"coderhub/api/TechSphere/AcademicNavigator/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/TechSphere/AcademicNavigator/academic_navigator"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +27,31 @@ func NewDeleteAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.ServiceCon
 }
 
 func (l *DeleteAcademicNavigatorLogic) DeleteAcademicNavigator(req *types.DeleteAcademicNavigatorReq) (resp *types.DeleteAcademicNavigatorResp, err error) {
-	// todo: add your logic here and delete this line
+	_, err = l.svcCtx.AcademicNavigatorService.DeleteAcademicNavigator(l.ctx, &academic_navigator.DeleteAcademicNavigatorRequest{
+		Id: req.Id,
+	})
+	if err != nil {
+		return l.errorResp(err)
+	}
 
-	return
+	return l.successResp()
+}
+
+func (l *DeleteAcademicNavigatorLogic) successResp() (*types.DeleteAcademicNavigatorResp, error) {
+	return &types.DeleteAcademicNavigatorResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: true,
+	}, nil
+}
+
+func (l *DeleteAcademicNavigatorLogic) errorResp(err error) (*types.DeleteAcademicNavigatorResp, error) {
+	return &types.DeleteAcademicNavigatorResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpBadRequest,
+			Message: err.Error(),
+		},
+	}, nil
 }

@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 
+	"coderhub/model"
 	"coderhub/rpc/TechSphere/AcademicNavigator/academic_navigator"
 	"coderhub/rpc/TechSphere/AcademicNavigator/internal/svc"
 
@@ -24,8 +25,40 @@ func NewGetAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.ServiceContex
 }
 
 // 获取学术导航
-func (l *GetAcademicNavigatorLogic) GetAcademicNavigator(in *academic_navigator.GetAcademicNavigatorRequest) (*academic_navigator.Response, error) {
-	// todo: add your logic here and delete this line
+func (l *GetAcademicNavigatorLogic) GetAcademicNavigator(in *academic_navigator.GetAcademicNavigatorRequest) (*academic_navigator.GetAcademicNavigatorResponse, error) {
+	academicNavigators, total, err := l.svcCtx.AcademicNavigatorRepository.GetAcademicNavigator(&model.AcademicNavigator{
+		UserId: in.UserId,
+	})
+	if err != nil {
+		return nil, err
+	}
 
-	return &academic_navigator.Response{}, nil
+	academicNavigatorList := make([]*academic_navigator.AcademicNavigator, 0, len(academicNavigators))
+	academicNavigatorIDs := make([]int64, 0, len(academicNavigators))
+	for _, academicNavigator := range academicNavigators {
+		academicNavigatorIDs = append(academicNavigatorIDs, int64(academicNavigator.ID))
+	}
+	academicRelationLikeCountMap, err := l.svcCtx.AcademicRelationLikeRepository.BatchGetAcademicRelationLikeCount(l.ctx, academicNavigatorIDs)
+	if err != nil {
+		return nil, err
+	}
+	for _, academicNavigator := range academicNavigators {
+		academicNavigatorList = append(academicNavigatorList, &academic_navigator.AcademicNavigator{
+			Id:        int64(academicNavigator.ID),
+			UserId:    academicNavigator.UserId,
+			Content:   academicNavigator.Content,
+			Education: academicNavigator.Education,
+			Major:     academicNavigator.Major,
+			School:    academicNavigator.School,
+			WorkExp:   academicNavigator.WorkExp,
+			LikeCount: academicRelationLikeCountMap[int64(academicNavigator.ID)],
+			CreatedAt: academicNavigator.CreatedAt.Unix(),
+			UpdatedAt: academicNavigator.UpdatedAt.Unix(),
+		})
+	}
+
+	return &academic_navigator.GetAcademicNavigatorResponse{
+		AcademicNavigator: academicNavigatorList,
+		Total:             total,
+	}, nil
 }

@@ -30,7 +30,7 @@ func (s *AcademicNavigatorServiceServer) AddAcademicNavigator(ctx context.Contex
 }
 
 // 获取学术导航
-func (s *AcademicNavigatorServiceServer) GetAcademicNavigator(ctx context.Context, in *academic_navigator.GetAcademicNavigatorRequest) (*academic_navigator.Response, error) {
+func (s *AcademicNavigatorServiceServer) GetAcademicNavigator(ctx context.Context, in *academic_navigator.GetAcademicNavigatorRequest) (*academic_navigator.GetAcademicNavigatorResponse, error) {
 	l := logic.NewGetAcademicNavigatorLogic(ctx, s.svcCtx)
 	return l.GetAcademicNavigator(in)
 }
@@ -39,4 +39,16 @@ func (s *AcademicNavigatorServiceServer) GetAcademicNavigator(ctx context.Contex
 func (s *AcademicNavigatorServiceServer) DeleteAcademicNavigator(ctx context.Context, in *academic_navigator.DeleteAcademicNavigatorRequest) (*academic_navigator.Response, error) {
 	l := logic.NewDeleteAcademicNavigatorLogic(ctx, s.svcCtx)
 	return l.DeleteAcademicNavigator(in)
+}
+
+// 点赞学术导航
+func (s *AcademicNavigatorServiceServer) LikeAcademicNavigator(ctx context.Context, in *academic_navigator.LikeAcademicNavigatorRequest) (*academic_navigator.Response, error) {
+	l := logic.NewLikeAcademicNavigatorLogic(ctx, s.svcCtx)
+	return l.LikeAcademicNavigator(in)
+}
+
+// 取消点赞学术导航
+func (s *AcademicNavigatorServiceServer) CancelLikeAcademicNavigator(ctx context.Context, in *academic_navigator.CancelLikeAcademicNavigatorRequest) (*academic_navigator.Response, error) {
+	l := logic.NewCancelLikeAcademicNavigatorLogic(ctx, s.svcCtx)
+	return l.CancelLikeAcademicNavigator(in)
 }

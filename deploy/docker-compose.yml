@@ -244,6 +244,31 @@ services:
       timeout: 10s
     restart: always
 
+  academic-navigator-api:
+    build:
+      context: ..
+      dockerfile: ./api/TechSphere/AcademicNavigator/Dockerfile
+    container_name: academic-navigator-api
+    depends_on:
+      - etcd
+      - mysql
+      - redis
+      - academic-navigator-service
+    networks:
+      - coderhub-network
+    healthcheck:
+      test: [
+        "CMD",
+        "curl",
+        "-f",
+        "http://localhost:8888/api/academic_navigator/health",
+      ] # 修改为实际的健康检查端点
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    restart: always
+
   # RPC 服务
   user-service:
     build:
@@ -391,6 +416,33 @@ services:
       context: ..
       dockerfile: ./rpc/UserFollow/Dockerfile
     container_name: user-follow-service
+    depends_on:
+      - mysql
+      - redis
+      - etcd
+      - user-service
+    networks:
+      - coderhub-network
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "8888" ] # 使用netcat检查端口是否开放
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    restart: always
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ETCD_HOST: etcd
+      ETCD_PORT: 2379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+
+  academic-navigator-service:
+    build:
+      context: ..
+      dockerfile: ./rpc/TechSphere/AcademicNavigator/Dockerfile
+    container_name: academic-navigator-service
     depends_on:
       - mysql
       - redis

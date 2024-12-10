@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 
+	"coderhub/model"
 	"coderhub/rpc/TechSphere/AcademicNavigator/academic_navigator"
 	"coderhub/rpc/TechSphere/AcademicNavigator/internal/svc"
 
@@ -25,7 +26,16 @@ func NewCancelLikeAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.Servic
 
 // 取消点赞学术导航
 func (l *CancelLikeAcademicNavigatorLogic) CancelLikeAcademicNavigator(in *academic_navigator.CancelLikeAcademicNavigatorRequest) (*academic_navigator.Response, error) {
-	// todo: add your logic here and delete this line
+	err := l.svcCtx.AcademicRelationLikeRepository.DeleteAcademicRelationLike(l.ctx, &model.AcademicRelationLike{
+		AcademicNavigatorID: in.Id,
+		UserID:              in.UserId,
+	})
 
-	return &academic_navigator.Response{}, nil
+	if err != nil {
+		return nil, err
+	}
+
+	return &academic_navigator.Response{
+		Success: true,
+	}, nil
 }

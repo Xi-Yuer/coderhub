@@ -85,6 +85,44 @@
         ]
       }
     },
+    "/api/academic_navigator/dislike/{id}": {
+      "delete": {
+        "summary": "取消点赞学术导航",
+        "operationId": "CancelLikeAcademicNavigator",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CancelLikeAcademicNavigatorResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CancelLikeAcademicNavigatorReq"
+            }
+          }
+        ],
+        "tags": [
+          "AcademicNavigator"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
     "/api/academic_navigator/get": {
       "get": {
         "summary": "获取学术导航",
@@ -180,15 +218,15 @@
         ]
       }
     },
-    "/api/academic_navigator/like_count/{id}": {
-      "put": {
-        "summary": "更新学术导航点赞数",
-        "operationId": "UpdateAcademicNavigatorLikeCount",
+    "/api/academic_navigator/like/{id}": {
+      "post": {
+        "summary": "点赞学术导航",
+        "operationId": "PostAcademicNavigatorLike",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/UpdateAcademicNavigatorLikeCountResp"
+              "$ref": "#/definitions/PostAcademicNavigatorLikeResp"
             }
           }
         },
@@ -204,7 +242,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UpdateAcademicNavigatorLikeCountReq"
+              "$ref": "#/definitions/PostAcademicNavigatorLikeReq"
             }
           }
         ],
@@ -329,6 +367,43 @@
         }
       },
       "title": "AddAcademicNavigatorResp",
+      "required": [
+        "data"
+      ]
+    },
+    "CancelLikeAcademicNavigatorReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 用户 ID"
+        }
+      },
+      "title": "CancelLikeAcademicNavigatorReq",
+      "required": [
+        "user_id"
+      ]
+    },
+    "CancelLikeAcademicNavigatorResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否取消点赞成功"
+        }
+      },
+      "title": "CancelLikeAcademicNavigatorResp",
       "required": [
         "data"
       ]
@@ -476,6 +551,43 @@
       "required": [
         "total",
         "items"
+      ]
+    },
+    "PostAcademicNavigatorLikeReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 用户 ID"
+        }
+      },
+      "title": "PostAcademicNavigatorLikeReq",
+      "required": [
+        "user_id"
+      ]
+    },
+    "PostAcademicNavigatorLikeResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否点赞成功"
+        }
+      },
+      "title": "PostAcademicNavigatorLikeResp",
+      "required": [
+        "data"
       ]
     },
     "Response": {

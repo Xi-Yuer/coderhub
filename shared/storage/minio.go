@@ -6,11 +6,8 @@ import (
 	"fmt"
 	"image"
 	"image/gif"
-	_ "image/gif"
 	"image/jpeg"
-	_ "image/jpeg"
 	"image/png"
-	_ "image/png"
 	"io"
 	"path/filepath"
 

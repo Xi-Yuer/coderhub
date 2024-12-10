@@ -21,9 +21,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AcademicNavigatorService_AddAcademicNavigator_FullMethodName    = "/academic_navigator.AcademicNavigatorService/AddAcademicNavigator"
-	AcademicNavigatorService_GetAcademicNavigator_FullMethodName    = "/academic_navigator.AcademicNavigatorService/GetAcademicNavigator"
-	AcademicNavigatorService_DeleteAcademicNavigator_FullMethodName = "/academic_navigator.AcademicNavigatorService/DeleteAcademicNavigator"
+	AcademicNavigatorService_AddAcademicNavigator_FullMethodName        = "/academic_navigator.AcademicNavigatorService/AddAcademicNavigator"
+	AcademicNavigatorService_GetAcademicNavigator_FullMethodName        = "/academic_navigator.AcademicNavigatorService/GetAcademicNavigator"
+	AcademicNavigatorService_DeleteAcademicNavigator_FullMethodName     = "/academic_navigator.AcademicNavigatorService/DeleteAcademicNavigator"
+	AcademicNavigatorService_LikeAcademicNavigator_FullMethodName       = "/academic_navigator.AcademicNavigatorService/LikeAcademicNavigator"
+	AcademicNavigatorService_CancelLikeAcademicNavigator_FullMethodName = "/academic_navigator.AcademicNavigatorService/CancelLikeAcademicNavigator"
 )
 
 // AcademicNavigatorServiceClient is the client API for AcademicNavigatorService service.
@@ -33,9 +35,13 @@ type AcademicNavigatorServiceClient interface {
 	// 新增学术导航
 	AddAcademicNavigator(ctx context.Context, in *AddAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
 	// 获取学术导航
-	GetAcademicNavigator(ctx context.Context, in *GetAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
+	GetAcademicNavigator(ctx context.Context, in *GetAcademicNavigatorRequest, opts ...grpc.CallOption) (*GetAcademicNavigatorResponse, error)
 	// 删除学术导航
 	DeleteAcademicNavigator(ctx context.Context, in *DeleteAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
+	// 点赞学术导航
+	LikeAcademicNavigator(ctx context.Context, in *LikeAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
+	// 取消点赞学术导航
+	CancelLikeAcademicNavigator(ctx context.Context, in *CancelLikeAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
 }
 
 type academicNavigatorServiceClient struct {
@@ -56,9 +62,9 @@ func (c *academicNavigatorServiceClient) AddAcademicNavigator(ctx context.Contex
 	return out, nil
 }
 
-func (c *academicNavigatorServiceClient) GetAcademicNavigator(ctx context.Context, in *GetAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error) {
+func (c *academicNavigatorServiceClient) GetAcademicNavigator(ctx context.Context, in *GetAcademicNavigatorRequest, opts ...grpc.CallOption) (*GetAcademicNavigatorResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Response)
+	out := new(GetAcademicNavigatorResponse)
 	err := c.cc.Invoke(ctx, AcademicNavigatorService_GetAcademicNavigator_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -76,6 +82,26 @@ func (c *academicNavigatorServiceClient) DeleteAcademicNavigator(ctx context.Con
 	return out, nil
 }
 
+func (c *academicNavigatorServiceClient) LikeAcademicNavigator(ctx context.Context, in *LikeAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Response)
+	err := c.cc.Invoke(ctx, AcademicNavigatorService_LikeAcademicNavigator_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *academicNavigatorServiceClient) CancelLikeAcademicNavigator(ctx context.Context, in *CancelLikeAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Response)
+	err := c.cc.Invoke(ctx, AcademicNavigatorService_CancelLikeAcademicNavigator_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AcademicNavigatorServiceServer is the server API for AcademicNavigatorService service.
 // All implementations must embed UnimplementedAcademicNavigatorServiceServer
 // for forward compatibility.
@@ -83,9 +109,13 @@ type AcademicNavigatorServiceServer interface {
 	// 新增学术导航
 	AddAcademicNavigator(context.Context, *AddAcademicNavigatorRequest) (*Response, error)
 	// 获取学术导航
-	GetAcademicNavigator(context.Context, *GetAcademicNavigatorRequest) (*Response, error)
+	GetAcademicNavigator(context.Context, *GetAcademicNavigatorRequest) (*GetAcademicNavigatorResponse, error)
 	// 删除学术导航
 	DeleteAcademicNavigator(context.Context, *DeleteAcademicNavigatorRequest) (*Response, error)
+	// 点赞学术导航
+	LikeAcademicNavigator(context.Context, *LikeAcademicNavigatorRequest) (*Response, error)
+	// 取消点赞学术导航
+	CancelLikeAcademicNavigator(context.Context, *CancelLikeAcademicNavigatorRequest) (*Response, error)
 	mustEmbedUnimplementedAcademicNavigatorServiceServer()
 }
 
@@ -99,11 +129,17 @@ type UnimplementedAcademicNavigatorServiceServer struct{}
 func (UnimplementedAcademicNavigatorServiceServer) AddAcademicNavigator(context.Context, *AddAcademicNavigatorRequest) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddAcademicNavigator not implemented")
 }
-func (UnimplementedAcademicNavigatorServiceServer) GetAcademicNavigator(context.Context, *GetAcademicNavigatorRequest) (*Response, error) {
+func (UnimplementedAcademicNavigatorServiceServer) GetAcademicNavigator(context.Context, *GetAcademicNavigatorRequest) (*GetAcademicNavigatorResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAcademicNavigator not implemented")
 }
 func (UnimplementedAcademicNavigatorServiceServer) DeleteAcademicNavigator(context.Context, *DeleteAcademicNavigatorRequest) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAcademicNavigator not implemented")
+}
+func (UnimplementedAcademicNavigatorServiceServer) LikeAcademicNavigator(context.Context, *LikeAcademicNavigatorRequest) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LikeAcademicNavigator not implemented")
+}
+func (UnimplementedAcademicNavigatorServiceServer) CancelLikeAcademicNavigator(context.Context, *CancelLikeAcademicNavigatorRequest) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CancelLikeAcademicNavigator not implemented")
 }
 func (UnimplementedAcademicNavigatorServiceServer) mustEmbedUnimplementedAcademicNavigatorServiceServer() {
 }
@@ -181,6 +217,42 @@ func _AcademicNavigatorService_DeleteAcademicNavigator_Handler(srv interface{}, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AcademicNavigatorService_LikeAcademicNavigator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LikeAcademicNavigatorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AcademicNavigatorServiceServer).LikeAcademicNavigator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AcademicNavigatorService_LikeAcademicNavigator_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AcademicNavigatorServiceServer).LikeAcademicNavigator(ctx, req.(*LikeAcademicNavigatorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AcademicNavigatorService_CancelLikeAcademicNavigator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelLikeAcademicNavigatorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AcademicNavigatorServiceServer).CancelLikeAcademicNavigator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AcademicNavigatorService_CancelLikeAcademicNavigator_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AcademicNavigatorServiceServer).CancelLikeAcademicNavigator(ctx, req.(*CancelLikeAcademicNavigatorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AcademicNavigatorService_ServiceDesc is the grpc.ServiceDesc for AcademicNavigatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -199,6 +271,14 @@ var AcademicNavigatorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteAcademicNavigator",
 			Handler:    _AcademicNavigatorService_DeleteAcademicNavigator_Handler,
+		},
+		{
+			MethodName: "LikeAcademicNavigator",
+			Handler:    _AcademicNavigatorService_LikeAcademicNavigator_Handler,
+		},
+		{
+			MethodName: "CancelLikeAcademicNavigator",
+			Handler:    _AcademicNavigatorService_CancelLikeAcademicNavigator_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -45,10 +45,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: DeleteAcademicNavigatorHandler(serverCtx),
 			},
 			{
-				// 更新学术导航点赞数
-				Method:  http.MethodPut,
-				Path:    "/like_count/:id",
-				Handler: UpdateAcademicNavigatorLikeCountHandler(serverCtx),
+				// 取消点赞学术导航
+				Method:  http.MethodDelete,
+				Path:    "/dislike/:id",
+				Handler: CancelLikeAcademicNavigatorHandler(serverCtx),
+			},
+			{
+				// 点赞学术导航
+				Method:  http.MethodPost,
+				Path:    "/like/:id",
+				Handler: PostAcademicNavigatorLikeHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

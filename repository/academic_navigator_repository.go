@@ -2,7 +2,9 @@ package repository
 
 import (
 	"coderhub/model"
+	"coderhub/shared/storage"
 
+	"github.com/elastic/go-elasticsearch/v8"
 	"gorm.io/gorm"
 )
 
@@ -14,12 +16,18 @@ type AcademicNavigatorRepository interface {
 }
 
 type AcademicNavigatorRepositoryImpl struct {
-	DB *gorm.DB
+	DB            *gorm.DB
+	Elasticsearch storage.ElasticsearchImpl
 }
 
-func NewAcademicNavigatorRepositoryImpl(db *gorm.DB) *AcademicNavigatorRepositoryImpl {
+func NewAcademicNavigatorRepositoryImpl(db *gorm.DB, cfg *elasticsearch.Config) *AcademicNavigatorRepositoryImpl {
+	elastic, err := storage.NewElasticSearchClient(cfg)
+	if err != nil {
+		return nil
+	}
 	return &AcademicNavigatorRepositoryImpl{
-		DB: db,
+		DB:            db,
+		Elasticsearch: elastic,
 	}
 }
 
@@ -30,12 +38,28 @@ func (r *AcademicNavigatorRepositoryImpl) AddAcademicNavigator(academicNavigator
 func (r *AcademicNavigatorRepositoryImpl) GetAcademicNavigator(academicNavigator *model.AcademicNavigator) ([]*model.AcademicNavigator, int64, error) {
 	var total int64
 	var academicNavigators []*model.AcademicNavigator
-	err := r.DB.Model(&model.AcademicNavigator{}).Count(&total).Error
+	// 先从Elasticsearch中查询到符合条件的ID
+	ids, err := r.Elasticsearch.SearchByFields("academic_navigators", map[string]interface{}{
+		"user_id":   academicNavigator.UserId,
+		"content":   academicNavigator.Content,
+		"education": academicNavigator.Education,
+		"major":     academicNavigator.Major,
+		"school":    academicNavigator.School,
+	})
 	if err != nil {
 		return nil, 0, err
 	}
-	err = r.DB.Where("user_id = ?", academicNavigator.UserId).Find(&academicNavigators).Error
-	return academicNavigators, total, err
+	// 再根据ID从数据库中查询到对应的数据
+	err = r.DB.Where("id IN (?)", ids).Find(&academicNavigators).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	// 获取总数
+	err = r.DB.Model(&model.AcademicNavigator{}).Where("id IN (?)", ids).Count(&total).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	return academicNavigators, total, nil
 }
 
 func (r *AcademicNavigatorRepositoryImpl) GetAcademicNavigatorByID(ID int64) (*model.AcademicNavigator, error) {

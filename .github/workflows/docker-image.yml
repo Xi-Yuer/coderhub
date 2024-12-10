@@ -29,6 +29,8 @@ jobs:
             dockerfile: ./api/Image/Dockerfile
           - name: user-follow-api
             dockerfile: ./api/UserFollow/Dockerfile
+          - name: academic-navigator-api
+            dockerfile: ./api/TechSphere/AcademicNavigator/Dockerfile
           - name: image-relation-service
             dockerfile: ./rpc/ImageRelation/Dockerfile
           - name: user-service
@@ -41,6 +43,8 @@ jobs:
             dockerfile: ./rpc/Image/Dockerfile
           - name: user-follow-service
             dockerfile: ./rpc/UserFollow/Dockerfile
+          - name: academic-navigator-service
+            dockerfile: ./rpc/TechSphere/AcademicNavigator/Dockerfile
 
     # 定义步骤（该 Step 会根据矩阵策略执行多次）
     steps:

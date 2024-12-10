@@ -5,6 +5,8 @@ import (
 
 	"coderhub/api/TechSphere/AcademicNavigator/internal/svc"
 	"coderhub/api/TechSphere/AcademicNavigator/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/TechSphere/AcademicNavigator/academic_navigator"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +27,51 @@ func NewGetAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.ServiceContex
 }
 
 func (l *GetAcademicNavigatorLogic) GetAcademicNavigator(req *types.GetAcademicNavigatorReq) (resp *types.GetAcademicNavigatorResp, err error) {
-	// todo: add your logic here and delete this line
+	var respAcademicNavigator *academic_navigator.GetAcademicNavigatorResponse
+	respAcademicNavigator, err = l.svcCtx.AcademicNavigatorService.GetAcademicNavigator(l.ctx, &academic_navigator.GetAcademicNavigatorRequest{
+		UserId:    req.UserId,
+		Education: req.Education,
+		Major:     req.Major,
+		School:    req.School,
+		WorkExp:   req.WorkExp,
+		Page:      req.Page,
+		PageSize:  req.PageSize,
+	})
+	if err != nil {
+		return l.errorResp(err)
+	}
 
-	return
+	academicNavigator := make([]*types.AcademicNavigator, len(respAcademicNavigator.AcademicNavigator))
+	for i, v := range respAcademicNavigator.AcademicNavigator {
+		academicNavigator[i] = &types.AcademicNavigator{
+			Id:        v.Id,
+			UserId:    v.UserId,
+			Education: v.Education,
+			Content:   v.Content,
+			Major:     v.Major,
+			School:    v.School,
+			WorkExp:   v.WorkExp,
+			LikeCount: v.LikeCount,
+		}
+	}
+
+	return l.successResp()
+}
+
+func (l *GetAcademicNavigatorLogic) errorResp(err error) (*types.GetAcademicNavigatorResp, error) {
+	return &types.GetAcademicNavigatorResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpBadRequest,
+			Message: err.Error(),
+		},
+	}, nil
+}
+
+func (l *GetAcademicNavigatorLogic) successResp() (*types.GetAcademicNavigatorResp, error) {
+	return &types.GetAcademicNavigatorResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+	}, nil
 }

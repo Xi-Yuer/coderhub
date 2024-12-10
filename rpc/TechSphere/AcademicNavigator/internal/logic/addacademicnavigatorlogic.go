@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 
+	"coderhub/model"
 	"coderhub/rpc/TechSphere/AcademicNavigator/academic_navigator"
 	"coderhub/rpc/TechSphere/AcademicNavigator/internal/svc"
 
@@ -25,7 +26,19 @@ func NewAddAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.ServiceContex
 
 // 新增学术导航
 func (l *AddAcademicNavigatorLogic) AddAcademicNavigator(in *academic_navigator.AddAcademicNavigatorRequest) (*academic_navigator.Response, error) {
-	// todo: add your logic here and delete this line
+	err := l.svcCtx.AcademicNavigatorRepository.AddAcademicNavigator(&model.AcademicNavigator{
+		UserId:    in.UserId,
+		Content:   in.Content,
+		Education: in.Education,
+		Major:     in.Major,
+		School:    in.School,
+		WorkExp:   in.WorkExp,
+	})
+	if err != nil {
+		return nil, err
+	}
 
-	return &academic_navigator.Response{}, nil
+	return &academic_navigator.Response{
+		Success: true,
+	}, nil
 }

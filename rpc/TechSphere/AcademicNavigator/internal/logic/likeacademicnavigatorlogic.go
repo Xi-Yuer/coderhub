@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 
+	"coderhub/model"
 	"coderhub/rpc/TechSphere/AcademicNavigator/academic_navigator"
 	"coderhub/rpc/TechSphere/AcademicNavigator/internal/svc"
 
@@ -25,7 +26,15 @@ func NewLikeAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.ServiceConte
 
 // 点赞学术导航
 func (l *LikeAcademicNavigatorLogic) LikeAcademicNavigator(in *academic_navigator.LikeAcademicNavigatorRequest) (*academic_navigator.Response, error) {
-	// todo: add your logic here and delete this line
+	err := l.svcCtx.AcademicRelationLikeRepository.AddAcademicRelationLike(l.ctx, &model.AcademicRelationLike{
+		AcademicNavigatorID: in.Id,
+		UserID:              in.UserId,
+	})
+	if err != nil {
+		return nil, err
+	}
 
-	return &academic_navigator.Response{}, nil
+	return &academic_navigator.Response{
+		Success: true,
+	}, nil
 }

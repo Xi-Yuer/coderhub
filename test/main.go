@@ -1,13 +1,26 @@
 package main
 
 import (
-	"coderhub/shared/messaging"
+	"coderhub/shared/storage"
+	"fmt"
+
+	"github.com/elastic/go-elasticsearch/v8"
 )
 
 func main() {
-	g := messaging.NewGoMail()
-	err := g.SendWithHTML("2214380963@qq.com", "邮箱密码重置", "https://www.baidu.com")
+	cfg := &elasticsearch.Config{
+		Addresses: []string{"http://localhost:9200"},
+		Username:  "c",
+		Password:  "2214380963Wx!!",
+	}
+	c, err := storage.NewElasticSearchClient(cfg)
 	if err != nil {
 		return
 	}
+	ids, err := c.SearchByFields("users", map[string]interface{}{"user_name": "123456"})
+	if err != nil {
+		return
+	}
+	fmt.Printf("id type: %T\n", ids[0])
+	fmt.Println(ids)
 }

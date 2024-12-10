@@ -14,18 +14,26 @@ import (
 )
 
 type (
-	AddAcademicNavigatorRequest    = academic_navigator.AddAcademicNavigatorRequest
-	DeleteAcademicNavigatorRequest = academic_navigator.DeleteAcademicNavigatorRequest
-	GetAcademicNavigatorRequest    = academic_navigator.GetAcademicNavigatorRequest
-	Response                       = academic_navigator.Response
+	AcademicNavigator                  = academic_navigator.AcademicNavigator
+	AddAcademicNavigatorRequest        = academic_navigator.AddAcademicNavigatorRequest
+	CancelLikeAcademicNavigatorRequest = academic_navigator.CancelLikeAcademicNavigatorRequest
+	DeleteAcademicNavigatorRequest     = academic_navigator.DeleteAcademicNavigatorRequest
+	GetAcademicNavigatorRequest        = academic_navigator.GetAcademicNavigatorRequest
+	GetAcademicNavigatorResponse       = academic_navigator.GetAcademicNavigatorResponse
+	LikeAcademicNavigatorRequest       = academic_navigator.LikeAcademicNavigatorRequest
+	Response                           = academic_navigator.Response
 
 	AcademicNavigatorService interface {
 		// 新增学术导航
 		AddAcademicNavigator(ctx context.Context, in *AddAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
 		// 获取学术导航
-		GetAcademicNavigator(ctx context.Context, in *GetAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
+		GetAcademicNavigator(ctx context.Context, in *GetAcademicNavigatorRequest, opts ...grpc.CallOption) (*GetAcademicNavigatorResponse, error)
 		// 删除学术导航
 		DeleteAcademicNavigator(ctx context.Context, in *DeleteAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
+		// 点赞学术导航
+		LikeAcademicNavigator(ctx context.Context, in *LikeAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
+		// 取消点赞学术导航
+		CancelLikeAcademicNavigator(ctx context.Context, in *CancelLikeAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
 	}
 
 	defaultAcademicNavigatorService struct {
@@ -46,7 +54,7 @@ func (m *defaultAcademicNavigatorService) AddAcademicNavigator(ctx context.Conte
 }
 
 // 获取学术导航
-func (m *defaultAcademicNavigatorService) GetAcademicNavigator(ctx context.Context, in *GetAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error) {
+func (m *defaultAcademicNavigatorService) GetAcademicNavigator(ctx context.Context, in *GetAcademicNavigatorRequest, opts ...grpc.CallOption) (*GetAcademicNavigatorResponse, error) {
 	client := academic_navigator.NewAcademicNavigatorServiceClient(m.cli.Conn())
 	return client.GetAcademicNavigator(ctx, in, opts...)
 }
@@ -55,4 +63,16 @@ func (m *defaultAcademicNavigatorService) GetAcademicNavigator(ctx context.Conte
 func (m *defaultAcademicNavigatorService) DeleteAcademicNavigator(ctx context.Context, in *DeleteAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error) {
 	client := academic_navigator.NewAcademicNavigatorServiceClient(m.cli.Conn())
 	return client.DeleteAcademicNavigator(ctx, in, opts...)
+}
+
+// 点赞学术导航
+func (m *defaultAcademicNavigatorService) LikeAcademicNavigator(ctx context.Context, in *LikeAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error) {
+	client := academic_navigator.NewAcademicNavigatorServiceClient(m.cli.Conn())
+	return client.LikeAcademicNavigator(ctx, in, opts...)
+}
+
+// 取消点赞学术导航
+func (m *defaultAcademicNavigatorService) CancelLikeAcademicNavigator(ctx context.Context, in *CancelLikeAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error) {
+	client := academic_navigator.NewAcademicNavigatorServiceClient(m.cli.Conn())
+	return client.CancelLikeAcademicNavigator(ctx, in, opts...)
 }

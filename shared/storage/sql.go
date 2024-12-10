@@ -76,6 +76,7 @@ func NewGorm() *gorm.DB {
 			&model.CommentRelationLike{},
 			&model.ArticlePV{},
 			&model.UserFollow{},
+			&model.AcademicNavigator{},
 		); err != nil {
 			log.Fatalf("数据库迁移失败: %v", err)
 		}
