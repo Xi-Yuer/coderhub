@@ -1,0 +1,16 @@
+// goctl rpc protoc academic_navigator.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../
+syntax = "proto3";
+
+package academic_navigator;
+option go_package = "./academic_navigator";
+
+
+// 新增学术导航
+message AddAcademicNavigatorRequest {
+  int64 user_id = 1;               // 用户 ID
+  string content = 2;               // 内容
+  string education = 3;            // 学历
+  string major = 4;                 // 专业
+  string school = 5;                // 学校
+  string work_exp = 6;              // 工作经验
+}

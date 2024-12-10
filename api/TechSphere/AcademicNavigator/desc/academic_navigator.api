@@ -1,0 +1,101 @@
+syntax = "v1"
+
+info (
+	title:   "Academic Navigator API"
+	version: "1.0.0"
+)
+
+type (
+	Response {
+		Code    int32  `json:"code"` // 状态码
+		Message string `json:"message"` // 提示信息
+	}
+	AcademicNavigator {
+		Id        int64  `json:"id"`        // 学术导航 ID
+		UserId    int64  `json:"user_id"`    // 用户 ID
+		Education string `json:"education"` // 学历
+		Major     string `json:"major"`     // 专业
+		School    string `json:"school"`    // 学校
+		WorkExp   string `json:"workExp"`   // 工作经验
+	}
+	GetAcademicNavigatorReq {
+		UserId int64 `json:"user_id"` // 用户 ID
+		Education string `json:"education"` // 学历
+		Major     string `json:"major"`     // 专业
+		School    string `json:"school"`    // 学校
+		WorkExp   string `json:"workExp"`   // 工作经验
+		Page      int64  `json:"page"`      // 页码
+		PageSize  int64  `json:"page_size"` // 每页大小
+	}
+
+	List {
+		Total int64 `json:"total"` // 总数
+		Items []AcademicNavigator `json:"items"` // 学术导航列表
+	}
+	GetAcademicNavigatorResp {
+		Response
+		Data *List `json:"data"` // 学术导航列表
+	}
+
+	AddAcademicNavigatorReq {
+		UserId    int64  `json:"user_id"`    // 用户 ID
+		Education string `json:"education"` // 学历
+		Major     string `json:"major"`     // 专业
+		School    string `json:"school"`    // 学校
+		WorkExp   string `json:"workExp"`   // 工作经验
+	}
+	AddAcademicNavigatorResp {
+		Response
+		Data bool `json:"data"` // 是否添加成功
+	}
+	DeleteAcademicNavigatorReq {
+		Id int64 `path:"id"` // 学术导航 ID
+	}
+	DeleteAcademicNavigatorResp {
+		Response
+		Data bool `json:"data"` // 是否删除成功
+	}
+	HealthResp {
+		Response
+		Data bool `json:"data"` // 是否健康
+	}
+)
+
+@server(
+	prefix: /api/academic_navigator
+)
+
+service AcademicNavigator {
+    @doc(
+		summary: "健康检查"
+	)
+	@handler Health
+	get /health returns (HealthResp)
+
+	@doc(
+		summary: "获取学术导航"
+	)
+	@handler GetAcademicNavigator
+	get / returns (GetAcademicNavigatorResp)
+}
+
+
+
+@serve(
+	prefix: /api/academic_navigator
+    jwt: Auth
+)
+
+service AcademicNavigator {
+    @doc(
+		summary: "新增学术导航"
+	)
+	@handler AddAcademicNavigator
+	post / (AddAcademicNavigatorReq) returns (AddAcademicNavigatorResp)
+
+	@doc(
+		summary: "删除学术导航"
+	)
+	@handler DeleteAcademicNavigator
+	delete /:id (DeleteAcademicNavigatorReq) returns (DeleteAcademicNavigatorResp)
+}
