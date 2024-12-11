@@ -7,6 +7,7 @@ import (
 	"coderhub/api/TechSphere/AcademicNavigator/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/TechSphere/AcademicNavigator/academic_navigator"
+	"coderhub/shared/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,9 +28,14 @@ func NewPostAcademicNavigatorLikeLogic(ctx context.Context, svcCtx *svc.ServiceC
 }
 
 func (l *PostAcademicNavigatorLikeLogic) PostAcademicNavigatorLike(req *types.PostAcademicNavigatorLikeReq) (resp *types.PostAcademicNavigatorLikeResp, err error) {
+	// 2. 获取用户ID
+	userId, err := utils.GetUserID(l.ctx)
+	if err != nil {
+		return l.errorResp(err)
+	}
 	_, err = l.svcCtx.AcademicNavigatorService.LikeAcademicNavigator(l.ctx, &academic_navigator.LikeAcademicNavigatorRequest{
 		Id:     req.Id,
-		UserId: req.UserId,
+		UserId: userId,
 	})
 	if err != nil {
 		return l.errorResp(err)

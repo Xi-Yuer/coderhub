@@ -41,9 +41,9 @@ func (l *GetAcademicNavigatorLogic) GetAcademicNavigator(req *types.GetAcademicN
 		return l.errorResp(err)
 	}
 
-	academicNavigator := make([]*types.AcademicNavigator, len(respAcademicNavigator.AcademicNavigator))
+	academicNavigator := make([]types.AcademicNavigator, len(respAcademicNavigator.AcademicNavigator))
 	for i, v := range respAcademicNavigator.AcademicNavigator {
-		academicNavigator[i] = &types.AcademicNavigator{
+		academicNavigator[i] = types.AcademicNavigator{
 			Id:        v.Id,
 			UserId:    v.UserId,
 			Education: v.Education,
@@ -55,7 +55,7 @@ func (l *GetAcademicNavigatorLogic) GetAcademicNavigator(req *types.GetAcademicN
 		}
 	}
 
-	return l.successResp()
+	return l.successResp(academicNavigator, respAcademicNavigator.Total)
 }
 
 func (l *GetAcademicNavigatorLogic) errorResp(err error) (*types.GetAcademicNavigatorResp, error) {
@@ -64,14 +64,19 @@ func (l *GetAcademicNavigatorLogic) errorResp(err error) (*types.GetAcademicNavi
 			Code:    conf.HttpCode.HttpBadRequest,
 			Message: err.Error(),
 		},
+		Data: nil,
 	}, nil
 }
 
-func (l *GetAcademicNavigatorLogic) successResp() (*types.GetAcademicNavigatorResp, error) {
+func (l *GetAcademicNavigatorLogic) successResp(academicNavigators []types.AcademicNavigator, total int64) (*types.GetAcademicNavigatorResp, error) {
 	return &types.GetAcademicNavigatorResp{
 		Response: types.Response{
 			Code:    conf.HttpCode.HttpStatusOK,
 			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: &types.List{
+			Total: total,
+			List:  academicNavigators,
 		},
 	}, nil
 }

@@ -10,7 +10,7 @@ import (
 
 type AcademicNavigatorRepository interface {
 	AddAcademicNavigator(academicNavigator *model.AcademicNavigator) error
-	GetAcademicNavigator(academicNavigator *model.AcademicNavigator) ([]*model.AcademicNavigator, int64, error)
+	GetAcademicNavigator(academicNavigator *model.AcademicNavigator, page int64, pageSize int64) ([]*model.AcademicNavigator, int64, error)
 	GetAcademicNavigatorByID(ID int64) (*model.AcademicNavigator, error)
 	DeleteAcademicNavigator(ID int64) error
 }
@@ -35,7 +35,7 @@ func (r *AcademicNavigatorRepositoryImpl) AddAcademicNavigator(academicNavigator
 	return r.DB.Create(academicNavigator).Error
 }
 
-func (r *AcademicNavigatorRepositoryImpl) GetAcademicNavigator(academicNavigator *model.AcademicNavigator) ([]*model.AcademicNavigator, int64, error) {
+func (r *AcademicNavigatorRepositoryImpl) GetAcademicNavigator(academicNavigator *model.AcademicNavigator, page int64, pageSize int64) ([]*model.AcademicNavigator, int64, error) {
 	var total int64
 	var academicNavigators []*model.AcademicNavigator
 	// 先从Elasticsearch中查询到符合条件的ID

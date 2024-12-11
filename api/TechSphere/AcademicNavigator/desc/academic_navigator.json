@@ -140,7 +140,7 @@
             "name": "user_id",
             "description": " 用户 ID",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "integer",
             "format": "int64"
           },
@@ -148,35 +148,35 @@
             "name": "education",
             "description": " 学历",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
             "name": "content",
             "description": " 内容",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
             "name": "major",
             "description": " 专业",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
             "name": "school",
             "description": " 学校",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
             "name": "work_exp",
             "description": " 工作经验",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
@@ -312,11 +312,6 @@
     "AddAcademicNavigatorReq": {
       "type": "object",
       "properties": {
-        "user_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 用户 ID"
-        },
         "education": {
           "type": "string",
           "description": " 学历"
@@ -340,7 +335,6 @@
       },
       "title": "AddAcademicNavigatorReq",
       "required": [
-        "user_id",
         "education",
         "content",
         "major",
@@ -373,17 +367,7 @@
     },
     "CancelLikeAcademicNavigatorReq": {
       "type": "object",
-      "properties": {
-        "user_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 用户 ID"
-        }
-      },
-      "title": "CancelLikeAcademicNavigatorReq",
-      "required": [
-        "user_id"
-      ]
+      "title": "CancelLikeAcademicNavigatorReq"
     },
     "CancelLikeAcademicNavigatorResp": {
       "type": "object",
@@ -476,12 +460,6 @@
       },
       "title": "GetAcademicNavigatorReq",
       "required": [
-        "user_id",
-        "education",
-        "content",
-        "major",
-        "school",
-        "work_exp",
         "page",
         "page_size"
       ]
@@ -539,7 +517,7 @@
           "format": "int64",
           "description": " 总数"
         },
-        "items": {
+        "list": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/AcademicNavigator"
@@ -550,22 +528,12 @@
       "title": "List",
       "required": [
         "total",
-        "items"
+        "list"
       ]
     },
     "PostAcademicNavigatorLikeReq": {
       "type": "object",
-      "properties": {
-        "user_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 用户 ID"
-        }
-      },
-      "title": "PostAcademicNavigatorLikeReq",
-      "required": [
-        "user_id"
-      ]
+      "title": "PostAcademicNavigatorLikeReq"
     },
     "PostAcademicNavigatorLikeResp": {
       "type": "object",
@@ -611,17 +579,7 @@
     },
     "UpdateAcademicNavigatorLikeCountReq": {
       "type": "object",
-      "properties": {
-        "user_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 用户 ID"
-        }
-      },
-      "title": "UpdateAcademicNavigatorLikeCountReq",
-      "required": [
-        "user_id"
-      ]
+      "title": "UpdateAcademicNavigatorLikeCountReq"
     },
     "UpdateAcademicNavigatorLikeCountResp": {
       "type": "object",

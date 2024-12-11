@@ -28,7 +28,7 @@ func NewGetAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.ServiceContex
 func (l *GetAcademicNavigatorLogic) GetAcademicNavigator(in *academic_navigator.GetAcademicNavigatorRequest) (*academic_navigator.GetAcademicNavigatorResponse, error) {
 	academicNavigators, total, err := l.svcCtx.AcademicNavigatorRepository.GetAcademicNavigator(&model.AcademicNavigator{
 		UserId: in.UserId,
-	})
+	}, in.Page, in.PageSize)
 	if err != nil {
 		return nil, err
 	}

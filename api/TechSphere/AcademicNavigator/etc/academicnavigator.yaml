@@ -4,7 +4,6 @@ Port: 8888
 Auth:
   AccessSecret: User-api-secret
   AccessExpire: 86400
-
 AcademicNavigatorService:
   Etcd:
     Hosts:

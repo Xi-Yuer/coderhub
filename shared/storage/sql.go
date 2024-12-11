@@ -2,13 +2,14 @@ package storage
 
 import (
 	"coderhub/model"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"log"
 	"os"
 	"sync"
 	"time"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var (
@@ -77,6 +78,7 @@ func NewGorm() *gorm.DB {
 			&model.ArticlePV{},
 			&model.UserFollow{},
 			&model.AcademicNavigator{},
+			&model.AcademicRelationLike{},
 		); err != nil {
 			log.Fatalf("数据库迁移失败: %v", err)
 		}

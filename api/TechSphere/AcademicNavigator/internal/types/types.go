@@ -15,7 +15,6 @@ type AcademicNavigator struct {
 }
 
 type AddAcademicNavigatorReq struct {
-	UserId    int64  `json:"user_id"`   // 用户 ID
 	Education string `json:"education"` // 学历
 	Content   string `json:"content"`   // 内容
 	Major     string `json:"major"`     // 专业
@@ -29,8 +28,7 @@ type AddAcademicNavigatorResp struct {
 }
 
 type CancelLikeAcademicNavigatorReq struct {
-	UserId int64 `json:"user_id"` // 用户 ID
-	Id     int64 `path:"id"`      // 学术导航 ID
+	Id int64 `path:"id"` // 学术导航 ID
 }
 
 type CancelLikeAcademicNavigatorResp struct {
@@ -70,12 +68,11 @@ type HealthResp struct {
 
 type List struct {
 	Total int64               `json:"total"` // 总数
-	Items []AcademicNavigator `json:"items"` // 学术导航列表
+	List  []AcademicNavigator `json:"list"`  // 学术导航列表
 }
 
 type PostAcademicNavigatorLikeReq struct {
-	UserId int64 `json:"user_id"` // 用户 ID
-	Id     int64 `path:"id"`      // 学术导航 ID
+	Id int64 `path:"id"` // 学术导航 ID
 }
 
 type PostAcademicNavigatorLikeResp struct {
@@ -89,8 +86,7 @@ type Response struct {
 }
 
 type UpdateAcademicNavigatorLikeCountReq struct {
-	UserId int64 `json:"user_id"` // 用户 ID
-	Id     int64 `path:"id"`      // 学术导航 ID
+	Id int64 `path:"id"` // 学术导航 ID
 }
 
 type UpdateAcademicNavigatorLikeCountResp struct {

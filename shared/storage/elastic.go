@@ -1,13 +1,10 @@
 package storage
 
 import (
-	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"net"
-	"net/http"
+	"reflect"
 	"strconv"
-	"time"
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/esutil"
@@ -26,14 +23,6 @@ func NewElasticSearchClient(cfg *elasticsearch.Config) (*ElasticSearchClient, er
 		Addresses: cfg.Addresses,
 		Username:  cfg.Username,
 		Password:  cfg.Password,
-		Transport: &http.Transport{
-			MaxIdleConnsPerHost:   10,
-			ResponseHeaderTimeout: time.Second,
-			DialContext:           (&net.Dialer{Timeout: time.Second}).DialContext,
-			TLSClientConfig: &tls.Config{
-				MinVersion: tls.VersionTLS12,
-			},
-		},
 	})
 	if err != nil {
 		return nil, err
@@ -43,7 +32,7 @@ func NewElasticSearchClient(cfg *elasticsearch.Config) (*ElasticSearchClient, er
 
 // 根据传入的字段查询数据，只返回数据的ID
 func (c *ElasticSearchClient) SearchByFields(index string, fields map[string]interface{}) ([]int64, error) {
-	// Construct the query using the fields
+	// 构建查询
 	query := map[string]interface{}{
 		"query": map[string]interface{}{
 			"bool": map[string]interface{}{
@@ -53,6 +42,11 @@ func (c *ElasticSearchClient) SearchByFields(index string, fields map[string]int
 	}
 
 	for field, value := range fields {
+		// 过滤空值
+		if value == nil || (reflect.TypeOf(value).Kind() == reflect.String && value.(string) == "") {
+			continue
+		}
+
 		query["query"].(map[string]interface{})["bool"].(map[string]interface{})["must"] = append(
 			query["query"].(map[string]interface{})["bool"].(map[string]interface{})["must"].([]map[string]interface{}),
 			map[string]interface{}{
@@ -63,7 +57,7 @@ func (c *ElasticSearchClient) SearchByFields(index string, fields map[string]int
 		)
 	}
 
-	// Perform the search
+	// 执行搜索
 	res, err := c.Client.Search(
 		c.Client.Search.WithIndex(index),
 		c.Client.Search.WithBody(esutil.NewJSONReader(query)),
@@ -79,7 +73,7 @@ func (c *ElasticSearchClient) SearchByFields(index string, fields map[string]int
 		return nil, fmt.Errorf("error searching Elasticsearch: %s", res.String())
 	}
 
-	// Parse the response to extract IDs
+	// 解析响应以提取 ID
 	var response map[string]interface{}
 	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
 		return nil, err
