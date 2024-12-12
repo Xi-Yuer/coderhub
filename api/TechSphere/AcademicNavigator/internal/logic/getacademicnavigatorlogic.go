@@ -34,6 +34,7 @@ func (l *GetAcademicNavigatorLogic) GetAcademicNavigator(req *types.GetAcademicN
 		Major:     req.Major,
 		School:    req.School,
 		WorkExp:   req.WorkExp,
+		Content:   req.Content,
 		Page:      req.Page,
 		PageSize:  req.PageSize,
 	})

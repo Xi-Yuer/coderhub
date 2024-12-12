@@ -22,8 +22,9 @@ message GetAcademicNavigatorRequest {
   string major = 3;                 // 专业
   string school = 4;                // 学校
   string work_exp = 5;              // 工作经验
-  int64 page = 6;                   // 页码
-  int64 page_size = 7;              // 每页大小
+  string content = 6;                // 内容
+  int64 page = 7;                   // 页码
+  int64 page_size = 8;              // 每页大小
 }
 
 // 删除学术导航

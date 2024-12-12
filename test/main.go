@@ -23,11 +23,12 @@ func main() {
 	// 构造搜索查询
 	ids, err := c.SearchByFields("academic_navigators", map[string]interface{}{
 		"user_id":   "",
-		"content":   "cillum",
+		"content":   "",
 		"education": "",
 		"major":     "",
 		"school":    "",
 	})
+	
 	if err != nil {
 		fmt.Println(err.Error())
 		return

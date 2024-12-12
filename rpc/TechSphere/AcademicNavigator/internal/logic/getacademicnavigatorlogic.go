@@ -27,7 +27,12 @@ func NewGetAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.ServiceContex
 // 获取学术导航
 func (l *GetAcademicNavigatorLogic) GetAcademicNavigator(in *academic_navigator.GetAcademicNavigatorRequest) (*academic_navigator.GetAcademicNavigatorResponse, error) {
 	academicNavigators, total, err := l.svcCtx.AcademicNavigatorRepository.GetAcademicNavigator(&model.AcademicNavigator{
-		UserId: in.UserId,
+		UserId:    in.UserId,
+		Content:   in.Content,
+		Education: in.Education,
+		Major:     in.Major,
+		School:    in.School,
+		WorkExp:   in.WorkExp,
 	}, in.Page, in.PageSize)
 	if err != nil {
 		return nil, err
