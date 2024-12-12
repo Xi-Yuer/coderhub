@@ -28,7 +28,7 @@ func NewAddAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.ServiceContex
 }
 
 func (l *AddAcademicNavigatorLogic) AddAcademicNavigator(req *types.AddAcademicNavigatorReq) (resp *types.AddAcademicNavigatorResp, err error) {
-	// 2. 获取用户ID
+	// 获取用户ID
 	userId, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err)

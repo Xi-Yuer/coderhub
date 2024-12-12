@@ -28,7 +28,7 @@ func NewPostAcademicNavigatorLikeLogic(ctx context.Context, svcCtx *svc.ServiceC
 }
 
 func (l *PostAcademicNavigatorLikeLogic) PostAcademicNavigatorLike(req *types.PostAcademicNavigatorLikeReq) (resp *types.PostAcademicNavigatorLikeResp, err error) {
-	// 2. 获取用户ID
+	// 获取用户ID
 	userId, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err)

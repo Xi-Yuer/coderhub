@@ -28,7 +28,7 @@ func NewCancelLikeAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.Servic
 }
 
 func (l *CancelLikeAcademicNavigatorLogic) CancelLikeAcademicNavigator(req *types.CancelLikeAcademicNavigatorReq) (resp *types.CancelLikeAcademicNavigatorResp, err error) {
-	// 2. 获取用户ID
+	// 获取用户ID
 	userId, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err)

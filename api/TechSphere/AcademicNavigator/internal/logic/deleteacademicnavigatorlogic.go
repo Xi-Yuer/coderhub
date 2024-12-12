@@ -7,6 +7,7 @@ import (
 	"coderhub/api/TechSphere/AcademicNavigator/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/TechSphere/AcademicNavigator/academic_navigator"
+	"coderhub/shared/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,8 +28,14 @@ func NewDeleteAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.ServiceCon
 }
 
 func (l *DeleteAcademicNavigatorLogic) DeleteAcademicNavigator(req *types.DeleteAcademicNavigatorReq) (resp *types.DeleteAcademicNavigatorResp, err error) {
+	// 获取用户ID
+	userId, err := utils.GetUserID(l.ctx)
+	if err != nil {
+		return l.errorResp(err)
+	}
 	_, err = l.svcCtx.AcademicNavigatorService.DeleteAcademicNavigator(l.ctx, &academic_navigator.DeleteAcademicNavigatorRequest{
-		Id: req.Id,
+		Id:     req.Id,
+		UserId: userId,
 	})
 	if err != nil {
 		return l.errorResp(err)

@@ -28,16 +28,16 @@ func NewAcademicRelationLikeRepositoryImpl(db *gorm.DB) *AcademicRelationLikeRep
 // 创建学术关系点赞
 func (r *AcademicRelationLikeRepositoryImpl) AddAcademicRelationLike(ctx context.Context, academicRelationLike *model.AcademicRelationLike) error {
 	like := r.GetAcademicRelationLike(ctx, academicRelationLike)
-	if like {
+	if ! like {
 		return r.DB.Create(academicRelationLike).Error
 	} else {
-		return r.DB.Delete(academicRelationLike).Error
+		return r.DB.Where("id = ? AND user_id = ?", academicRelationLike.AcademicNavigatorID, academicRelationLike.UserID).Delete(&model.AcademicRelationLike{}).Error
 	}
 }
 
 // 删除学术关系点赞
 func (r *AcademicRelationLikeRepositoryImpl) DeleteAcademicRelationLike(ctx context.Context, academicRelationLike *model.AcademicRelationLike) error {
-	return r.DB.Delete(academicRelationLike).Where("id = ? AND user_id = ?", academicRelationLike.AcademicNavigatorID, academicRelationLike.UserID).Error
+	return r.DB.Delete(&model.AcademicRelationLike{}).Where("id = ? AND user_id = ?", academicRelationLike.AcademicNavigatorID, academicRelationLike.UserID).Error
 }
 
 // 是否点赞
