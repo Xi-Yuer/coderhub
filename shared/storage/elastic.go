@@ -43,7 +43,13 @@ func (c *ElasticSearchClient) SearchByFields(index string, fields map[string]int
 
 	for field, value := range fields {
 		// 过滤空值
-		if value == nil || (reflect.TypeOf(value).Kind() == reflect.String && value.(string) == "") {
+		if value == nil || 
+			(reflect.TypeOf(value).Kind() == reflect.String && value.(string) == "") ||
+			(reflect.TypeOf(value).Kind() == reflect.Int64 && value.(int64) == 0) ||
+			(reflect.TypeOf(value).Kind() == reflect.Int32 && value.(int32) == 0) ||
+			(reflect.TypeOf(value).Kind() == reflect.Float64 && value.(float64) == 0) ||
+			(reflect.TypeOf(value).Kind() == reflect.Float32 && value.(float32) == 0) ||
+			(reflect.TypeOf(value).Kind() == reflect.Bool && !value.(bool)) {
 			continue
 		}
 
@@ -58,7 +64,7 @@ func (c *ElasticSearchClient) SearchByFields(index string, fields map[string]int
 	}
 
 	// 执行搜索
-	res, err := c.Client.Search(
+	result, err := c.Client.Search(
 		c.Client.Search.WithIndex(index),
 		c.Client.Search.WithBody(esutil.NewJSONReader(query)),
 		c.Client.Search.WithTrackTotalHits(true),
@@ -67,15 +73,15 @@ func (c *ElasticSearchClient) SearchByFields(index string, fields map[string]int
 	if err != nil {
 		return nil, err
 	}
-	defer res.Body.Close()
+	defer result.Body.Close()
 
-	if res.IsError() {
-		return nil, fmt.Errorf("error searching Elasticsearch: %s", res.String())
+	if result.IsError() {
+		return nil, fmt.Errorf("error searching Elasticsearch: %s", result.String())
 	}
 
 	// 解析响应以提取 ID
 	var response map[string]interface{}
-	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
+	if err := json.NewDecoder(result.Body).Decode(&response); err != nil {
 		return nil, err
 	}
 

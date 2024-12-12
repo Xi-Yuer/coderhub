@@ -3,7 +3,6 @@ package repository
 import (
 	"coderhub/model"
 	"coderhub/shared/storage"
-	"fmt"
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"gorm.io/gorm"
@@ -51,7 +50,6 @@ func (r *AcademicNavigatorRepositoryImpl) GetAcademicNavigator(academicNavigator
 		return nil, 0, err
 	}
 	// 再根据ID从数据库中查询到对应的数据
-	fmt.Println("ids:", ids)
 	err = r.DB.Model(&model.AcademicNavigator{}).Where("id IN (?)", ids).Find(&academicNavigators).Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Count(&total).Error
 	if err != nil {
 		return nil, 0, err
@@ -68,5 +66,3 @@ func (r *AcademicNavigatorRepositoryImpl) GetAcademicNavigatorByID(ID int64) (*m
 func (r *AcademicNavigatorRepositoryImpl) DeleteAcademicNavigator(ID int64) error {
 	return r.DB.Delete(&model.AcademicNavigator{}, ID).Error
 }
-
-// ids, err := r.Elasticsearch.SearchByFields("academic_navigators", map[string]interface{}{
