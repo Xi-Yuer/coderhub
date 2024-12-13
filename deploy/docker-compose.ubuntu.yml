@@ -1,4 +1,3 @@
-# docker run -d -p:10086:80 --privileged -it -v deploy:/app ubuntu:latest
 services:
   mysql:
     image: mysql:8.0
@@ -41,7 +40,8 @@ services:
         hard: -1
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:8.15.1
+    image: docker.elastic.co/logstash/logstash:8.11.3-arm64
+    platform: linux/arm64
     container_name: logstash
     depends_on:
       - elasticsearch
@@ -156,13 +156,6 @@ services:
       start_period: 30s
       timeout: 10s
     restart: always
-    environment:
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      ETCD_HOST: etcd
-      ETCD_PORT: 2379
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
 
   articles-api:
     image: 2214380963/articles-service:latest
@@ -181,13 +174,6 @@ services:
       start_period: 30s
       timeout: 10s
     restart: always
-    environment:
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      ETCD_HOST: etcd
-      ETCD_PORT: 2379
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
 
   comment-api:
     image: 2214380963/comments-api:latest
@@ -206,13 +192,6 @@ services:
       start_period: 30s
       timeout: 10s
     restart: always
-    environment:
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      ETCD_HOST: etcd
-      ETCD_PORT: 2379
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
 
   image-api:
     image: 2214380963/images-service:latest
@@ -231,13 +210,6 @@ services:
       start_period: 30s
       timeout: 10s
     restart: always
-    environment:
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      ETCD_HOST: etcd
-      ETCD_PORT: 2379
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
 
   user-follow-api:
     image: 2214380963/user-follow-service:latest
@@ -250,20 +222,17 @@ services:
     networks:
       - coderhub-network
     healthcheck:
-      test:
-        [ "CMD", "curl", "-f", "http://localhost:8888/api/user_follow/health" ]
+      test: [
+        "CMD",
+        "curl",
+        "-f",
+        "http://localhost:8888/api/user_follow/health",
+      ] # 修改为实际的健康检查端点
       interval: 10s
       retries: 10
       start_period: 30s
       timeout: 10s
     restart: always
-    environment:
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      ETCD_HOST: etcd
-      ETCD_PORT: 2379
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
 
   academic-navigator-api:
     image: 2214380963/academic-navigator-api:latest
@@ -276,13 +245,12 @@ services:
     networks:
       - coderhub-network
     healthcheck:
-      test:
-        [
-          "CMD",
-          "curl",
-          "-f",
-          "http://localhost:8888/api/academic_navigator/health",
-        ]
+      test: [
+        "CMD",
+        "curl",
+        "-f",
+        "http://localhost:8888/api/academic_navigator/health",
+      ] # 修改为实际的健康检查端点
       interval: 10s
       retries: 10
       start_period: 30s
@@ -432,7 +400,7 @@ services:
     networks:
       - coderhub-network
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "8888"]
+      test: [ "CMD", "nc", "-z", "localhost", "8888" ] # 使用netcat检查端口是否开放
       interval: 10s
       retries: 10
       start_period: 30s
