@@ -6,7 +6,14 @@ package handler
 import (
 	"net/http"
 
-	codehub "coderhub/api/coderhub/internal/handler/codehub"
+	academic_auth "coderhub/api/coderhub/internal/handler/academic_auth"
+	academic_public "coderhub/api/coderhub/internal/handler/academic_public"
+	follow_auth "coderhub/api/coderhub/internal/handler/follow_auth"
+	follow_public "coderhub/api/coderhub/internal/handler/follow_public"
+	image_auth "coderhub/api/coderhub/internal/handler/image_auth"
+	image_public "coderhub/api/coderhub/internal/handler/image_public"
+	user_auth "coderhub/api/coderhub/internal/handler/user_auth"
+	user_public "coderhub/api/coderhub/internal/handler/user_public"
 	"coderhub/api/coderhub/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -18,142 +25,188 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// 新增学术导航
 				Method:  http.MethodPost,
-				Path:    "/academic_navigator/create",
-				Handler: codehub.AddAcademicNavigatorHandler(serverCtx),
+				Path:    "/create",
+				Handler: academic_auth.AddAcademicNavigatorHandler(serverCtx),
 			},
 			{
 				// 删除学术导航
 				Method:  http.MethodDelete,
-				Path:    "/academic_navigator/delete/:id",
-				Handler: codehub.DeleteAcademicNavigatorHandler(serverCtx),
+				Path:    "/delete/:id",
+				Handler: academic_auth.DeleteAcademicNavigatorHandler(serverCtx),
 			},
 			{
 				// 取消点赞学术导航
 				Method:  http.MethodDelete,
-				Path:    "/academic_navigator/dislike/:id",
-				Handler: codehub.CancelLikeAcademicNavigatorHandler(serverCtx),
-			},
-			{
-				// 获取学术导航
-				Method:  http.MethodGet,
-				Path:    "/academic_navigator/get",
-				Handler: codehub.GetAcademicNavigatorHandler(serverCtx),
-			},
-			{
-				// 健康检查
-				Method:  http.MethodGet,
-				Path:    "/academic_navigator/health",
-				Handler: codehub.AcademicHealthHandler(serverCtx),
+				Path:    "/dislike/:id",
+				Handler: academic_auth.CancelLikeAcademicNavigatorHandler(serverCtx),
 			},
 			{
 				// 点赞学术导航
 				Method:  http.MethodPost,
-				Path:    "/academic_navigator/like/:id",
-				Handler: codehub.PostAcademicNavigatorLikeHandler(serverCtx),
+				Path:    "/like/:id",
+				Handler: academic_auth.PostAcademicNavigatorLikeHandler(serverCtx),
 			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/academic_navigator"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
 			{
-				// 获取粉丝列表
+				// 获取学术导航
 				Method:  http.MethodGet,
-				Path:    "/follow/fans",
-				Handler: codehub.GetFansListHandler(serverCtx),
-			},
-			{
-				// 关注用户
-				Method:  http.MethodPost,
-				Path:    "/follow/follow",
-				Handler: codehub.FollowUserHandler(serverCtx),
+				Path:    "/get",
+				Handler: academic_public.GetAcademicNavigatorHandler(serverCtx),
 			},
 			{
 				// 健康检查
 				Method:  http.MethodGet,
-				Path:    "/follow/health",
-				Handler: codehub.FollowHealthHandler(serverCtx),
+				Path:    "/health",
+				Handler: academic_public.AcademicHealthHandler(serverCtx),
 			},
+		},
+		rest.WithPrefix("/api/academic_navigator"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
 			{
-				// 获取关注列表
-				Method:  http.MethodGet,
-				Path:    "/follow/list",
-				Handler: codehub.GetFollowListHandler(serverCtx),
+				// 关注用户
+				Method:  http.MethodPost,
+				Path:    "/follow",
+				Handler: follow_auth.FollowUserHandler(serverCtx),
 			},
 			{
 				// 取消关注
 				Method:  http.MethodPost,
-				Path:    "/follow/unfollow",
-				Handler: codehub.UnfollowUserHandler(serverCtx),
+				Path:    "/unfollow",
+				Handler: follow_auth.UnfollowUserHandler(serverCtx),
 			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/follow"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取粉丝列表
+				Method:  http.MethodGet,
+				Path:    "/fans",
+				Handler: follow_public.GetFansListHandler(serverCtx),
+			},
+			{
+				// 健康检查
+				Method:  http.MethodGet,
+				Path:    "/health",
+				Handler: follow_public.FollowHealthHandler(serverCtx),
+			},
+			{
+				// 获取关注列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: follow_public.GetFollowListHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/follow"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
 			{
 				// 删除图片
 				Method:  http.MethodPost,
-				Path:    "/image/delete",
-				Handler: codehub.DeleteHandler(serverCtx),
+				Path:    "/delete",
+				Handler: image_auth.DeleteHandler(serverCtx),
 			},
 			{
 				// 获取图片信息
 				Method:  http.MethodGet,
-				Path:    "/image/get/:image_id",
-				Handler: codehub.GetHandler(serverCtx),
-			},
-			{
-				// 健康检查
-				Method:  http.MethodGet,
-				Path:    "/image/health",
-				Handler: codehub.ImageHealthHandler(serverCtx),
+				Path:    "/get/:image_id",
+				Handler: image_auth.GetHandler(serverCtx),
 			},
 			{
 				// 获取用户图片列表
 				Method:  http.MethodGet,
-				Path:    "/image/list",
-				Handler: codehub.ListByUserHandler(serverCtx),
+				Path:    "/list",
+				Handler: image_auth.ListByUserHandler(serverCtx),
 			},
 			{
 				// 上传图片
 				Method:  http.MethodPost,
-				Path:    "/image/upload",
-				Handler: codehub.UploadHandler(serverCtx),
+				Path:    "/upload",
+				Handler: image_auth.UploadHandler(serverCtx),
 			},
-			{
-				// 删除用户
-				Method:  http.MethodDelete,
-				Path:    "/user/delete/:id",
-				Handler: codehub.DeleteUserHandler(serverCtx),
-			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/image"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
 			{
 				// 健康检查
 				Method:  http.MethodGet,
-				Path:    "/user/health",
-				Handler: codehub.UserHealthHandler(serverCtx),
+				Path:    "/health",
+				Handler: image_public.ImageHealthHandler(serverCtx),
 			},
+		},
+		rest.WithPrefix("/api/image"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
 			{
-				// 获取用户信息
-				Method:  http.MethodGet,
-				Path:    "/user/info/:id",
-				Handler: codehub.GetUserInfoHandler(serverCtx),
-			},
-			{
-				// 获取用户列表
-				Method:  http.MethodGet,
-				Path:    "/user/list",
-				Handler: codehub.GetUserListHandler(serverCtx),
-			},
-			{
-				// 用户登录
-				Method:  http.MethodPost,
-				Path:    "/user/login",
-				Handler: codehub.LoginHandler(serverCtx),
-			},
-			{
-				// 用户注册
-				Method:  http.MethodPost,
-				Path:    "/user/register",
-				Handler: codehub.RegisterHandler(serverCtx),
+				// 删除用户
+				Method:  http.MethodDelete,
+				Path:    "/delete/:id",
+				Handler: user_auth.DeleteUserHandler(serverCtx),
 			},
 			{
 				// 更新用户信息
 				Method:  http.MethodPut,
-				Path:    "/user/update/:id",
-				Handler: codehub.UpdateUserInfoHandler(serverCtx),
+				Path:    "/update/:id",
+				Handler: user_auth.UpdateUserInfoHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/user"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 健康检查
+				Method:  http.MethodGet,
+				Path:    "/health",
+				Handler: user_public.UserHealthHandler(serverCtx),
+			},
+			{
+				// 获取用户信息
+				Method:  http.MethodGet,
+				Path:    "/info/:id",
+				Handler: user_public.GetUserInfoHandler(serverCtx),
+			},
+			{
+				// 获取用户列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: user_public.GetUserListHandler(serverCtx),
+			},
+			{
+				// 用户登录
+				Method:  http.MethodPost,
+				Path:    "/login",
+				Handler: user_public.LoginHandler(serverCtx),
+			},
+			{
+				// 用户注册
+				Method:  http.MethodPost,
+				Path:    "/register",
+				Handler: user_public.RegisterHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/user"),
 	)
 }
