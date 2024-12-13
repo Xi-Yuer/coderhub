@@ -5,6 +5,8 @@ import (
 
 	"coderhub/api/coderhub/internal/svc"
 	"coderhub/api/coderhub/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/coderhub/coderhub"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +27,52 @@ func NewGetFansListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFa
 }
 
 func (l *GetFansListLogic) GetFansList(req *types.GetFansListReq) (resp *types.GetFansListResp, err error) {
-	// todo: add your logic here and delete this line
+	userFansResp, err := l.svcCtx.UserFollowService.GetUserFans(l.ctx, &coderhub.GetUserFansReq{
+		FollowedId: req.UserId,
+		Page:       int32(req.Page),
+		PageSize:   int32(req.PageSize),
+	})
+	if err != nil {
+		return l.errorResp(err)
+	}
 
-	return
+	return l.successResp(userFansResp)
+}
+
+func (l *GetFansListLogic) successResp(userFansResp *coderhub.GetUserFansResp) (*types.GetFansListResp, error) {
+	userFansList := make([]types.UserFollow, 0, len(userFansResp.UserFans))
+	for _, userFan := range userFansResp.UserFans {
+		userFansList = append(userFansList, types.UserFollow{
+			Id:           0,
+			UserId:       userFan.UserId,
+			FollowUserId: 0,
+			Status:       userFan.Status,
+			CreateTime:   userFan.CreatedAt,
+			UpdateTime:   userFan.UpdatedAt,
+		})
+	}
+
+	return &types.GetFansListResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: types.FollowList{
+			List:  userFansList,
+			Total: userFansResp.Total,
+		},
+	}, nil
+}
+
+func (l *GetFansListLogic) errorResp(err error) (*types.GetFansListResp, error) {
+	return &types.GetFansListResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpBadRequest,
+			Message: err.Error(),
+		},
+		Data: types.FollowList{
+			List:  nil,
+			Total: 0,
+		},
+	}, nil
 }

@@ -1,3 +1,38 @@
 Name: CodeHubAPI
 Host: 0.0.0.0
 Port: 8888
+UserService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: codehub.rpc
+ArticlesService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: codehub.rpc
+CommentsService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: codehub.rpc
+ImageRelationService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: codehub.rpc
+ImagesService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: codehub.rpc
+AcademicNavigationService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: codehub.rpc
+UserFollowService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: codehub.rpc

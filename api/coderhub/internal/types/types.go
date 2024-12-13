@@ -232,9 +232,41 @@ type RegisterResp struct {
 	Data bool `json:"data"` // 是否注册成功
 }
 
+type ResetPasswordByLinkReq struct {
+	Email           string `form:"email" validate:"required,email"`
+	Password        string `form:"password" validate:"required,min=8,max=32"`
+	ConfirmPassword string `form:"confirmPassword" validate:"required,eqfield=Password"`
+	Token           string `form:"token" validate:"required"`
+}
+
+type ResetPasswordByLinkResp struct {
+	Response
+	Data bool `json:"data"` // 是否重置成功
+}
+
+type ResetPasswordReq struct {
+	OldPassword     string `json:"old_password"`     // 旧密码
+	NewPassword     string `json:"new_password"`     // 新密码
+	ConfirmPassword string `json:"confirm_password"` // 确认密码
+}
+
+type ResetPasswordResp struct {
+	Response
+	Data bool `json:"data"` // 是否修改成功
+}
+
 type Response struct {
 	Code    int32  `json:"code"`    // 状态码
 	Message string `json:"message"` // 提示信息
+}
+
+type SendResetPasswordLinkReq struct {
+	Email string `form:"email"` // 邮箱
+}
+
+type SendResetPasswordLinkResp struct {
+	Response
+	Data bool `json:"data"` // 是否发送成功
 }
 
 type UnfollowUserReq struct {
@@ -244,6 +276,16 @@ type UnfollowUserReq struct {
 type UnfollowUserResp struct {
 	Response
 	Data bool `json:"data"` // 是否取消成功
+}
+
+type UpdatePasswordReq struct {
+	OldPassword string `json:"old_password"` // 旧密码
+	NewPassword string `json:"new_password"` // 新密码
+}
+
+type UpdatePasswordResp struct {
+	Response
+	Data bool `json:"data"` // 是否修改成功
 }
 
 type UpdateUserInfoReq struct {
@@ -267,12 +309,12 @@ type UploadResponse struct {
 }
 
 type UserFollow struct {
-	Id           int64  `json:"id"`          // 关注ID
-	UserId       int64  `json:"user_id"`     // 用户ID
-	FollowUserId int64  `json:"follow_id"`   // 被关注用户ID
-	Status       int32  `json:"status"`      // 状态 0:未关注 1:已关注
-	CreateTime   string `json:"create_time"` // 创建时间
-	UpdateTime   string `json:"update_time"` // 更新时间
+	Id           int64 `json:"id"`          // 关注ID
+	UserId       int64 `json:"user_id"`     // 用户ID
+	FollowUserId int64 `json:"follow_id"`   // 被关注用户ID
+	Status       int32 `json:"status"`      // 状态 0:未关注 1:已关注
+	CreateTime   int64 `json:"create_time"` // 创建时间
+	UpdateTime   int64 `json:"update_time"` // 更新时间
 }
 
 type UserInfo struct {
@@ -288,8 +330,8 @@ type UserInfo struct {
 	Status     int32  `json:"status"`      // 状态 0:正常 1:禁用
 	Role       int32  `json:"role"`        // 角色 0:普通用户 1:管理员
 	LastLogin  string `json:"last_login"`  // 最后登录时间
-	CreateTime string `json:"create_time"` // 创建时间
-	UpdateTime string `json:"update_time"` // 更新时间
+	CreateTime int64  `json:"create_time"` // 创建时间
+	UpdateTime int64  `json:"update_time"` // 更新时间
 }
 
 type UserList struct {

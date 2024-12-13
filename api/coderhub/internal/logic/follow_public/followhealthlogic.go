@@ -5,6 +5,7 @@ import (
 
 	"coderhub/api/coderhub/internal/svc"
 	"coderhub/api/coderhub/internal/types"
+	"coderhub/conf"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +26,13 @@ func NewFollowHealthLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Foll
 }
 
 func (l *FollowHealthLogic) FollowHealth() (resp *types.HealthResp, err error) {
-	// todo: add your logic here and delete this line
+	resp = &types.HealthResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: true,
+	}
 
-	return
+	return resp, nil
 }

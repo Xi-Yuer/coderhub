@@ -5,6 +5,9 @@ import (
 
 	"coderhub/api/coderhub/internal/svc"
 	"coderhub/api/coderhub/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +28,37 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterResp, err error) {
-	// todo: add your logic here and delete this line
+	if err := utils.NewValidator().Username(req.Username).Password(req.Password).Check(); err != nil {
+		return &types.RegisterResp{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpBadRequest,
+				Message: err.Error(),
+			},
+			Data: false,
+		}, nil
+	}
 
-	return
+	if _, err = l.svcCtx.UserService.CreateUser(
+		l.ctx,
+		&coderhub.CreateUserRequest{
+			Username:     req.Username,
+			PasswordHash: req.Password,
+		},
+	); err != nil {
+		return &types.RegisterResp{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpBadRequest,
+				Message: err.Error(),
+			},
+			Data: false,
+		}, nil
+	}
+
+	return &types.RegisterResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: true,
+	}, nil
 }

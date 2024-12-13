@@ -5,6 +5,9 @@ import (
 
 	"coderhub/api/coderhub/internal/svc"
 	"coderhub/api/coderhub/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +28,36 @@ func NewSendResetPasswordLinkLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *SendResetPasswordLinkLogic) SendResetPasswordLink(req *types.SendResetPasswordLinkReq) (resp *types.SendResetPasswordLinkResp, err error) {
-	// todo: add your logic here and delete this line
+	err = utils.NewValidator().Email(req.Email).Check()
+	if err != nil {
+		return l.errorResp(err), nil
+	}
+	_, err = l.svcCtx.UserService.ResetPassword(l.ctx, &coderhub.ResetPasswordRequest{
+		Email: req.Email,
+	})
+	if err != nil {
+		return l.errorResp(err), nil
+	}
 
-	return
+	return l.successResp(), nil
+}
+
+func (l *SendResetPasswordLinkLogic) successResp() *types.SendResetPasswordLinkResp {
+	return &types.SendResetPasswordLinkResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: true,
+	}
+}
+
+func (l *SendResetPasswordLinkLogic) errorResp(err error) *types.SendResetPasswordLinkResp {
+	return &types.SendResetPasswordLinkResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpBadRequest,
+			Message: err.Error(),
+		},
+		Data: false,
+	}
 }

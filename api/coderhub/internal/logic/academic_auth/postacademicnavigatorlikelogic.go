@@ -5,6 +5,9 @@ import (
 
 	"coderhub/api/coderhub/internal/svc"
 	"coderhub/api/coderhub/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +28,38 @@ func NewPostAcademicNavigatorLikeLogic(ctx context.Context, svcCtx *svc.ServiceC
 }
 
 func (l *PostAcademicNavigatorLikeLogic) PostAcademicNavigatorLike(req *types.PostAcademicNavigatorLikeReq) (resp *types.PostAcademicNavigatorLikeResp, err error) {
-	// todo: add your logic here and delete this line
+	// 获取用户ID
+	userId, err := utils.GetUserID(l.ctx)
+	if err != nil {
+		return l.errorResp(err)
+	}
+	_, err = l.svcCtx.AcademicService.LikeAcademicNavigator(l.ctx, &coderhub.LikeAcademicNavigatorRequest{
+		Id:     req.Id,
+		UserId: userId,
+	})
+	if err != nil {
+		return l.errorResp(err)
+	}
 
-	return
+	return l.successResp()
+}
+
+func (l *PostAcademicNavigatorLikeLogic) successResp() (*types.PostAcademicNavigatorLikeResp, error) {
+	return &types.PostAcademicNavigatorLikeResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: true,
+	}, nil
+}
+
+func (l *PostAcademicNavigatorLikeLogic) errorResp(err error) (*types.PostAcademicNavigatorLikeResp, error) {
+	return &types.PostAcademicNavigatorLikeResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpBadRequest,
+			Message: err.Error(),
+		},
+		Data: false,
+	}, nil
 }

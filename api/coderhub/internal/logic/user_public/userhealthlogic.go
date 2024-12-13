@@ -5,6 +5,7 @@ import (
 
 	"coderhub/api/coderhub/internal/svc"
 	"coderhub/api/coderhub/internal/types"
+	"coderhub/conf"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +26,11 @@ func NewUserHealthLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserHe
 }
 
 func (l *UserHealthLogic) UserHealth() (resp *types.HealthResp, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	return &types.HealthResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: true,
+	}, nil
 }

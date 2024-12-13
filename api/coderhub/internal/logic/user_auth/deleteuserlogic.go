@@ -5,6 +5,8 @@ import (
 
 	"coderhub/api/coderhub/internal/svc"
 	"coderhub/api/coderhub/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/coderhub/coderhub"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +27,22 @@ func NewDeleteUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 }
 
 func (l *DeleteUserLogic) DeleteUser(req *types.DeleteUserReq) (resp *types.DeleteUserResp, err error) {
-	// todo: add your logic here and delete this line
+	_, err = l.svcCtx.UserService.DeleteUser(l.ctx, &coderhub.DeleteUserRequest{UserId: req.Id})
+	if err != nil {
+		return &types.DeleteUserResp{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpBadRequest,
+				Message: err.Error(),
+			},
+			Data: false,
+		}, nil
+	}
 
-	return
+	return &types.DeleteUserResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: true,
+	}, nil
 }

@@ -158,10 +158,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 修改密码
+				Method:  http.MethodPost,
+				Path:    "/change-password",
+				Handler: user_auth.ChangePasswordHandler(serverCtx),
+			},
+			{
 				// 删除用户
 				Method:  http.MethodDelete,
 				Path:    "/delete/:id",
 				Handler: user_auth.DeleteUserHandler(serverCtx),
+			},
+			{
+				// 重置密码
+				Method:  http.MethodPost,
+				Path:    "/reset-password",
+				Handler: user_auth.ResetPasswordHandler(serverCtx),
 			},
 			{
 				// 更新用户信息
@@ -205,6 +217,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/register",
 				Handler: user_public.RegisterHandler(serverCtx),
+			},
+			{
+				// 通过链接重置密码
+				Method:  http.MethodPost,
+				Path:    "/reset-password-by-link",
+				Handler: user_public.ResetPasswordByLinkHandler(serverCtx),
+			},
+			{
+				// 发送重置密码链接
+				Method:  http.MethodPost,
+				Path:    "/send-reset-password-link",
+				Handler: user_public.SendResetPasswordLinkHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/user"),
