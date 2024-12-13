@@ -1,0 +1,461 @@
+    // goctl api go -api merge.api -dir ../
+        // goctl api plugin -plugin goctl-swagger="swagger -filename merge.json" -api merge.api -dir .
+    syntax = "v1"
+
+    info(
+        title: "CodeHub API"
+        desc: "CodeHub 后端服务 API 文档"
+        author: "Xi-Yuer"
+        version: "1.0.0"
+    )
+
+    type (
+        // 通用响应结构
+        Response {
+            Code int32 `json:"code"`        // 状态码
+            Message string `json:"message"` // 提示信息
+        }
+            // 健康检查响应
+        HealthResp {
+            Response
+            Data bool `json:"data"` // 是否健康
+        }
+            // 分页请求
+        PageRequest {
+            Page int32 `form:"page"`          // 页码
+            PageSize int32 `form:"page_size"` // 每页数量
+        }
+            // 分页响应
+        PageResponse {
+            Total int64 `json:"total"`        // 总数
+            Page int32 `json:"page"`          // 当前页码
+            PageSize int32 `json:"page_size"` // 每页数量
+        }
+            // 用户信息
+        UserInfo {
+            Id int64 `json:"id"`                   // 用户ID
+            Username string `json:"username"`      // 用户名
+            Password string `json:"password"`      // 密码
+            Nickname string `json:"nickname"`      // 昵称
+            Email string `json:"email"`            // 邮箱
+            Phone string `json:"phone"`            // 手机号
+            Avatar string `json:"avatar"`          // 头像
+            Gender int32 `json:"gender"`           // 性别 0:未知 1:男 2:女
+            Age int32 `json:"age"`                 // 年龄
+            Status int32 `json:"status"`           // 状态 0:正常 1:禁用
+            Role int32 `json:"role"`               // 角色 0:普通用户 1:管理员
+            LastLogin string `json:"last_login"`   // 最后登录时间
+            CreateTime string `json:"create_time"` // 创建时间
+            UpdateTime string `json:"update_time"` // 更新时间
+        }
+            // 用户注册请求
+        RegisterReq {
+            Username string `json:"username"` // 用户名
+            Password string `json:"password"` // 密码
+            Nickname string `json:"nickname"` // 昵称
+            Email string `json:"email"`       // 邮箱
+            Phone string `json:"phone"`       // 手机号
+            Avatar string `json:"avatar"`     // 头像
+            Gender int32 `json:"gender"`      // 性别 0:未知 1:男 2:女
+            Age int32 `json:"age"`            // 年龄
+        }
+            // 用户注册响应
+        RegisterResp {
+            Response
+            Data bool `json:"data"` // 是否注册成功
+        }
+            // 用户登录请求
+        LoginReq {
+            Username string `json:"username"` // 用户名
+            Password string `json:"password"` // 密码
+        }
+            // 用户登录响应
+        LoginResp {
+            Response
+            Data string `json:"data"` // JWT token
+        }
+            // 获取用户信息请求
+        GetUserInfoReq {
+            Id int64 `path:"id"` // 用户ID
+        }
+            // 获取用户信息响应
+        GetUserInfoResp {
+            Response
+            Data *UserInfo `json:"data"` // 用户信息
+        }
+            // 更新用户信息请求
+        UpdateUserInfoReq {
+            Id int64 `path:"id"`              // 用户ID
+            Nickname string `json:"nickname"` // 昵称
+            Email string `json:"email"`       // 邮箱
+            Phone string `json:"phone"`       // 手机号
+            Avatar string `json:"avatar"`     // 头像
+            Gender int32 `json:"gender"`      // 性别 0:未知 1:男 2:女
+            Age int32 `json:"age"`            // 年龄
+        }
+            // 更新用户信息响应
+        UpdateUserInfoResp {
+            Response
+            Data bool `json:"data"` // 是否更新成功
+        }
+            // 删除用户请求
+        DeleteUserReq {
+            Id int64 `path:"id"` // 用户ID
+        }
+            // 删除用户响应
+        DeleteUserResp {
+            Response
+            Data bool `json:"data"` // 是否删除成功
+        }
+            // 获取用户列表请求
+        GetUserListReq {
+            Page int64 `form:"page"`          // 页码
+            PageSize int64 `form:"page_size"` // 每页数量
+        }
+            // 用户列表
+        UserList {
+            Total int64 `json:"total"`    // 总数
+            List []UserInfo `json:"list"` // 用户列表
+        }
+            // 获取用户列表响应
+        GetUserListResp {
+            Response
+            Data UserList `json:"data"` // 用户列表
+        }
+            // 用户关注信息
+        UserFollow {
+            Id int64 `json:"id"`                   // 关注ID
+            UserId int64 `json:"user_id"`          // 用户ID
+            FollowUserId int64 `json:"follow_id"`  // 被关注用户ID
+            Status int32 `json:"status"`           // 状态 0:未关注 1:已关注
+            CreateTime string `json:"create_time"` // 创建时间
+            UpdateTime string `json:"update_time"` // 更新时间
+        }
+            // 关注用户请求
+        FollowUserReq {
+            FollowUserId int64 `json:"follow_id"` // 被关注用户ID
+        }
+            // 关注用户响应
+        FollowUserResp {
+            Response
+            Data bool `json:"data"` // 是否关注成功
+        }
+            // 取消关注请求
+        UnfollowUserReq {
+            FollowUserId int64 `json:"follow_id"` // 被关注用户ID
+        }
+            // 取消关注响应
+        UnfollowUserResp {
+            Response
+            Data bool `json:"data"` // 是否取消成功
+        }
+            // 获取关注列表请求
+        GetFollowListReq {
+            UserId int64 `form:"user_id"`     // 用户ID
+            Page int64 `form:"page"`          // 页码
+            PageSize int64 `form:"page_size"` // 每页数量
+        }
+            // 关注列表
+        FollowList {
+            Total int64 `json:"total"`      // 总数
+            List []UserFollow `json:"list"` // 关注列表
+        }
+            // 获取关注列表响应
+        GetFollowListResp {
+            Response
+            Data FollowList `json:"data"` // 关注列表
+        }
+            // 获取粉丝列表请求
+        GetFansListReq {
+            UserId int64 `form:"user_id"`     // 用户ID
+            Page int64 `form:"page"`          // 页码
+            PageSize int64 `form:"page_size"` // 每页数量
+        }
+            // 粉丝列表响应
+        GetFansListResp {
+            Response
+            Data FollowList `json:"data"` // 粉丝列表
+        }
+            // 图片信息
+        ImageInfo {
+            ImageId int64 `json:"image_id"`            // 图片ID
+            BucketName string `json:"bucket_name"`     // MinIO bucket名称
+            ObjectName string `json:"object_name"`     // MinIO中的对象名称
+            Url string `json:"url"`                    // 完整的访问URL
+            ThumbnailUrl string `json:"thumbnail_url"` // 缩略图URL
+            ContentType string `json:"content_type"`   // 文件MIME类型
+            Size int64 `json:"size"`                   // 文件大小(bytes)
+            Width int32 `json:"width"`                 // 图片宽度(px)
+            Height int32 `json:"height"`               // 图片高度(px)
+            UploadIp string `json:"upload_ip"`         // 上传者IP
+            UserId int64 `json:"user_id"`              // 上传者ID
+            Status string `json:"status"`              // 状态
+            CreatedAt string `json:"created_at"`       // 创建时间
+        }
+            // 上传图片响应
+        UploadResponse {
+            Response
+            Data *ImageInfo `json:"data"` // 上传的图片信息
+        }
+            // 删除图片请求
+        DeleteRequest {
+            ImageId int64 `json:"image_id"` // 图片ID
+            UserId int64 `json:"user_id"`   // 用户ID（用于权限验证）
+        }
+            // 删除图片响应
+        DeleteResponse {
+            Response
+            Data bool `json:"success"` // 删除是否成功
+        }
+            // 获取图片信息请求
+        GetRequest {
+            ImageId int64 `path:"image_id"` // 图片ID
+        }
+            // 获取图片信息响应
+        GetResponse {
+            Response
+            Data *ImageInfo `json:"data"` // 图片详情
+        }
+            // 获取用户图片列表请求
+        ListByUserRequest {
+            UserId int64 `json:"user_id"`     // 用户ID
+            Page int32 `json:"page"`          // 页码
+            PageSize int32 `json:"page_size"` // 每页数量
+        }
+            // 图片列表
+        ImageInfoList {
+            List []ImageInfo `json:"images"` // 图片列表
+            Total int64 `json:"total"`       // 总数量
+        }
+            // 获取用户图片列表响应
+        ListByUserResponse {
+            Response
+            Data *ImageInfoList `json:"data"` // 图片列表
+        }
+            // 学术导航信息
+        AcademicNavigator {
+            Id int64 `json:"id"`                // 学术导航 ID
+            UserId int64 `json:"user_id"`       // 用户 ID
+            Education string `json:"education"` // 学历
+            Content string `json:"content"`     // 内容
+            Major string `json:"major"`         // 专业
+            School string `json:"school"`       // 学校
+            WorkExp string `json:"work_exp"`    // 工作经验
+            LikeCount int64 `json:"like_count"` // 点赞数
+        }
+            // 获取学术导航列表请求
+        GetAcademicNavigatorReq {
+            UserId int64 `json:"user_id,optional"`       // 用户 ID
+            Education string `json:"education,optional"` // 学历
+            Content string `json:"content,optional"`     // 内容
+            Major string `json:"major,optional"`         // 专业
+            School string `json:"school,optional"`       // 学校
+            WorkExp string `json:"work_exp,optional"`    // 工作经验
+            Page int64 `json:"page"`                     // 页码
+            PageSize int64 `json:"page_size"`            // 每页大小
+        }
+            // 学术导航列表
+        AcademicList {
+            Total int64 `json:"total"`             // 总数
+            List []AcademicNavigator `json:"list"` // 学术导航列表
+        }
+            // 获取学术导航列表响应
+        GetAcademicNavigatorResp {
+            Response
+            Data *AcademicList `json:"data"` // 学术导航列表
+        }
+            // 添加学术导航请求
+        AddAcademicNavigatorReq {
+            Education string `json:"education"` // 学历
+            Content string `json:"content"`     // 内容
+            Major string `json:"major"`         // 专业
+            School string `json:"school"`       // 学校
+            WorkExp string `json:"work_exp"`    // 工作经验
+        }
+            // 添加学术导航响应
+        AddAcademicNavigatorResp {
+            Response
+            Data bool `json:"data"` // 是否添加成功
+        }
+            // 删除学术导航请求
+        DeleteAcademicNavigatorReq {
+            Id int64 `path:"id"` // 学术导航 ID
+        }
+            // 删除学术导航响应
+        DeleteAcademicNavigatorResp {
+            Response
+            Data bool `json:"data"` // 是否删除成功
+        }
+            // 点赞请求
+        PostAcademicNavigatorLikeReq {
+            Id int64 `path:"id"` // 学术导航 ID
+        }
+            // 点赞响应
+        PostAcademicNavigatorLikeResp {
+            Response
+            Data bool `json:"data"` // 是否点赞成功
+        }
+            // 取消点赞请求
+        CancelLikeAcademicNavigatorReq {
+            Id int64 `path:"id"` // 学术导航 ID
+        }
+            // 取消点赞响应
+        CancelLikeAcademicNavigatorResp {
+            Response
+            Data bool `json:"data"` // 是否取消点赞成功
+        }
+    )
+
+    // 服务
+    @server(
+        prefix: /api
+        group: codehub
+    )
+    service CodeHubAPI {
+        // 用户服务 - 公共路由
+        @doc(
+            summary: "健康检查"
+        )
+        @handler UserHealth
+        get /user/health returns (HealthResp)
+
+        @doc(
+            summary: "用户注册"
+        )
+        @handler Register
+        post /user/register (RegisterReq) returns (RegisterResp)
+
+        @doc(
+            summary: "用户登录"
+        )
+        @handler Login
+        post /user/login (LoginReq) returns (LoginResp)
+
+        @doc(
+            summary: "获取用户信息"
+        )
+        @handler GetUserInfo
+        get /user/info/:id (GetUserInfoReq) returns (GetUserInfoResp)
+
+        @doc(
+            summary: "获取用户列表"
+        )
+        @handler GetUserList
+        get /user/list (GetUserListReq) returns (GetUserListResp)
+
+        // 用户服务 - 需要认证的路由
+        @doc(
+            summary: "更新用户信息"
+        )
+        @handler UpdateUserInfo
+        put /user/update/:id (UpdateUserInfoReq) returns (UpdateUserInfoResp)
+
+        @doc(
+            summary: "删除用户"
+        )
+        @handler DeleteUser
+        delete /user/delete/:id (DeleteUserReq) returns (DeleteUserResp)
+
+        // 用户关注服务 - 公共路由
+        @doc(
+            summary: "健康检查"
+        )
+        @handler FollowHealth
+        get /follow/health returns (HealthResp)
+
+        @doc(
+            summary: "获取关注列表"
+        )
+        @handler GetFollowList
+        get /follow/list (GetFollowListReq) returns (GetFollowListResp)
+
+        @doc(
+            summary: "获取粉丝列表"
+        )
+        @handler GetFansList
+        get /follow/fans (GetFansListReq) returns (GetFansListResp)
+
+        // 用户关注服务 - 需要认证的路由
+        @doc(
+            summary: "关注用户"
+        )
+        @handler FollowUser
+        post /follow/follow (FollowUserReq) returns (FollowUserResp)
+
+        @doc(
+            summary: "取消关注"
+        )
+        @handler UnfollowUser
+        post /follow/unfollow (UnfollowUserReq) returns (UnfollowUserResp)
+
+        // 图片服务 - 公共路由
+        @doc(
+            summary: "健康检查"
+        )
+        @handler ImageHealth
+        get /image/health returns (HealthResp)
+
+        // 图片服务 - 需要认证的路由
+        @doc(
+            summary: "上传图片"
+        )
+        @handler Upload
+        post /image/upload returns (UploadResponse)
+
+        @doc(
+            summary: "删除图片"
+        )
+        @handler Delete
+        post /image/delete (DeleteRequest) returns (DeleteResponse)
+
+        @doc(
+            summary: "获取图片信息"
+        )
+        @handler Get
+        get /image/get/:image_id (GetRequest) returns (GetResponse)
+
+        @doc(
+            summary: "获取用户图片列表"
+        )
+        @handler ListByUser
+        get /image/list (ListByUserRequest) returns (ListByUserResponse)
+
+        // 学术导航服务 - 公共路由
+        @doc(
+            summary: "健康检查"
+        )
+        @handler AcademicHealth
+        get /academic_navigator/health returns (HealthResp)
+
+        @doc(
+            summary: "获取学术导航"
+        )
+        @handler GetAcademicNavigator
+        get /academic_navigator/get (GetAcademicNavigatorReq) returns (GetAcademicNavigatorResp)
+
+        // 学术导航服务 - 需要认证的路由
+        @doc(
+            summary: "新增学术导航"
+        )
+        @handler AddAcademicNavigator
+        post /academic_navigator/create (AddAcademicNavigatorReq) returns (AddAcademicNavigatorResp)
+
+        @doc(
+            summary: "删除学术导航"
+        )
+        @handler DeleteAcademicNavigator
+        delete /academic_navigator/delete/:id (DeleteAcademicNavigatorReq) returns (DeleteAcademicNavigatorResp)
+
+        @doc(
+            summary: "点赞学术导航"
+        )
+        @handler PostAcademicNavigatorLike
+        post /academic_navigator/like/:id (PostAcademicNavigatorLikeReq) returns (PostAcademicNavigatorLikeResp)
+
+        @doc(
+            summary: "取消点赞学术导航"
+        )
+        @handler CancelLikeAcademicNavigator
+        delete /academic_navigator/dislike/:id (CancelLikeAcademicNavigatorReq) returns (CancelLikeAcademicNavigatorResp)
+    }
+

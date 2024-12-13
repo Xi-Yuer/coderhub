@@ -1,0 +1,164 @@
+syntax = "v1"
+
+info(
+    title: "Academic Navigator API"
+    desc: "学术导航服务接口，提供学术导航的增删改查功能"
+    author: "Xi-Yuer"
+    version: "1.0.0"
+)
+
+type (
+    AcademicNavigatorResponse {
+        Code int32 `json:"code"`        // 状态码
+        Message string `json:"message"` // 提示信息
+    }
+    AcademicNavigatorHealthResp {
+        AcademicNavigatorResponse
+        Data bool `json:"data"` // 健康检查结果
+    }
+        // 学术导航信息
+    AcademicNavigator {
+        Id int64 `json:"id"`                  // 学术导航 ID
+        UserId int64 `json:"user_id"`         // 用户 ID
+        Education string `json:"education"`   // 学历
+        Content string `json:"content"`       // 内容
+        Major string `json:"major"`           // 专业
+        School string `json:"school"`         // 学校
+        WorkExp string `json:"work_exp"`      // 工作经验
+        LikeCount int64 `json:"like_count"`   // 点赞数
+    }
+
+        // 获取学术导航列表请求
+    GetAcademicNavigatorReq {
+        UserId int64 `json:"user_id,optional"`         // 用户 ID
+        Education string `json:"education,optional"`   // 学历
+        Content string `json:"content,optional"`       // 内容
+        Major string `json:"major,optional"`           // 专业
+        School string `json:"school,optional"`         // 学校
+        WorkExp string `json:"work_exp,optional"`      // 工作经验
+        Page int64 `json:"page"`                       // 页码
+        PageSize int64 `json:"page_size"`              // 每页大小
+    }
+
+        // 学术导航列表
+    List {
+        Total int64 `json:"total"`             // 总数
+        List []AcademicNavigator `json:"list"` // 学术导航列表
+    }
+
+        // 获取学术导航列表响应
+    GetAcademicNavigatorResp {
+        AcademicNavigatorResponse
+        Data *List `json:"data"` // 学术导航列表
+    }
+
+        // 添加学术导航请求
+    AddAcademicNavigatorReq {
+        Education string `json:"education"` // 学历
+        Content string `json:"content"`     // 内容
+        Major string `json:"major"`         // 专业
+        School string `json:"school"`       // 学校
+        WorkExp string `json:"work_exp"`    // 工作经验
+    }
+
+        // 添加学术导航响应
+    AddAcademicNavigatorResp {
+        AcademicNavigatorResponse
+        Data bool `json:"data"` // 是否添加成功
+    }
+
+        // 删除学术导航请求
+    DeleteAcademicNavigatorReq {
+        Id int64 `path:"id"` // 学术导航 ID
+    }
+
+        // 删除学术导航响应
+    DeleteAcademicNavigatorResp {
+        AcademicNavigatorResponse
+        Data bool `json:"data"` // 是否删除成功
+    }
+
+        // 更新点赞数请求
+    UpdateAcademicNavigatorLikeCountReq {
+        Id int64 `path:"id"` // 学术导航 ID
+    }
+
+        // 更新点赞数响应
+    UpdateAcademicNavigatorLikeCountResp {
+        AcademicNavigatorResponse
+        Data bool `json:"data"` // 是否更新成功
+    }
+
+        // 取消点赞请求
+    CancelLikeAcademicNavigatorReq {
+        Id int64 `path:"id"` // 学术导航 ID
+    }
+
+        // 取消点赞响应
+    CancelLikeAcademicNavigatorResp {
+        AcademicNavigatorResponse
+        Data bool `json:"data"` // 是否取消点赞成功
+    }
+
+        // 点赞请求
+    PostAcademicNavigatorLikeReq {
+        Id int64 `path:"id"` // 学术导航 ID
+    }
+
+        // 点赞响应
+    PostAcademicNavigatorLikeResp {
+        AcademicNavigatorResponse
+        Data bool `json:"data"` // 是否点赞成功
+    }
+)
+
+// 公共路由
+@server(
+    prefix: /api/academic_navigator
+    group: academic_navigator
+)
+service AcademicAPI {
+    @doc(
+        summary: "健康检查"
+    )
+    @handler Health
+    get /health returns (AcademicNavigatorHealthResp)
+
+    @doc(
+        summary: "获取学术导航"
+    )
+    @handler GetAcademicNavigator
+    get /get (GetAcademicNavigatorReq) returns (GetAcademicNavigatorResp)
+}
+
+// 需要认证的路由
+@server(
+    jwt: Auth
+    prefix: /api/academic_navigator
+    group: academic_navigator
+)
+service AcademicAPI {
+    @doc(
+        summary: "新增学术导航"
+    )
+    @handler AddAcademicNavigator
+    post /create (AddAcademicNavigatorReq) returns (AddAcademicNavigatorResp)
+
+    @doc(
+        summary: "删除学术导航"
+    )
+    @handler DeleteAcademicNavigator
+    delete /delete/:id (DeleteAcademicNavigatorReq) returns (DeleteAcademicNavigatorResp)
+
+    @doc(
+        summary: "点赞学术导航"
+    )
+    @handler PostAcademicNavigatorLike
+    post /like/:id (PostAcademicNavigatorLikeReq) returns (PostAcademicNavigatorLikeResp)
+
+    @doc(
+        summary: "取消点赞学术导航"
+    )
+    @handler CancelLikeAcademicNavigator
+    delete /dislike/:id (CancelLikeAcademicNavigatorReq) returns (CancelLikeAcademicNavigatorResp)
+}

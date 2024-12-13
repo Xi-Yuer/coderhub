@@ -1,0 +1,16 @@
+syntax = "v1"
+
+type (
+    // 分页请求
+    PageRequest {
+        Page int32 `form:"page,optional"`          // 页码
+        PageSize int32 `form:"page_size,optional"` // 每页大小
+    }
+
+        // 分页响应
+    PageResponse {
+        Total int64 `json:"total"`        // 总数
+        Page int32 `json:"page"`          // 当前页码
+        PageSize int32 `json:"page_size"` // 每页大小
+    }
+)
