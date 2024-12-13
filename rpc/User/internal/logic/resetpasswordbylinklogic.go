@@ -25,7 +25,7 @@ func NewResetPasswordByLinkLogic(ctx context.Context, svcCtx *svc.ServiceContext
 	}
 }
 
-// 通过链接重置密码
+// ResetPasswordByLink 通过链接重置密码
 func (l *ResetPasswordByLinkLogic) ResetPasswordByLink(in *user.ResetPasswordByLinkRequest) (*user.ResetPasswordByLinkResponse, error) {
 	err := l.svcCtx.Validator.Email(in.Email).Password(in.Password).ConfirmPassword(in.Password, in.ConfirmPassword).Token(in.Token).Check()
 	if err != nil {

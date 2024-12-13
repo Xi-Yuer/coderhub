@@ -30,7 +30,7 @@ func NewCreateArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 // validateCreateArticleRequest 验证文章创建请求
 func (l *CreateArticleLogic) validateCreateArticleRequest(req *articles.CreateArticleRequest) error {
 	// 验证基本字段
-	if err := utils.New().
+	if err := utils.NewValidator().
 		Title(req.Title).
 		Summary(req.Summary).
 		Content(req.Content).

@@ -71,7 +71,7 @@ func (l *CreateArticleLogic) successResp(articleId int64) *types.CreateArticleRe
 }
 
 func (l *CreateArticleLogic) validateArticleData(req *types.CreateArticleReq) error {
-	return utils.New().
+	return utils.NewValidator().
 		Title(req.Title).
 		Content(req.Content).
 		ArticleType(req.Type).

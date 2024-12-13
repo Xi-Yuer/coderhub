@@ -26,7 +26,7 @@ func NewResetPasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Res
 }
 
 func (l *ResetPasswordLogic) ResetPassword(req *types.ResetPasswordRequest) (resp *types.ResetPasswordResponse, err error) {
-	if err := utils.New().Password(req.Email).Password(req.NewPassword).Check(); err != nil {
+	if err := utils.NewValidator().Password(req.Email).Password(req.NewPassword).Check(); err != nil {
 		return &types.ResetPasswordResponse{
 			Response: types.Response{
 				Code:    conf.HttpCode.HttpBadRequest,

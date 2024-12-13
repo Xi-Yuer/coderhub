@@ -30,7 +30,7 @@ func NewChangePasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ch
 
 // ChangePassword 修改密码
 func (l *ChangePasswordLogic) ChangePassword(in *user.ChangePasswordRequest) (*user.ChangePasswordResponse, error) {
-	if err := utils.New().Password(in.OldPassword).Password(in.NewPassword).Check(); err != nil {
+	if err := utils.NewValidator().Password(in.OldPassword).Password(in.NewPassword).Check(); err != nil {
 		return nil, err
 	}
 

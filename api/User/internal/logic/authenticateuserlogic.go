@@ -25,7 +25,7 @@ func NewAuthenticateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *AuthenticateUserLogic) AuthenticateUser(req *types.AuthenticateUserRequest) (resp *types.AuthenticateUserResponse, err error) {
-	if err := utils.New().Username(req.Username).Password(req.Password).Check(); err != nil {
+	if err := utils.NewValidator().Username(req.Username).Password(req.Password).Check(); err != nil {
 		return &types.AuthenticateUserResponse{
 			Response: types.Response{
 				Code:    conf.HttpCode.HttpBadRequest,

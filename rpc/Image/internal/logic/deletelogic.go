@@ -25,7 +25,7 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 	}
 }
 
-// 删除图片
+// Delete 删除图片
 func (l *DeleteLogic) Delete(in *image.DeleteRequest) (*image.DeleteResponse, error) {
 	// 权限校验
 	var (

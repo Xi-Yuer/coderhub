@@ -26,7 +26,7 @@ func NewChangePasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ch
 }
 
 func (l *ChangePasswordLogic) ChangePassword(req *types.ChangePasswordRequest) (resp *types.ChangePasswordResponse, err error) {
-	if err := utils.New().Password(req.OldPassword).Password(req.NewPassword).Check(); err != nil {
+	if err := utils.NewValidator().Password(req.OldPassword).Password(req.NewPassword).Check(); err != nil {
 		return &types.ChangePasswordResponse{
 			Response: types.Response{
 				Code:    conf.HttpCode.HttpBadRequest,

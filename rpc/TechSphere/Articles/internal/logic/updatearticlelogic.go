@@ -93,7 +93,7 @@ func (l *UpdateArticleLogic) UpdateArticle(in *articles.UpdateArticleRequest) (*
 // validateArticleUpdate 验证文章更新请求
 func (l *UpdateArticleLogic) validateArticleUpdate(req *articles.UpdateArticleRequest) error {
 	// 基础字段验证
-	if err := utils.New().
+	if err := utils.NewValidator().
 		ArticleID(req.Id).
 		Title(req.Title).
 		Summary(req.Summary).

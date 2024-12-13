@@ -26,7 +26,7 @@ func NewGetArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetArt
 }
 
 func (l *GetArticleLogic) GetArticle(req *types.GetArticleReq) (*types.GetArticleResp, error) {
-	if err := utils.New().ArticleID(req.Id).Check(); err != nil {
+	if err := utils.NewValidator().ArticleID(req.Id).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
 

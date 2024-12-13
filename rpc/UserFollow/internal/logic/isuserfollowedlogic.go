@@ -23,7 +23,7 @@ func NewIsUserFollowedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Is
 	}
 }
 
-// 检查是否关注
+// IsUserFollowed 检查是否关注
 func (l *IsUserFollowedLogic) IsUserFollowed(in *user_follow.IsUserFollowedReq) (*user_follow.IsUserFollowedResp, error) {
 	// 检查是否关注
 	isFollowed, err := l.svcCtx.UserFollowRepository.IsUserFollowed(in.FollowerId, in.FollowedId)

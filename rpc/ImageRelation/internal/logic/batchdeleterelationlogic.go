@@ -23,7 +23,7 @@ func NewBatchDeleteRelationLogic(ctx context.Context, svcCtx *svc.ServiceContext
 	}
 }
 
-// 批量删除图片关系
+// BatchDeleteRelation 批量删除图片关系
 func (l *BatchDeleteRelationLogic) BatchDeleteRelation(in *imageRelation.BatchDeleteRelationRequest) (*imageRelation.BatchDeleteRelationResponse, error) {
 	if err := l.svcCtx.ImageRelationRepository.BatchDelete(l.ctx, in.Ids); err != nil {
 		return nil, err

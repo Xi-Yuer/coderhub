@@ -17,6 +17,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:      c,
 		UserService: userservice.NewUserService(zrpc.MustNewClient(c.UserService)),
-		Validator:   utils.New(),
+		Validator:   utils.NewValidator(),
 	}
 }

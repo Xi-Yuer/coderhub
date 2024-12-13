@@ -26,7 +26,7 @@ func NewResetPasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Res
 	}
 }
 
-// 重置密码, 通过邮箱发送重置密码链接
+// ResetPassword 重置密码, 通过邮箱发送重置密码链接
 func (l *ResetPasswordLogic) ResetPassword(in *user.ResetPasswordRequest) (*user.ResetPasswordResponse, error) {
 	// 1. 检查用户是否存在
 	userInfo, err := l.svcCtx.UserRepository.FindOneByEmail(in.Email)

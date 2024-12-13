@@ -82,7 +82,7 @@ func (l *DeleteArticleLogic) DeleteArticle(in *articles.DeleteArticleRequest) (*
 
 // validateRequest 验证删除请求的参数
 func (l *DeleteArticleLogic) validateRequest(in *articles.DeleteArticleRequest) error {
-	if err := utils.New().ArticleID(in.Id).Check(); err != nil {
+	if err := utils.NewValidator().ArticleID(in.Id).Check(); err != nil {
 		l.Logger.Errorf(ErrValidationFailed, err)
 		return fmt.Errorf(ErrValidationFailed, err)
 	}

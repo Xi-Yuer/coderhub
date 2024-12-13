@@ -23,7 +23,7 @@ func NewDeleteByEntityIDLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-// 根据实体ID、实体类型删除图片关系
+// DeleteByEntityID 根据实体ID、实体类型删除图片关系
 func (l *DeleteByEntityIDLogic) DeleteByEntityID(in *imageRelation.DeleteByEntityIDRequest) (*imageRelation.DeleteByEntityIDResponse, error) {
 	// todo: add your logic here and delete this line
 

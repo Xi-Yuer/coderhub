@@ -26,7 +26,7 @@ func NewAuthorizeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Authori
 }
 
 func (l *AuthorizeLogic) Authorize(in *user.AuthorizeRequest) (*user.AuthorizeResponse, error) {
-	if err := utils.New().Username(in.Username).Password(in.Password).Check(); err != nil {
+	if err := utils.NewValidator().Username(in.Username).Password(in.Password).Check(); err != nil {
 		return nil, err
 	}
 

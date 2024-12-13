@@ -33,7 +33,7 @@ func (l *UpdateArticleLogic) UpdateArticle(req *types.UpdateArticleReq) (*types.
 	}
 	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 	// 1. 参数验证
-	if err := utils.New().ArticleID(req.Id).Check(); err != nil {
+	if err := utils.NewValidator().ArticleID(req.Id).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
 

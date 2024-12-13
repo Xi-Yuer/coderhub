@@ -30,7 +30,7 @@ func NewGetArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetArt
 }
 func (l *GetArticleLogic) GetArticle(in *articles.GetArticleRequest) (*articles.GetArticleResponse, error) {
 	// 参数校验
-	if err := utils.New().ArticleID(in.Id).Check(); err != nil {
+	if err := utils.NewValidator().ArticleID(in.Id).Check(); err != nil {
 		return nil, errors.New(err.Error())
 	}
 

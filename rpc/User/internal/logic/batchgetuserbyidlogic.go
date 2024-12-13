@@ -23,7 +23,7 @@ func NewBatchGetUserByIDLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-// 批量获取用户信息
+// BatchGetUserByID 批量获取用户信息
 func (l *BatchGetUserByIDLogic) BatchGetUserByID(in *user.BatchGetUserByIDRequest) (*user.BatchGetUserByIDResponse, error) {
 	users, err := l.svcCtx.UserRepository.BatchGetUserByID(in.UserIds)
 	if err != nil {

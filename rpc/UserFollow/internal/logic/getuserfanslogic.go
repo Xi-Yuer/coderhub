@@ -46,11 +46,11 @@ func (l *GetUserFansLogic) GetUserFans(in *user_follow.GetUserFansReq) (*user_fo
 	}
 	// 转换为user_follow.UserInfo
 	userInfos := make([]*user_follow.UserInfo, 0, len(users.UserInfos))
-	for _, user := range users.UserInfos {
+	for _, userInfo := range users.UserInfos {
 		userInfos = append(userInfos, &user_follow.UserInfo{
-			Id:       user.UserId,
-			Username: user.UserName,
-			Avatar:   user.Avatar,
+			Id:       userInfo.UserId,
+			Username: userInfo.UserName,
+			Avatar:   userInfo.Avatar,
 		})
 	}
 

@@ -33,7 +33,7 @@ func (l *DeleteArticleLogic) DeleteArticle(req *types.DeleteArticleReq) (*types.
 	}
 	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 
-	if err := utils.New().ArticleID(req.Id).Check(); err != nil {
+	if err := utils.NewValidator().ArticleID(req.Id).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
 

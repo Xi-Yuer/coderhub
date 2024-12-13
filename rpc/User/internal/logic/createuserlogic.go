@@ -27,7 +27,7 @@ func NewCreateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateUserLogic) CreateUser(in *user.CreateUserRequest) (*user.CreateUserResponse, error) {
-	if err := utils.New().Username(in.Username).Password(in.PasswordHash).Check(); err != nil {
+	if err := utils.NewValidator().Username(in.Username).Password(in.PasswordHash).Check(); err != nil {
 		return nil, err
 	}
 

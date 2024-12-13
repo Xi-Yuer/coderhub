@@ -32,7 +32,7 @@ func (l *UpdateLikeCountLogic) UpdateLikeCount(req *types.UpdateLikeCountReq) (r
 	}
 	ctx := utils.SetUserMetaData(l.ctx)
 
-	if err := utils.New().ArticleID(req.Id).Check(); err != nil {
+	if err := utils.NewValidator().ArticleID(req.Id).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
 
