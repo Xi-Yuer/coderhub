@@ -15,7 +15,7 @@ RUN ls
 RUN go mod download
 
 # 编译 Go 程序
-RUN go build -o /app/bin/cmd ./api/coderhub/coderhubapi.go
+RUN go build -o /app/bin/cmd ./api/coderhub/codehubapi.go
 
 # 第 2 阶段：运行阶段（轻量级）
 FROM alpine:3.19
@@ -33,4 +33,4 @@ COPY --from=builder /app/api/coderhub/etc /app/bin/etc
 EXPOSE 8888
 
 # 定义容器启动时运行的命令
-CMD ["/app/bin/cmd", "-f", "/app/bin/etc/coderhubapi.yaml"]
+CMD ["/app/bin/cmd", "-f", "/app/bin/etc/codehubapi.yaml"]
