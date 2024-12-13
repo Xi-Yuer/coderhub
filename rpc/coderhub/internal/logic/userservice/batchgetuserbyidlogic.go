@@ -39,7 +39,7 @@ func (l *BatchGetUserByIDLogic) BatchGetUserByID(in *coderhub.BatchGetUserByIDRe
 			Email:     val.Email.String,
 			NickName:  val.NickName.String,
 			IsAdmin:   val.IsAdmin,
-			Status:    val.Status,
+			Status:    0,
 			CreatedAt: val.CreatedAt.Unix(),
 			UpdatedAt: val.UpdatedAt.Unix(),
 		}
