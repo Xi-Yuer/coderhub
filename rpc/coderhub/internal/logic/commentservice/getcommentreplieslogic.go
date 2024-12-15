@@ -2,14 +2,12 @@ package commentservicelogic
 
 import (
 	"coderhub/model"
+	"coderhub/rpc/coderhub/coderhub"
 	imagerelationservicelogic "coderhub/rpc/coderhub/internal/logic/imagerelationservice"
 	userservicelogic "coderhub/rpc/coderhub/internal/logic/userservice"
+	"coderhub/rpc/coderhub/internal/svc"
 	"context"
 	"sort"
-	"strconv"
-
-	"coderhub/rpc/coderhub/coderhub"
-	"coderhub/rpc/coderhub/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -71,12 +69,11 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentReplie
 	}
 
 	// 构建回复ID到图片列表的映射
-	replyImages := make(map[int64][]*coderhub.CommentImage)
+	replyImages := make(map[int64][]*coderhub.ImageInfo)
 	for _, img := range imageRelations.Relations {
 		if img.ImageId > 0 {
-			imageId := strconv.FormatInt(img.ImageId, 10)
-			replyImages[img.EntityId] = append(replyImages[img.EntityId], &coderhub.CommentImage{
-				ImageId:      imageId,
+			replyImages[img.EntityId] = append(replyImages[img.EntityId], &coderhub.ImageInfo{
+				ImageId:      img.ImageId,
 				Url:          img.Url,
 				ThumbnailUrl: img.ThumbnailUrl,
 			})
@@ -98,17 +95,27 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentReplie
 	l.Logger.Infof("获取到的用户信息: %+v", users)
 
 	// 构建用户信息映射
-	userInfos := make(map[int64]*coderhub.CommentUserInfo)
+	userInfos := make(map[int64]*coderhub.UserInfo)
 	if users != nil && len(users.UserInfos) > 0 {
 		for _, user := range users.UserInfos {
 			if user != nil {
 				l.Logger.Infof("映射用户信息: userId=%d, userName=%s", user.UserId, user.UserName)
 				// 如果用户信息不存在，则添加到映射中
 				if _, ok := userInfos[user.UserId]; !ok {
-					userInfos[user.UserId] = &coderhub.CommentUserInfo{
-						UserId:   user.UserId,
-						Username: user.UserName,
-						Avatar:   user.Avatar,
+					userInfos[user.UserId] = &coderhub.UserInfo{
+						UserId:    user.UserId,
+						UserName:  user.UserName,
+						Avatar:    user.Avatar,
+						Email:     user.Email,
+						Password:  user.Password,
+						Gender:    user.Gender,
+						Age:       user.Age,
+						Phone:     user.Phone,
+						NickName:  user.NickName,
+						IsAdmin:   user.IsAdmin,
+						Status:    user.Status,
+						CreatedAt: user.CreatedAt,
+						UpdatedAt: user.UpdatedAt,
 					}
 				}
 			}
@@ -126,7 +133,7 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentReplie
 	commentReplies := make([]*coderhub.Comment, len(replies))
 	for i, reply := range replies {
 		if _, ok := replyImages[reply.ID]; !ok {
-			replyImages[reply.ID] = make([]*coderhub.CommentImage, 0)
+			replyImages[reply.ID] = make([]*coderhub.ImageInfo, 0)
 		}
 		commentReplies[i] = &coderhub.Comment{
 			Id:              reply.ID,

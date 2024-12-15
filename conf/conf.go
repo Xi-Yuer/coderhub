@@ -1,6 +1,6 @@
 package conf
 
-var JWTSecret = "User-api-secret"
+var JWTSecret = "secret_key"
 
 var GoMail = struct {
 	Username string

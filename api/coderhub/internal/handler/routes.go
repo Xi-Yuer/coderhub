@@ -8,6 +8,9 @@ import (
 
 	academic_auth "coderhub/api/coderhub/internal/handler/academic_auth"
 	academic_public "coderhub/api/coderhub/internal/handler/academic_public"
+	articles_auth "coderhub/api/coderhub/internal/handler/articles_auth"
+	articles_public "coderhub/api/coderhub/internal/handler/articles_public"
+	comments_auth "coderhub/api/coderhub/internal/handler/comments_auth"
 	follow_auth "coderhub/api/coderhub/internal/handler/follow_auth"
 	follow_public "coderhub/api/coderhub/internal/handler/follow_public"
 	image_auth "coderhub/api/coderhub/internal/handler/image_auth"
@@ -67,6 +70,92 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/academic_navigator"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 更新文章
+				Method:  http.MethodPut,
+				Path:    "/:id",
+				Handler: articles_auth.UpdateArticleHandler(serverCtx),
+			},
+			{
+				// 删除文章
+				Method:  http.MethodDelete,
+				Path:    "/:id",
+				Handler: articles_auth.DeleteArticleHandler(serverCtx),
+			},
+			{
+				// 创建文章
+				Method:  http.MethodPost,
+				Path:    "/create",
+				Handler: articles_auth.CreateArticleHandler(serverCtx),
+			},
+			{
+				// 更新文章点赞数
+				Method:  http.MethodPost,
+				Path:    "/update_like_count",
+				Handler: articles_auth.UpdateLikeCountHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/articles"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取文章
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: articles_public.GetArticleHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/articles"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取单个评论
+				Method:  http.MethodGet,
+				Path:    "/:comment_id",
+				Handler: comments_auth.GetCommentHandler(serverCtx),
+			},
+			{
+				// 删除评论
+				Method:  http.MethodDelete,
+				Path:    "/:comment_id",
+				Handler: comments_auth.DeleteCommentHandler(serverCtx),
+			},
+			{
+				// 获取评论列表
+				Method:  http.MethodGet,
+				Path:    "/article/:article_id",
+				Handler: comments_auth.GetCommentsHandler(serverCtx),
+			},
+			{
+				// 创建评论
+				Method:  http.MethodPost,
+				Path:    "/create",
+				Handler: comments_auth.CreateCommentHandler(serverCtx),
+			},
+			{
+				// 获取某条评论的子评论列表
+				Method:  http.MethodGet,
+				Path:    "/replies/:comment_id",
+				Handler: comments_auth.GetCommentRepliesHandler(serverCtx),
+			},
+			{
+				// 更新评论点赞数
+				Method:  http.MethodPost,
+				Path:    "/update_like_count",
+				Handler: comments_auth.UpdateCommentLikeCountHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/comments"),
 	)
 
 	server.AddRoutes(

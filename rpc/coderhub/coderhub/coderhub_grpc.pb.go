@@ -46,8 +46,8 @@ type UserServiceClient interface {
 	// 创建用户
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	// 获取用户信息
-	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
-	GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
+	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error)
+	GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*UserInfo, error)
 	// 批量获取用户信息
 	BatchGetUserByID(ctx context.Context, in *BatchGetUserByIDRequest, opts ...grpc.CallOption) (*BatchGetUserByIDResponse, error)
 	// 更新用户信息
@@ -102,9 +102,9 @@ func (c *userServiceClient) CreateUser(ctx context.Context, in *CreateUserReques
 	return out, nil
 }
 
-func (c *userServiceClient) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
+func (c *userServiceClient) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserInfoResponse)
+	out := new(UserInfo)
 	err := c.cc.Invoke(ctx, UserService_GetUserInfo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -112,9 +112,9 @@ func (c *userServiceClient) GetUserInfo(ctx context.Context, in *GetUserInfoRequ
 	return out, nil
 }
 
-func (c *userServiceClient) GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
+func (c *userServiceClient) GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*UserInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserInfoResponse)
+	out := new(UserInfo)
 	err := c.cc.Invoke(ctx, UserService_GetUserInfoByUsername_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -203,8 +203,8 @@ type UserServiceServer interface {
 	// 创建用户
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	// 获取用户信息
-	GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error)
-	GetUserInfoByUsername(context.Context, *GetUserInfoByUsernameRequest) (*GetUserInfoResponse, error)
+	GetUserInfo(context.Context, *GetUserInfoRequest) (*UserInfo, error)
+	GetUserInfoByUsername(context.Context, *GetUserInfoByUsernameRequest) (*UserInfo, error)
 	// 批量获取用户信息
 	BatchGetUserByID(context.Context, *BatchGetUserByIDRequest) (*BatchGetUserByIDResponse, error)
 	// 更新用户信息
@@ -238,10 +238,10 @@ func (UnimplementedUserServiceServer) CheckUserExists(context.Context, *CheckUse
 func (UnimplementedUserServiceServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error) {
+func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *GetUserInfoRequest) (*UserInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
 }
-func (UnimplementedUserServiceServer) GetUserInfoByUsername(context.Context, *GetUserInfoByUsernameRequest) (*GetUserInfoResponse, error) {
+func (UnimplementedUserServiceServer) GetUserInfoByUsername(context.Context, *GetUserInfoByUsernameRequest) (*UserInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfoByUsername not implemented")
 }
 func (UnimplementedUserServiceServer) BatchGetUserByID(context.Context, *BatchGetUserByIDRequest) (*BatchGetUserByIDResponse, error) {

@@ -25,14 +25,14 @@ func NewGetUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 }
 
 // GetUserInfo 获取用户信息
-func (l *GetUserInfoLogic) GetUserInfo(in *coderhub.GetUserInfoRequest) (*coderhub.GetUserInfoResponse, error) {
+func (l *GetUserInfoLogic) GetUserInfo(in *coderhub.GetUserInfoRequest) (*coderhub.UserInfo, error) {
 	var User *model.User
 	User, err := l.svcCtx.UserRepository.GetUserByID(in.UserId)
 	if err != nil {
 		return nil, err
 	}
 
-	return &coderhub.GetUserInfoResponse{
+	return &coderhub.UserInfo{
 		UserId:    User.ID,
 		UserName:  User.UserName,
 		Avatar:    User.Avatar.String,

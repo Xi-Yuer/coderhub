@@ -42,12 +42,12 @@ func (s *UserServiceServer) CreateUser(ctx context.Context, in *coderhub.CreateU
 }
 
 // 获取用户信息
-func (s *UserServiceServer) GetUserInfo(ctx context.Context, in *coderhub.GetUserInfoRequest) (*coderhub.GetUserInfoResponse, error) {
+func (s *UserServiceServer) GetUserInfo(ctx context.Context, in *coderhub.GetUserInfoRequest) (*coderhub.UserInfo, error) {
 	l := userservicelogic.NewGetUserInfoLogic(ctx, s.svcCtx)
 	return l.GetUserInfo(in)
 }
 
-func (s *UserServiceServer) GetUserInfoByUsername(ctx context.Context, in *coderhub.GetUserInfoByUsernameRequest) (*coderhub.GetUserInfoResponse, error) {
+func (s *UserServiceServer) GetUserInfoByUsername(ctx context.Context, in *coderhub.GetUserInfoByUsernameRequest) (*coderhub.UserInfo, error) {
 	l := userservicelogic.NewGetUserInfoByUsernameLogic(ctx, s.svcCtx)
 	return l.GetUserInfoByUsername(in)
 }

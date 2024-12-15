@@ -35,8 +35,6 @@ type (
 	CheckUserExistsRequest             = coderhub.CheckUserExistsRequest
 	CheckUserExistsResponse            = coderhub.CheckUserExistsResponse
 	Comment                            = coderhub.Comment
-	CommentImage                       = coderhub.CommentImage
-	CommentUserInfo                    = coderhub.CommentUserInfo
 	CreateArticleRequest               = coderhub.CreateArticleRequest
 	CreateArticleResponse              = coderhub.CreateArticleResponse
 	CreateCommentRequest               = coderhub.CreateCommentRequest
@@ -86,7 +84,6 @@ type (
 	GetUserFollowsResp                 = coderhub.GetUserFollowsResp
 	GetUserInfoByUsernameRequest       = coderhub.GetUserInfoByUsernameRequest
 	GetUserInfoRequest                 = coderhub.GetUserInfoRequest
-	GetUserInfoResponse                = coderhub.GetUserInfoResponse
 	Image                              = coderhub.Image
 	ImageInfo                          = coderhub.ImageInfo
 	ImageRelation                      = coderhub.ImageRelation
@@ -123,8 +120,8 @@ type (
 		// 创建用户
 		CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 		// 获取用户信息
-		GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
-		GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
+		GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error)
+		GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*UserInfo, error)
 		// 批量获取用户信息
 		BatchGetUserByID(ctx context.Context, in *BatchGetUserByIDRequest, opts ...grpc.CallOption) (*BatchGetUserByIDResponse, error)
 		// 更新用户信息
@@ -171,12 +168,12 @@ func (m *defaultUserService) CreateUser(ctx context.Context, in *CreateUserReque
 }
 
 // 获取用户信息
-func (m *defaultUserService) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
+func (m *defaultUserService) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error) {
 	client := coderhub.NewUserServiceClient(m.cli.Conn())
 	return client.GetUserInfo(ctx, in, opts...)
 }
 
-func (m *defaultUserService) GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
+func (m *defaultUserService) GetUserInfoByUsername(ctx context.Context, in *GetUserInfoByUsernameRequest, opts ...grpc.CallOption) (*UserInfo, error) {
 	client := coderhub.NewUserServiceClient(m.cli.Conn())
 	return client.GetUserInfoByUsername(ctx, in, opts...)
 }

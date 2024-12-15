@@ -35,8 +35,6 @@ type (
 	CheckUserExistsRequest             = coderhub.CheckUserExistsRequest
 	CheckUserExistsResponse            = coderhub.CheckUserExistsResponse
 	Comment                            = coderhub.Comment
-	CommentImage                       = coderhub.CommentImage
-	CommentUserInfo                    = coderhub.CommentUserInfo
 	CreateArticleRequest               = coderhub.CreateArticleRequest
 	CreateArticleResponse              = coderhub.CreateArticleResponse
 	CreateCommentRequest               = coderhub.CreateCommentRequest
@@ -86,7 +84,6 @@ type (
 	GetUserFollowsResp                 = coderhub.GetUserFollowsResp
 	GetUserInfoByUsernameRequest       = coderhub.GetUserInfoByUsernameRequest
 	GetUserInfoRequest                 = coderhub.GetUserInfoRequest
-	GetUserInfoResponse                = coderhub.GetUserInfoResponse
 	Image                              = coderhub.Image
 	ImageInfo                          = coderhub.ImageInfo
 	ImageRelation                      = coderhub.ImageRelation

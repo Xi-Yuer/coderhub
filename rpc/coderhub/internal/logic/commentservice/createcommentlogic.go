@@ -83,7 +83,7 @@ func (l *CreateCommentLogic) CreateComment(in *coderhub.CreateCommentRequest) (*
 			Content:      commentModel.Content,
 			ParentId:     commentModel.ParentID,
 			RootId:       commentModel.RootID,
-			UserInfo:     &coderhub.CommentUserInfo{UserId: user.UserId, Username: user.UserName, Avatar: user.Avatar},
+			UserInfo:     user,
 			CreatedAt:    commentModel.CreatedAt.Unix(),
 			UpdatedAt:    commentModel.UpdatedAt.Unix(),
 			Replies:      nil,

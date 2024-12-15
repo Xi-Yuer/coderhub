@@ -25,7 +25,7 @@ func NewGetUserInfoByUsernameLogic(ctx context.Context, svcCtx *svc.ServiceConte
 	}
 }
 
-func (l *GetUserInfoByUsernameLogic) GetUserInfoByUsername(in *coderhub.GetUserInfoByUsernameRequest) (*coderhub.GetUserInfoResponse, error) {
+func (l *GetUserInfoByUsernameLogic) GetUserInfoByUsername(in *coderhub.GetUserInfoByUsernameRequest) (*coderhub.UserInfo, error) {
 	var User *model.User
 	User, err := l.svcCtx.UserRepository.GetUserByName(in.Username)
 	if err != nil {
@@ -34,7 +34,7 @@ func (l *GetUserInfoByUsernameLogic) GetUserInfoByUsername(in *coderhub.GetUserI
 	if User == nil {
 		return nil, errors.New("用户不存在")
 	}
-	return &coderhub.GetUserInfoResponse{
+	return &coderhub.UserInfo{
 		UserId:    User.ID,
 		UserName:  User.UserName,
 		Avatar:    User.Avatar.String,

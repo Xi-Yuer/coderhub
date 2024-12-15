@@ -18,18 +18,6 @@ message CreateUserResponse {int64 user_id = 1;}
 
 message GetUserInfoRequest {int64 user_id = 1;}
 message GetUserInfoByUsernameRequest {string username = 1;}
-message GetUserInfoResponse {
-  int64 user_id = 1;
-  string user_name = 2;
-  string avatar = 3;
-  string email = 4;
-  string password = 5;
-  string nick_name = 6;
-  bool is_admin = 7;
-  bool status = 8;
-  int64 created_at = 9;
-  int64 updated_at = 10;
-}
 
 message BatchGetUserByIDRequest {repeated int64 user_ids = 1;}
 message BatchGetUserByIDResponse {repeated UserInfo user_infos = 1;}
@@ -102,8 +90,8 @@ service UserService {
   rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
 
   // 获取用户信息
-  rpc GetUserInfo (GetUserInfoRequest) returns (GetUserInfoResponse);
-  rpc GetUserInfoByUsername (GetUserInfoByUsernameRequest) returns (GetUserInfoResponse);
+  rpc GetUserInfo (GetUserInfoRequest) returns (UserInfo);
+  rpc GetUserInfoByUsername (GetUserInfoByUsernameRequest) returns (UserInfo);
 
   // 批量获取用户信息
   rpc BatchGetUserByID (BatchGetUserByIDRequest) returns (BatchGetUserByIDResponse);
@@ -413,21 +401,14 @@ message Comment {
   string content = 3;              // 评论内容
   int64 parent_id = 4;             // 父评论ID，用于嵌套评论
   int64 root_id = 5;              // 根评论ID（可选）
-  CommentUserInfo user_info = 6;          // 评论者信息
-  CommentUserInfo reply_to_user_info = 7;  // 被回复的用户信息（可选）
+  UserInfo user_info = 6;          // 评论者信息
+  UserInfo reply_to_user_info = 7;  // 被回复的用户信息（可选）
   int64 created_at = 8;            // 创建时间
   int64 updated_at = 9;            // 更新时间
   repeated Comment replies = 10;     // 子评论列表
   int64 replies_count = 11;          // 子评论数量
   int32 like_count = 12;            // 点赞数
-  repeated CommentImage images = 13;  // 评论包含的图片列表
-}
-
-// 评论者信息
-message CommentUserInfo {
-  int64 user_id = 1;                // 用户ID
-  string username = 2;              // 用户名
-  string avatar = 3;                 // 头像
+  repeated ImageInfo images = 13;  // 评论包含的图片列表
 }
 
 // 创建评论请求
@@ -488,13 +469,6 @@ message DeleteCommentResponse {
   bool success = 1;                // 删除是否成功
 }
 
-// 评论图片
-message CommentImage {
-  string image_id = 1;             // 图片ID（关联到图片服务）
-  string url = 2;                  // 图片URL
-  string thumbnail_url = 3;        // 缩略图URL
-}
-
 // 评论服务定义
 service CommentService {
   // 创建评论
@@ -519,6 +493,7 @@ message ImageRelation {
   string entity_type = 4;      // 关联实体类型(comment/article等)
   string url = 5;             // 图片URL
   string thumbnail_url = 6;   // 图片缩略图URL
+
   int32 sort = 7;              // 排序号
   string created_at = 8;       // 创建时间
 }
