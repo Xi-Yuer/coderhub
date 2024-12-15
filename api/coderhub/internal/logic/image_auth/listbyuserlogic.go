@@ -56,7 +56,6 @@ func (l *ListByUserLogic) successResp(response *coderhub.ListByUserResponse) (*t
 			Height:       val.Height,
 			UploadIp:     val.UploadIp,
 			UserId:       val.UserId,
-			Status:       val.Status,
 			CreatedAt:    val.CreatedAt,
 		})
 	}

@@ -16,7 +16,7 @@ type AcademicHealthLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 健康检查
+// NewAcademicHealthLogic 健康检查
 func NewAcademicHealthLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AcademicHealthLogic {
 	return &AcademicHealthLogic{
 		Logger: logx.WithContext(ctx),

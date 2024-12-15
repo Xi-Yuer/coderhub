@@ -18,7 +18,7 @@ type DeleteAcademicNavigatorLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 删除学术导航
+// NewDeleteAcademicNavigatorLogic 删除学术导航
 func NewDeleteAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteAcademicNavigatorLogic {
 	return &DeleteAcademicNavigatorLogic{
 		Logger: logx.WithContext(ctx),

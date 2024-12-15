@@ -45,8 +45,12 @@ func (l *GetLogic) successResp(response *coderhub.ImageInfo) (*types.GetResponse
 		},
 		Data: &types.ImageInfo{
 			ImageId:      response.ImageId,
+			BucketName:   response.BucketName,
+			ObjectName:   response.ObjectName,
 			Url:          response.Url,
 			ThumbnailUrl: response.ThumbnailUrl,
+			ContentType:  response.ContentType,
+			Size:         response.Size,
 			Width:        response.Width,
 			Height:       response.Height,
 		},

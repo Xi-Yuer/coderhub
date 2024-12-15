@@ -4,7 +4,6 @@ import (
 	"coderhub/rpc/coderhub/coderhub"
 	"coderhub/rpc/coderhub/internal/svc"
 	"context"
-	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -44,7 +43,7 @@ func (l *ListByUserLogic) ListByUser(in *coderhub.ListByUserRequest) (*coderhub.
 			UploadIp:     v.UploadIP,
 			UserId:       v.UserID,
 			Status:       v.Status,
-			CreatedAt:    v.CreatedAt.Format(time.DateTime),
+			CreatedAt:    v.CreatedAt.Unix(),
 		})
 	}
 

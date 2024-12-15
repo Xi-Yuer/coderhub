@@ -39,11 +39,17 @@ func (l *GetImagesByEntityLogic) GetImagesByEntity(in *coderhub.GetImagesByEntit
 	for _, image := range images.Images {
 		imageInfos = append(imageInfos, &coderhub.ImageInfo{
 			ImageId:      image.ImageId,
+			BucketName:   image.BucketName,
+			ObjectName:   image.ObjectName,
 			Url:          image.Url,
 			ThumbnailUrl: image.ThumbnailUrl,
+			ContentType:  image.ContentType,
+			Size:         image.Size,
 			Width:        image.Width,
 			Height:       image.Height,
-			Sort:         0,
+			UploadIp:     image.UploadIp,
+			UserId:       image.UserId,
+			CreatedAt:    image.CreatedAt,
 		})
 	}
 

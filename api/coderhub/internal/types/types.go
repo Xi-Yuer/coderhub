@@ -70,8 +70,8 @@ type DeleteUserResp struct {
 }
 
 type FollowList struct {
-	Total int64        `json:"total"` // 总数
-	List  []UserFollow `json:"list"`  // 关注列表
+	Total int64      `json:"total"` // 总数
+	List  []UserInfo `json:"list"`  // 关注列表
 }
 
 type FollowUserReq struct {
@@ -166,8 +166,7 @@ type ImageInfo struct {
 	Height       int32  `json:"height"`        // 图片高度(px)
 	UploadIp     string `json:"upload_ip"`     // 上传者IP
 	UserId       int64  `json:"user_id"`       // 上传者ID
-	Status       string `json:"status"`        // 状态
-	CreatedAt    string `json:"created_at"`    // 创建时间
+	CreatedAt    int64  `json:"created_at"`    // 创建时间
 }
 
 type ImageInfoList struct {
@@ -219,12 +218,6 @@ type PostAcademicNavigatorLikeResp struct {
 type RegisterReq struct {
 	Username string `json:"username"` // 用户名
 	Password string `json:"password"` // 密码
-	Nickname string `json:"nickname"` // 昵称
-	Email    string `json:"email"`    // 邮箱
-	Phone    string `json:"phone"`    // 手机号
-	Avatar   string `json:"avatar"`   // 头像
-	Gender   int32  `json:"gender"`   // 性别 0:未知 1:男 2:女
-	Age      int32  `json:"age"`      // 年龄
 }
 
 type RegisterResp struct {
@@ -293,7 +286,7 @@ type UpdateUserInfoReq struct {
 	Nickname string `json:"nickname"` // 昵称
 	Email    string `json:"email"`    // 邮箱
 	Phone    string `json:"phone"`    // 手机号
-	Avatar   string `json:"avatar"`   // 头像
+	Avatar   int64  `json:"avatar"`   // 头像
 	Gender   int32  `json:"gender"`   // 性别 0:未知 1:男 2:女
 	Age      int32  `json:"age"`      // 年龄
 }
@@ -308,30 +301,19 @@ type UploadResponse struct {
 	Data *ImageInfo `json:"data"` // 上传的图片信息
 }
 
-type UserFollow struct {
-	Id           int64 `json:"id"`          // 关注ID
-	UserId       int64 `json:"user_id"`     // 用户ID
-	FollowUserId int64 `json:"follow_id"`   // 被关注用户ID
-	Status       int32 `json:"status"`      // 状态 0:未关注 1:已关注
-	CreateTime   int64 `json:"create_time"` // 创建时间
-	UpdateTime   int64 `json:"update_time"` // 更新时间
-}
-
 type UserInfo struct {
-	Id         int64  `json:"id"`          // 用户ID
-	Username   string `json:"username"`    // 用户名
-	Password   string `json:"password"`    // 密码
-	Nickname   string `json:"nickname"`    // 昵称
-	Email      string `json:"email"`       // 邮箱
-	Phone      string `json:"phone"`       // 手机号
-	Avatar     string `json:"avatar"`      // 头像
-	Gender     int32  `json:"gender"`      // 性别 0:未知 1:男 2:女
-	Age        int32  `json:"age"`         // 年龄
-	Status     int32  `json:"status"`      // 状态 0:正常 1:禁用
-	Role       int32  `json:"role"`        // 角色 0:普通用户 1:管理员
-	LastLogin  string `json:"last_login"`  // 最后登录时间
-	CreateTime int64  `json:"create_time"` // 创建时间
-	UpdateTime int64  `json:"update_time"` // 更新时间
+	Id       int64  `json:"id"`        // 用户ID
+	Username string `json:"username"`  // 用户名
+	Nickname string `json:"nickname"`  // 昵称
+	Email    string `json:"email"`     // 邮箱
+	Phone    string `json:"phone"`     // 手机号
+	Avatar   string `json:"avatar"`    // 头像
+	Gender   int32  `json:"gender"`    // 性别 0:未知 1:男 2:女
+	Age      int32  `json:"age"`       // 年龄
+	Status   bool   `json:"status"`    // 状态 true:正常 false:禁用
+	IsAdmin  bool   `json:"is_admin"`  // 角色 0:普通用户 1:管理员
+	CreateAt int64  `json:"create_at"` // 创建时间
+	UpdateAt int64  `json:"update_at"` // 更新时间
 }
 
 type UserList struct {

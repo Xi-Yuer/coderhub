@@ -18,7 +18,7 @@ type CancelLikeAcademicNavigatorLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 取消点赞学术导航
+// NewCancelLikeAcademicNavigatorLogic 取消点赞学术导航
 func NewCancelLikeAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CancelLikeAcademicNavigatorLogic {
 	return &CancelLikeAcademicNavigatorLogic{
 		Logger: logx.WithContext(ctx),

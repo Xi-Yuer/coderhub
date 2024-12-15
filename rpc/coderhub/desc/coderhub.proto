@@ -39,11 +39,15 @@ message UserInfo {
   string user_name = 2;
   string avatar = 3;
   string email = 4;
-  string nick_name = 5;
-  bool is_admin = 6;
-  int32 status = 7;
-  int64 created_at = 8;
-  int64 updated_at = 9;
+  string password = 5;
+  int32 gender = 6;
+  int32 age = 7;
+  string phone = 8;
+  string nick_name = 9;
+  bool is_admin = 10;
+  bool status = 11;
+  int64 created_at = 12;
+  int64 updated_at = 13;
 }
 
 message UpdateUserInfoRequest {
@@ -591,12 +595,18 @@ message GetEntitiesByImageResponse {
 
 // 图片信息
 message ImageInfo {
-  int64 image_id = 1;
-  string url = 2;
-  string thumbnail_url = 3;
-  int32 width = 4;
-  int32 height = 5;
-  int32 sort = 6;          // 排序号
+  int64 image_id = 1;         // 图片ID
+  string bucket_name = 2;     // MinIO bucket名称
+  string object_name = 3;     // MinIO中的对象名称
+  string url = 4;             // 完整的访问URL
+  string thumbnail_url = 5;   // 缩略图URL
+  string content_type = 6;   // 文件MIME类型
+  int64 size = 7;             // 文件大小(bytes)
+  int32 width = 8;            // 图片宽度(px)
+  int32 height = 9;           // 图片高度(px)
+  string upload_ip = 10;      // 上传者IP
+  int64 user_id = 11;         // 上传者ID
+  int64 created_at = 12;      // 创建时间
 }
 
 // 实体信息
@@ -686,7 +696,7 @@ message UploadImageInfo {
   string upload_ip = 10;    // 上传者IP
   int64 user_id = 11;      // 上传者ID
   string status = 12;      // 状态
-  string created_at = 13;   // 创建时间
+  int64 created_at = 13;   // 创建时间
 }
 
 // 图片服务

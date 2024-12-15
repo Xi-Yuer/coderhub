@@ -39,14 +39,21 @@ func (l *GetFollowListLogic) GetFollowList(req *types.GetFollowListReq) (resp *t
 }
 
 func (l *GetFollowListLogic) successResp(userFollowsResp *coderhub.GetUserFollowsResp) (*types.GetFollowListResp, error) {
-	userFollowsList := make([]types.UserFollow, 0, len(userFollowsResp.UserFollows))
+	userFollowsList := make([]types.UserInfo, 0, len(userFollowsResp.UserFollows))
 	for _, userFollow := range userFollowsResp.UserFollows {
-		userFollowsList = append(userFollowsList, types.UserFollow{
-			UserId:       userFollow.UserId,
-			FollowUserId: userFollow.UserId,
-			Status:       userFollow.Status,
-			CreateTime:   userFollow.CreatedAt,
-			UpdateTime:   userFollow.UpdatedAt,
+		userFollowsList = append(userFollowsList, types.UserInfo{
+			Id:       userFollow.UserId,
+			Username: userFollow.UserName,
+			Nickname: userFollow.NickName,
+			Email:    userFollow.Email,
+			Phone:    userFollow.Phone,
+			Avatar:   userFollow.Avatar,
+			Gender:   userFollow.Gender,
+			Age:      userFollow.Age,
+			Status:   userFollow.Status,
+			IsAdmin:  userFollow.IsAdmin,
+			CreateAt: userFollow.CreatedAt,
+			UpdateAt: userFollow.UpdatedAt,
 		})
 	}
 	return &types.GetFollowListResp{

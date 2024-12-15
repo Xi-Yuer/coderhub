@@ -65,9 +65,16 @@ func (l *UploadLogic) Upload(in *coderhub.UploadRequest) (*coderhub.ImageInfo, e
 
 	return &coderhub.ImageInfo{
 		ImageId:      ID,
+		BucketName:   imageInfo.BucketName,
+		ObjectName:   imageInfo.ObjectName,
 		Url:          imageInfo.URL,
 		ThumbnailUrl: imageInfo.ThumbnailURL,
 		Width:        int32(imageInfo.Width),
 		Height:       int32(imageInfo.Height),
+		ContentType:  in.ContentType,
+		Size:         imageInfo.Size,
+		UploadIp:     "",
+		UserId:       in.UserId,
+		CreatedAt:    time.Now().Unix(),
 	}, nil
 }

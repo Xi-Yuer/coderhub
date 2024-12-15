@@ -40,15 +40,21 @@ func (l *GetFansListLogic) GetFansList(req *types.GetFansListReq) (resp *types.G
 }
 
 func (l *GetFansListLogic) successResp(userFansResp *coderhub.GetUserFansResp) (*types.GetFansListResp, error) {
-	userFansList := make([]types.UserFollow, 0, len(userFansResp.UserFans))
+	userFansList := make([]types.UserInfo, 0, len(userFansResp.UserFans))
 	for _, userFan := range userFansResp.UserFans {
-		userFansList = append(userFansList, types.UserFollow{
-			Id:           0,
-			UserId:       userFan.UserId,
-			FollowUserId: 0,
-			Status:       userFan.Status,
-			CreateTime:   userFan.CreatedAt,
-			UpdateTime:   userFan.UpdatedAt,
+		userFansList = append(userFansList, types.UserInfo{
+			Id:       userFan.UserId,
+			Username: userFan.UserName,
+			Nickname: userFan.NickName,
+			Email:    userFan.Email,
+			Phone:    userFan.Phone,
+			Avatar:   userFan.Avatar,
+			Gender:   userFan.Gender,
+			Age:      userFan.Age,
+			Status:   userFan.Status,
+			IsAdmin:  userFan.IsAdmin,
+			CreateAt: userFan.CreatedAt,
+			UpdateAt: userFan.UpdatedAt,
 		})
 	}
 

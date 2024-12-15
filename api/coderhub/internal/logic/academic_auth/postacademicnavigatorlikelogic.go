@@ -18,7 +18,7 @@ type PostAcademicNavigatorLikeLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 点赞学术导航
+// NewPostAcademicNavigatorLikeLogic 点赞学术导航
 func NewPostAcademicNavigatorLikeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PostAcademicNavigatorLikeLogic {
 	return &PostAcademicNavigatorLikeLogic{
 		Logger: logx.WithContext(ctx),

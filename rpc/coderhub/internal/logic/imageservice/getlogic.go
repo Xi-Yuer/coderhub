@@ -30,9 +30,16 @@ func (l *GetLogic) Get(in *coderhub.GetRequest) (*coderhub.ImageInfo, error) {
 	}
 	return &coderhub.ImageInfo{
 		ImageId:      imageModel.ID,
+		BucketName:   imageModel.BucketName,
+		ObjectName:   imageModel.ObjectName,
 		Url:          imageModel.URL,
 		ThumbnailUrl: imageModel.ThumbnailURL,
+		ContentType:  imageModel.ContentType,
+		Size:         imageModel.Size,
 		Width:        imageModel.Width,
 		Height:       imageModel.Height,
+		UploadIp:     imageModel.UploadIP,
+		UserId:       imageModel.UserID,
+		CreatedAt:    imageModel.CreatedAt.Unix(),
 	}, nil
 }

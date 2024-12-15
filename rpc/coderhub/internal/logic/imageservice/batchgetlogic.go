@@ -2,7 +2,6 @@ package imageservicelogic
 
 import (
 	"context"
-	"time"
 
 	"coderhub/rpc/coderhub/coderhub"
 	"coderhub/rpc/coderhub/internal/svc"
@@ -45,7 +44,7 @@ func (l *BatchGetLogic) BatchGet(in *coderhub.BatchGetRequest) (*coderhub.BatchG
 			UploadIp:     value.UploadIP,
 			UserId:       value.UserID,
 			Status:       value.Status,
-			CreatedAt:    value.CreatedAt.Format(time.DateTime),
+			CreatedAt:    value.CreatedAt.Unix(),
 		})
 	}
 
