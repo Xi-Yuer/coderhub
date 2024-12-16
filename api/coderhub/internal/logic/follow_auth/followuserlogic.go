@@ -18,7 +18,7 @@ type FollowUserLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 关注用户
+// NewFollowUserLogic 关注用户
 func NewFollowUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowUserLogic {
 	return &FollowUserLogic{
 		Logger: logx.WithContext(ctx),

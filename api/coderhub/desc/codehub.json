@@ -1778,7 +1778,8 @@
         "image_ids": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "integer",
+            "format": "int64"
           },
           "description": " 图片ID列表"
         }
