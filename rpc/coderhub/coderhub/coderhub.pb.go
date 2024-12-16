@@ -3705,13 +3705,13 @@ type CreateCommentRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ArticleId  int64    `protobuf:"varint,1,opt,name=article_id,json=articleId,proto3" json:"article_id,omitempty"`      // 文章ID
-	Content    string   `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`                            // 评论内容
-	ParentId   int64    `protobuf:"varint,3,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`         // 父评论ID（可选）
-	RootId     int64    `protobuf:"varint,4,opt,name=root_id,json=rootId,proto3" json:"root_id,omitempty"`               // 根评论ID（可选）
-	UserId     int64    `protobuf:"varint,5,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`               // 评论者ID
-	ReplyToUid int64    `protobuf:"varint,6,opt,name=reply_to_uid,json=replyToUid,proto3" json:"reply_to_uid,omitempty"` // 被回复的用户ID（可选）
-	ImageIds   []string `protobuf:"bytes,7,rep,name=image_ids,json=imageIds,proto3" json:"image_ids,omitempty"`          // 图片ID列表
+	ArticleId  int64   `protobuf:"varint,1,opt,name=article_id,json=articleId,proto3" json:"article_id,omitempty"`      // 文章ID
+	Content    string  `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`                            // 评论内容
+	ParentId   int64   `protobuf:"varint,3,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`         // 父评论ID（可选）
+	RootId     int64   `protobuf:"varint,4,opt,name=root_id,json=rootId,proto3" json:"root_id,omitempty"`               // 根评论ID（可选）
+	UserId     int64   `protobuf:"varint,5,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`               // 评论者ID
+	ReplyToUid int64   `protobuf:"varint,6,opt,name=reply_to_uid,json=replyToUid,proto3" json:"reply_to_uid,omitempty"` // 被回复的用户ID（可选）
+	ImageIds   []int64 `protobuf:"varint,7,rep,packed,name=image_ids,json=imageIds,proto3" json:"image_ids,omitempty"`  // 图片ID列表
 }
 
 func (x *CreateCommentRequest) Reset() {
@@ -3786,7 +3786,7 @@ func (x *CreateCommentRequest) GetReplyToUid() int64 {
 	return 0
 }
 
-func (x *CreateCommentRequest) GetImageIds() []string {
+func (x *CreateCommentRequest) GetImageIds() []int64 {
 	if x != nil {
 		return x.ImageIds
 	}
@@ -6228,7 +6228,7 @@ var file_coderhub_proto_rawDesc = []byte{
 	0x03, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x20, 0x0a, 0x0c, 0x72, 0x65, 0x70,
 	0x6c, 0x79, 0x5f, 0x74, 0x6f, 0x5f, 0x75, 0x69, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52,
 	0x0a, 0x72, 0x65, 0x70, 0x6c, 0x79, 0x54, 0x6f, 0x55, 0x69, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x69,
-	0x6d, 0x61, 0x67, 0x65, 0x5f, 0x69, 0x64, 0x73, 0x18, 0x07, 0x20, 0x03, 0x28, 0x09, 0x52, 0x08,
+	0x6d, 0x61, 0x67, 0x65, 0x5f, 0x69, 0x64, 0x73, 0x18, 0x07, 0x20, 0x03, 0x28, 0x03, 0x52, 0x08,
 	0x69, 0x6d, 0x61, 0x67, 0x65, 0x49, 0x64, 0x73, 0x22, 0x44, 0x0a, 0x15, 0x43, 0x72, 0x65, 0x61,
 	0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
 	0x65, 0x12, 0x2b, 0x0a, 0x07, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01,

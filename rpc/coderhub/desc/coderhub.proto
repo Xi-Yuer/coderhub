@@ -419,7 +419,7 @@ message CreateCommentRequest {
   int64 root_id = 4;              // 根评论ID（可选）
   int64 user_id = 5;               // 评论者ID
   int64 reply_to_uid = 6;         // 被回复的用户ID（可选）
-  repeated string image_ids = 7;      // 图片ID列表
+  repeated int64 image_ids = 7;      // 图片ID列表
 }
 
 message CreateCommentResponse {

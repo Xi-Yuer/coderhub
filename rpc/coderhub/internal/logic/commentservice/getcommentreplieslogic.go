@@ -26,7 +26,7 @@ func NewGetCommentRepliesLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 	}
 }
 
-// 获取某条评论的子评论列表
+// GetCommentReplies 获取某条评论的子评论列表
 func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentRepliesRequest) (*coderhub.GetCommentRepliesResponse, error) {
 	// 获取回复列表
 	replies, total, err := l.svcCtx.CommentRepository.ListReplies(l.ctx, in.CommentId, int64(in.Page), int64(in.PageSize))

@@ -3,6 +3,7 @@ package comments_auth
 import (
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/client/commentservice"
+	"coderhub/rpc/coderhub/coderhub"
 	"coderhub/shared/utils"
 	"context"
 
@@ -33,7 +34,7 @@ func (l *CreateCommentLogic) CreateComment(req *types.CreateCommentReq) (resp *t
 	if err != nil {
 		return nil, err
 	}
-	comment, err := l.svcCtx.CommentService.CreateComment(ctx, &commentservice.CreateCommentRequest{
+	comment, err := l.svcCtx.CommentService.CreateComment(ctx, &coderhub.CreateCommentRequest{
 		ArticleId:  req.ArticleId,
 		Content:    req.Content,
 		ParentId:   req.ParentId,

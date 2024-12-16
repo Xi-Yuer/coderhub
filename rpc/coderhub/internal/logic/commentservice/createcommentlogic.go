@@ -2,14 +2,12 @@ package commentservicelogic
 
 import (
 	"coderhub/model"
+	"coderhub/rpc/coderhub/coderhub"
 	imagerelationservicelogic "coderhub/rpc/coderhub/internal/logic/imagerelationservice"
 	userservicelogic "coderhub/rpc/coderhub/internal/logic/userservice"
+	"coderhub/rpc/coderhub/internal/svc"
 	"coderhub/shared/utils"
 	"context"
-	"strconv"
-
-	"coderhub/rpc/coderhub/coderhub"
-	"coderhub/rpc/coderhub/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -49,12 +47,11 @@ func (l *CreateCommentLogic) CreateComment(in *coderhub.CreateCommentRequest) (*
 	var imageRelationModels []*coderhub.CreateRelationRequest
 	if len(in.ImageIds) > 0 {
 		for _, imageId := range in.ImageIds {
-			imageIdInt, err := strconv.ParseInt(imageId, 10, 64)
 			if err != nil {
 				return nil, err
 			}
 			imageRelationModels = append(imageRelationModels, &coderhub.CreateRelationRequest{
-				ImageId:    imageIdInt,
+				ImageId:    imageId,
 				EntityId:   CommentID,
 				EntityType: model.ImageRelationComment,
 			})
