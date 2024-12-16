@@ -4,6 +4,7 @@ import (
 	"coderhub/model"
 	"coderhub/shared/storage"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"gorm.io/gorm"
@@ -42,7 +43,17 @@ type UserFollowRepositoryImpl struct {
 
 // CreateUserFollow 创建用户关注关系
 func (r *UserFollowRepositoryImpl) CreateUserFollow(userFollow *model.UserFollow) error {
-	return r.DB.Model(&model.UserFollow{}).Create(userFollow).Error
+	isFollowed, err := r.IsUserFollowed(userFollow.FollowerID, userFollow.FollowedID)
+	if err != nil {
+		return err
+	}
+	if isFollowed {
+		return errors.New("已关注")
+	}
+	if userFollow.FollowerID == userFollow.FollowedID {
+		return errors.New("不能关注自己")
+	}
+	return r.DB.Create(userFollow).Error
 }
 
 // DeleteUserFollow 删除用户关注关系
