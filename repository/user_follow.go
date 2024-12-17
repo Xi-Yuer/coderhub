@@ -53,12 +53,12 @@ func (r *UserFollowRepositoryImpl) CreateUserFollow(userFollow *model.UserFollow
 	if userFollow.FollowerID == userFollow.FollowedID {
 		return errors.New("不能关注自己")
 	}
-	return r.DB.Create(userFollow).Error
+	return r.DB.Model(&model.UserFollow{}).Create(userFollow).Error
 }
 
 // DeleteUserFollow 删除用户关注关系
 func (r *UserFollowRepositoryImpl) DeleteUserFollow(userFollow *model.UserFollow) error {
-	return r.DB.Model(&model.UserFollow{}).Delete(userFollow).Where("follower_id = ? AND followed_id = ?", userFollow.FollowerID, userFollow.FollowedID).Error
+	return r.DB.Model(&model.UserFollow{}).Where("follower_id = ? AND followed_id = ?", userFollow.FollowerID, userFollow.FollowedID).Unscoped().Delete(userFollow).Error
 }
 
 // GetUserFollows 查询用户关注的所有用户

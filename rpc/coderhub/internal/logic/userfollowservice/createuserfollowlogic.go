@@ -26,25 +26,6 @@ func NewCreateUserFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 // CreateUserFollow 创建用户关注关系
 func (l *CreateUserFollowLogic) CreateUserFollow(in *coderhub.CreateUserFollowReq) (*coderhub.CreateUserFollowResp, error) {
-	// 是否已经关注
-	exist, err := l.svcCtx.UserFollowRepository.IsUserFollowed(in.FollowerId, in.FollowedId)
-	if err != nil {
-		return nil, err
-	}
-	if exist {
-		// 取消关注
-		err = l.svcCtx.UserFollowRepository.DeleteUserFollow(&model.UserFollow{
-			FollowerID: in.FollowerId,
-			FollowedID: in.FollowedId,
-		})
-		if err != nil {
-			return nil, err
-		}
-		return &coderhub.CreateUserFollowResp{
-			Success: true,
-		}, nil
-	}
-
 	if err := l.svcCtx.UserFollowRepository.CreateUserFollow(&model.UserFollow{
 		FollowerID: in.FollowerId,
 		FollowedID: in.FollowedId,

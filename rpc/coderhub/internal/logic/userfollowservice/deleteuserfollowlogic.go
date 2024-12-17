@@ -26,6 +26,7 @@ func NewDeleteUserFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 // DeleteUserFollow 删除用户关注关系
 func (l *DeleteUserFollowLogic) DeleteUserFollow(in *coderhub.DeleteUserFollowReq) (*coderhub.DeleteUserFollowResp, error) {
+	l.Logger.Info("DeleteUserFollow", in.FollowedId, in.FollowerId)
 	err := l.svcCtx.UserFollowRepository.DeleteUserFollow(&model.UserFollow{
 		FollowerID: in.FollowerId,
 		FollowedID: in.FollowedId,

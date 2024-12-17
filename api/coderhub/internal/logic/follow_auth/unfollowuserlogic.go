@@ -18,7 +18,7 @@ type UnfollowUserLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 取消关注
+// NewUnfollowUserLogic 取消关注
 func NewUnfollowUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UnfollowUserLogic {
 	return &UnfollowUserLogic{
 		Logger: logx.WithContext(ctx),
