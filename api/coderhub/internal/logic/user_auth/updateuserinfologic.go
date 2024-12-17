@@ -18,7 +18,7 @@ type UpdateUserInfoLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 更新用户信息
+// NewUpdateUserInfoLogic 更新用户信息
 func NewUpdateUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateUserInfoLogic {
 	return &UpdateUserInfoLogic{
 		Logger: logx.WithContext(ctx),
@@ -35,15 +35,18 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(req *types.UpdateUserInfoReq) (resp
 	}
 	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 
-	// 上传图片
-	response, err := l.svcCtx.UserService.UploadAvatar(ctx, &coderhub.UploadAvatarRequest{
-		UserId:  userID,
-		ImageId: req.Id,
+	userInfo, err := l.svcCtx.UserService.UpdateUserInfo(ctx, &coderhub.UpdateUserInfoRequest{
+		UserId:   userID,
+		Email:    req.Email,
+		Nickname: req.Nickname,
+		Age:      req.Age,
+		Gender:   req.Gender,
+		Phone:    req.Phone,
 	})
 	if err != nil {
-		return l.errorResp(err)
+		return nil, err
 	}
-	return l.successResp(response)
+	return l.successResp(userInfo)
 }
 
 func (l *UpdateUserInfoLogic) errorResp(err error) (*types.UpdateUserInfoResp, error) {
@@ -56,7 +59,7 @@ func (l *UpdateUserInfoLogic) errorResp(err error) (*types.UpdateUserInfoResp, e
 	}, nil
 }
 
-func (l *UpdateUserInfoLogic) successResp(data *coderhub.UploadAvatarResponse) (*types.UpdateUserInfoResp, error) {
+func (l *UpdateUserInfoLogic) successResp(data *coderhub.UpdateUserInfoResponse) (*types.UpdateUserInfoResp, error) {
 	return &types.UpdateUserInfoResp{
 		Response: types.Response{
 			Code:    conf.HttpCode.HttpStatusOK,

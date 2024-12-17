@@ -978,7 +978,7 @@
         ]
       }
     },
-    "/api/user/change-password": {
+    "/api/user/change_password": {
       "post": {
         "summary": "修改密码",
         "operationId": "ChangePassword",
@@ -1186,7 +1186,38 @@
         ]
       }
     },
-    "/api/user/reset-password": {
+    "/api/user/reset-password-by-link": {
+      "post": {
+        "summary": "通过链接重置密码",
+        "operationId": "ResetPasswordByLink",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ResetPasswordByLinkResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 通过链接重置密码",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ResetPasswordByLinkReq"
+            }
+          }
+        ],
+        "tags": [
+          "user_public"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/api/user/reset_password": {
       "post": {
         "summary": "重置密码",
         "operationId": "ResetPassword",
@@ -1216,37 +1247,6 @@
           {
             "apiKey": []
           }
-        ]
-      }
-    },
-    "/api/user/reset-password-by-link": {
-      "post": {
-        "summary": "通过链接重置密码",
-        "operationId": "ResetPasswordByLink",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/ResetPasswordByLinkResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": " 通过链接重置密码",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ResetPasswordByLinkReq"
-            }
-          }
-        ],
-        "tags": [
-          "user_public"
-        ],
-        "consumes": [
-          "multipart/form-data"
         ]
       }
     },
@@ -1307,6 +1307,45 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/UpdateUserInfoReq"
+            }
+          }
+        ],
+        "tags": [
+          "user_auth"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/user/update_avatar/{id}": {
+      "put": {
+        "summary": "更新用户头像",
+        "operationId": "UpdateUserAvatar",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UpdateUserAvatarResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 更新用户头像",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateUserAvatarReq"
             }
           }
         ],
@@ -3136,6 +3175,43 @@
         "data"
       ]
     },
+    "UpdateUserAvatarReq": {
+      "type": "object",
+      "properties": {
+        "avatar": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 头像"
+        }
+      },
+      "title": "UpdateUserAvatarReq",
+      "required": [
+        "avatar"
+      ]
+    },
+    "UpdateUserAvatarResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否更新成功"
+        }
+      },
+      "title": "UpdateUserAvatarResp",
+      "required": [
+        "data"
+      ]
+    },
     "UpdateUserInfoReq": {
       "type": "object",
       "properties": {
@@ -3150,11 +3226,6 @@
         "phone": {
           "type": "string",
           "description": " 手机号"
-        },
-        "avatar": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 头像"
         },
         "gender": {
           "type": "integer",
@@ -3172,7 +3243,6 @@
         "nickname",
         "email",
         "phone",
-        "avatar",
         "gender",
         "age"
       ]

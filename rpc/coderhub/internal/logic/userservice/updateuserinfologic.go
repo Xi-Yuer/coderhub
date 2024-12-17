@@ -2,17 +2,15 @@ package userservicelogic
 
 import (
 	"coderhub/model"
+	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/rpc/coderhub/internal/svc"
 	"coderhub/shared/utils"
 	"context"
 	"database/sql"
 	"errors"
 	"fmt"
-	"strconv"
-
-	"coderhub/rpc/coderhub/coderhub"
-	"coderhub/rpc/coderhub/internal/svc"
-
 	"github.com/zeromicro/go-zero/core/logx"
+	"strconv"
 )
 
 type UpdateUserInfoLogic struct {
@@ -54,8 +52,10 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(in *coderhub.UpdateUserInfoRequest)
 		UserName: oldUser.UserName,
 		Password: oldUser.Password,
 		NickName: sql.NullString{String: in.Nickname, Valid: in.Nickname != ""},
+		Phone:    sql.NullString{String: in.Phone, Valid: in.Phone != ""},
+		Age:      in.Age,
+		Gender:   in.Gender,
 		Email:    sql.NullString{String: in.Email, Valid: in.Email != ""},
-		Avatar:   oldUser.Avatar,
 		Status:   oldUser.Status,
 		IsAdmin:  oldUser.IsAdmin,
 	}); err != nil {

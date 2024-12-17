@@ -442,12 +442,20 @@ type UpdatePasswordResp struct {
 	Data bool `json:"data"` // 是否修改成功
 }
 
+type UpdateUserAvatarReq struct {
+	Avatar int64 `json:"avatar"` // 头像
+}
+
+type UpdateUserAvatarResp struct {
+	Response
+	Data bool `json:"data"` // 是否更新成功
+}
+
 type UpdateUserInfoReq struct {
 	Id       int64  `path:"id"`       // 用户ID
 	Nickname string `json:"nickname"` // 昵称
 	Email    string `json:"email"`    // 邮箱
 	Phone    string `json:"phone"`    // 手机号
-	Avatar   int64  `json:"avatar"`   // 头像
 	Gender   int32  `json:"gender"`   // 性别 0:未知 1:男 2:女
 	Age      int32  `json:"age"`      // 年龄
 }

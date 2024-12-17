@@ -42,6 +42,9 @@ message UpdateUserInfoRequest {
   int64 user_id = 1;
   string email = 2;
   string nickname = 3;
+  int32 age = 4;
+  int32 gender = 5;
+  string phone = 6;
 }
 
 message UpdateUserInfoResponse {bool success = 1;}

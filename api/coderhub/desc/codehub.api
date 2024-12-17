@@ -81,12 +81,20 @@ type (
 		Nickname string `json:"nickname"` // 昵称
 		Email    string `json:"email"` // 邮箱
 		Phone    string `json:"phone"` // 手机号
-		Avatar int64 `json:"avatar"` // 头像
 		Gender   int32  `json:"gender"` // 性别 0:未知 1:男 2:女
 		Age      int32  `json:"age"` // 年龄
 	}
 	// 更新用户信息响应
 	UpdateUserInfoResp {
+		Response
+		Data bool `json:"data"` // 是否更新成功
+	}
+		// 更新用户头像
+	UpdateUserAvatarReq {
+		Avatar int64 `json:"avatar"` // 头像
+	}
+		// 更新用户头像响应
+	UpdateUserAvatarResp {
 		Response
 		Data bool `json:"data"` // 是否更新成功
 	}
@@ -542,6 +550,12 @@ service CodeHubAPI {
 	@handler UpdateUserInfo
 	put /update/:id (UpdateUserInfoReq) returns (UpdateUserInfoResp)
 
+	@doc(
+		summary: "更新用户头像"
+	)
+	@handler UpdateUserAvatar
+	put /update_avatar/:id (UpdateUserAvatarReq) returns (UpdateUserAvatarResp)
+
 	@doc (
 		summary: "删除用户"
 	)
@@ -552,13 +566,13 @@ service CodeHubAPI {
 		summary: "修改密码"
 	)
 	@handler ChangePassword
-	post /change-password (UpdatePasswordReq) returns (UpdatePasswordResp)
+	post /change_password (UpdatePasswordReq) returns (UpdatePasswordResp)
 
 	@doc (
 		summary: "重置密码"
 	)
 	@handler ResetPassword
-	post /reset-password (ResetPasswordReq) returns (ResetPasswordResp)
+	post /reset_password (ResetPasswordReq) returns (ResetPasswordResp)
 }
 
 // 用户关注服务 - 公共路由

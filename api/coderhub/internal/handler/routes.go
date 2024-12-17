@@ -249,7 +249,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// 修改密码
 				Method:  http.MethodPost,
-				Path:    "/change-password",
+				Path:    "/change_password",
 				Handler: user_auth.ChangePasswordHandler(serverCtx),
 			},
 			{
@@ -261,7 +261,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// 重置密码
 				Method:  http.MethodPost,
-				Path:    "/reset-password",
+				Path:    "/reset_password",
 				Handler: user_auth.ResetPasswordHandler(serverCtx),
 			},
 			{
@@ -269,6 +269,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPut,
 				Path:    "/update/:id",
 				Handler: user_auth.UpdateUserInfoHandler(serverCtx),
+			},
+			{
+				// 更新用户头像
+				Method:  http.MethodPut,
+				Path:    "/update_avatar/:id",
+				Handler: user_auth.UpdateUserAvatarHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
