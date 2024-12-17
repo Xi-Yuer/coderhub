@@ -24,7 +24,7 @@ func NewGetUserFollowsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 	}
 }
 
-// 获取用户关注列表
+// GetUserFollows 获取用户关注列表
 func (l *GetUserFollowsLogic) GetUserFollows(in *coderhub.GetUserFollowsReq) (*coderhub.GetUserFollowsResp, error) {
 	// 获取关注列表
 	userFollows, err := l.svcCtx.UserFollowRepository.GetUserFollows(in.FollowerId, in.Page, in.PageSize)
@@ -53,6 +53,9 @@ func (l *GetUserFollowsLogic) GetUserFollows(in *coderhub.GetUserFollowsReq) (*c
 			UserName:  userInfo.UserName,
 			Avatar:    userInfo.Avatar,
 			Email:     userInfo.Email,
+			Gender:    0,
+			Age:       0,
+			Phone:     "",
 			NickName:  userInfo.NickName,
 			IsAdmin:   userInfo.IsAdmin,
 			Status:    userInfo.Status,
@@ -60,7 +63,7 @@ func (l *GetUserFollowsLogic) GetUserFollows(in *coderhub.GetUserFollowsReq) (*c
 			UpdatedAt: userInfo.UpdatedAt,
 		})
 	}
-
+	l.Logger.Info("userInfos_length", len(userInfos))
 	return &coderhub.GetUserFollowsResp{
 		UserFollows: userInfos,
 		Total:       int64(len(userFollows)),

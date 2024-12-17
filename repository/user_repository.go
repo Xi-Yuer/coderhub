@@ -105,7 +105,10 @@ func (r *UserRepositoryImpl) FindOneByEmail(email string) (*model.User, error) {
 
 func (r *UserRepositoryImpl) BatchGetUserByID(ids []int64) ([]*model.User, error) {
 	var users []*model.User
-	return users, r.DB.Where("id IN (?)", ids).Find(&users).Error
+	fmt.Println("repository_ids", ids)
+	err := r.DB.Where("id IN (?)", ids).Find(&users).Error
+	fmt.Println("repository_users_length", len(users))
+	return users, err
 }
 
 func (r *UserRepositoryImpl) UpdateUser(user *model.User) error {

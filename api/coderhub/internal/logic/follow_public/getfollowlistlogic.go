@@ -17,7 +17,7 @@ type GetFollowListLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 获取关注列表
+// NewGetFollowListLogic 获取关注列表
 func NewGetFollowListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFollowListLogic {
 	return &GetFollowListLogic{
 		Logger: logx.WithContext(ctx),
