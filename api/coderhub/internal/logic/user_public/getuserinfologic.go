@@ -17,7 +17,7 @@ type GetUserInfoLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 获取用户信息
+// NewGetUserInfoLogic 获取用户信息
 func NewGetUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserInfoLogic {
 	return &GetUserInfoLogic{
 		Logger: logx.WithContext(ctx),
@@ -47,10 +47,10 @@ func (l *GetUserInfoLogic) GetUserInfo(req *types.GetUserInfoReq) (resp *types.G
 			Username: UserInfo.UserName,
 			Nickname: UserInfo.NickName,
 			Email:    UserInfo.Email,
-			Phone:    "",
+			Phone:    UserInfo.Phone,
 			Avatar:   UserInfo.Avatar,
-			Gender:   0,
-			Age:      0,
+			Gender:   UserInfo.Gender,
+			Age:      UserInfo.Age,
 			Status:   UserInfo.Status,
 			IsAdmin:  UserInfo.IsAdmin,
 			CreateAt: UserInfo.CreatedAt,

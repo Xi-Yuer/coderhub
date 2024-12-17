@@ -119,8 +119,9 @@ func (r *UserRepositoryImpl) UpdateUser(user *model.User) error {
 			return fmt.Errorf("获取用户失败: %w", err)
 		}
 
-		if err := tx.Save(user).Error; err != nil {
-			return fmt.Errorf("更新用户失败: %w", err)
+		updates := tx.Model(&model.User{}).Where("id = ?", user.ID).Updates(user)
+		if err := updates.Error; err != nil {
+			return err
 		}
 		// 清理所有相关缓存
 		keys := []string{

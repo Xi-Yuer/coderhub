@@ -273,7 +273,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// 更新用户头像
 				Method:  http.MethodPut,
-				Path:    "/update_avatar/:id",
+				Path:    "/update_avatar",
 				Handler: user_auth.UpdateUserAvatarHandler(serverCtx),
 			},
 		},

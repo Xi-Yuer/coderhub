@@ -1320,7 +1320,7 @@
         ]
       }
     },
-    "/api/user/update_avatar/{id}": {
+    "/api/user/update_avatar": {
       "put": {
         "summary": "更新用户头像",
         "operationId": "UpdateUserAvatar",
@@ -1333,12 +1333,6 @@
           }
         },
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
           {
             "name": "body",
             "description": " 更新用户头像",
@@ -3026,16 +3020,7 @@
           "description": " 文章状态"
         }
       },
-      "title": "UpdateArticleReq",
-      "required": [
-        "title",
-        "content",
-        "summary",
-        "imageIds",
-        "coverImageID",
-        "tags",
-        "status"
-      ]
+      "title": "UpdateArticleReq"
     },
     "UpdateArticleResp": {
       "type": "object",
@@ -3230,22 +3215,20 @@
         "gender": {
           "type": "integer",
           "format": "int32",
+          "enum": [
+            "0",
+            "1"
+          ],
           "description": " 性别 0:未知 1:男 2:女"
         },
         "age": {
           "type": "integer",
           "format": "int32",
-          "description": " 年龄"
+          "description": " 年龄",
+          "maximum": 120
         }
       },
-      "title": "UpdateUserInfoReq",
-      "required": [
-        "nickname",
-        "email",
-        "phone",
-        "gender",
-        "age"
-      ]
+      "title": "UpdateUserInfoReq"
     },
     "UpdateUserInfoResp": {
       "type": "object",
@@ -3323,12 +3306,17 @@
         "gender": {
           "type": "integer",
           "format": "int32",
+          "enum": [
+            "0",
+            "1"
+          ],
           "description": " 性别 0:未知 1:男 2:女"
         },
         "age": {
           "type": "integer",
           "format": "int32",
-          "description": " 年龄"
+          "description": " 年龄",
+          "maximum": 120
         },
         "status": {
           "type": "boolean",

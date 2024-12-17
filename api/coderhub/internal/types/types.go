@@ -399,14 +399,14 @@ type UnfollowUserResp struct {
 }
 
 type UpdateArticleReq struct {
-	Id           int64    `path:"id"`           // 文章 ID
-	Title        string   `json:"title"`        // 标题
-	Content      string   `json:"content"`      // 内容
-	Summary      string   `json:"summary"`      // 摘要
-	ImageIds     []int64  `json:"imageIds"`     // 图片 URL 列表
-	CoverImageID int64    `json:"coverImageID"` // 封面图片 URL
-	Tags         []string `json:"tags"`         // 标签列表
-	Status       string   `json:"status"`       // 文章状态
+	Id           int64    `path:"id"`                        // 文章 ID
+	Title        string   `json:"title,optional"`            // 标题
+	Content      string   `json:"content,optional,optional"` // 内容
+	Summary      string   `json:"summary,optional"`          // 摘要
+	ImageIds     []int64  `json:"imageIds,optional"`         // 图片 URL 列表
+	CoverImageID int64    `json:"coverImageID,optional"`     // 封面图片 URL
+	Tags         []string `json:"tags,optional"`             // 标签列表
+	Status       string   `json:"status,optional"`           // 文章状态
 }
 
 type UpdateArticleResp struct {
@@ -452,12 +452,12 @@ type UpdateUserAvatarResp struct {
 }
 
 type UpdateUserInfoReq struct {
-	Id       int64  `path:"id"`       // 用户ID
-	Nickname string `json:"nickname"` // 昵称
-	Email    string `json:"email"`    // 邮箱
-	Phone    string `json:"phone"`    // 手机号
-	Gender   int32  `json:"gender"`   // 性别 0:未知 1:男 2:女
-	Age      int32  `json:"age"`      // 年龄
+	Id       int64  `path:"id"`                          // 用户ID
+	Nickname string `json:"nickname,optional"`           // 昵称
+	Email    string `json:"email,optional"`              // 邮箱
+	Phone    string `json:"phone,optional"`              // 手机号
+	Gender   int32  `json:"gender,options=0|1,optional"` // 性别 0:未知 1:男 2:女
+	Age      int32  `json:"age,range=[0:120],optional"`  // 年龄
 }
 
 type UpdateUserInfoResp struct {
@@ -471,18 +471,18 @@ type UploadResponse struct {
 }
 
 type UserInfo struct {
-	Id       int64  `json:"id"`        // 用户ID
-	Username string `json:"username"`  // 用户名
-	Nickname string `json:"nickname"`  // 昵称
-	Email    string `json:"email"`     // 邮箱
-	Phone    string `json:"phone"`     // 手机号
-	Avatar   string `json:"avatar"`    // 头像
-	Gender   int32  `json:"gender"`    // 性别 0:未知 1:男 2:女
-	Age      int32  `json:"age"`       // 年龄
-	Status   bool   `json:"status"`    // 状态 true:正常 false:禁用
-	IsAdmin  bool   `json:"is_admin"`  // 角色 0:普通用户 1:管理员
-	CreateAt int64  `json:"create_at"` // 创建时间
-	UpdateAt int64  `json:"update_at"` // 更新时间
+	Id       int64  `json:"id"`                 // 用户ID
+	Username string `json:"username"`           // 用户名
+	Nickname string `json:"nickname"`           // 昵称
+	Email    string `json:"email"`              // 邮箱
+	Phone    string `json:"phone"`              // 手机号
+	Avatar   string `json:"avatar"`             // 头像
+	Gender   int32  `json:"gender,options=0|1"` // 性别 0:未知 1:男 2:女
+	Age      int32  `json:"age,range=[0:120]"`  // 年龄
+	Status   bool   `json:"status"`             // 状态 true:正常 false:禁用
+	IsAdmin  bool   `json:"is_admin"`           // 角色 0:普通用户 1:管理员
+	CreateAt int64  `json:"create_at"`          // 创建时间
+	UpdateAt int64  `json:"update_at"`          // 更新时间
 }
 
 type UserList struct {
