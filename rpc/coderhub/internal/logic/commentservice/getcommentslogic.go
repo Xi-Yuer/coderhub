@@ -116,7 +116,7 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*coderhub.Comme
 						IsAdmin:   user.IsAdmin,
 						Status:    user.Status,
 						CreatedAt: user.CreatedAt,
-						UpdatedAt: user.UserId,
+						UpdatedAt: user.UpdatedAt,
 					}
 				}
 			}

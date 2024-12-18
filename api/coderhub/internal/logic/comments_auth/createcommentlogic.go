@@ -19,7 +19,7 @@ type CreateCommentLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 创建评论
+// NewCreateCommentLogic 创建评论
 func NewCreateCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateCommentLogic {
 	return &CreateCommentLogic{
 		Logger: logx.WithContext(ctx),
@@ -51,6 +51,24 @@ func (l *CreateCommentLogic) CreateComment(req *types.CreateCommentReq) (resp *t
 }
 
 func (l *CreateCommentLogic) successResp(comment *commentservice.CreateCommentResponse) (*types.CreateCommentResp, error) {
+
+	Images := make([]types.ImageInfo, len(comment.Comment.Images))
+	for _, image := range comment.Comment.Images {
+		Images = append(Images, types.ImageInfo{
+			ImageId:      image.ImageId,
+			BucketName:   image.BucketName,
+			ObjectName:   image.ObjectName,
+			Url:          image.Url,
+			ThumbnailUrl: image.ThumbnailUrl,
+			ContentType:  image.ContentType,
+			Size:         image.Size,
+			Width:        image.Width,
+			Height:       image.Height,
+			UploadIp:     image.UploadIp,
+			UserId:       image.UserId,
+			CreatedAt:    image.CreatedAt,
+		})
+	}
 	return &types.CreateCommentResp{
 		Response: types.Response{
 			Code:    conf.HttpCode.HttpStatusOK,
@@ -66,9 +84,9 @@ func (l *CreateCommentLogic) successResp(comment *commentservice.CreateCommentRe
 			CreatedAt:    comment.Comment.CreatedAt,
 			UpdatedAt:    comment.Comment.UpdatedAt,
 			Replies:      nil,
-			RepliesCount: 0,
-			LikeCount:    0,
-			Images:       nil,
+			RepliesCount: comment.Comment.RepliesCount,
+			LikeCount:    comment.Comment.LikeCount,
+			Images:       Images,
 		},
 	}, nil
 }

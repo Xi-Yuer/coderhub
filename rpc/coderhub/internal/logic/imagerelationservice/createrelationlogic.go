@@ -40,7 +40,6 @@ func (l *CreateRelationLogic) CreateRelation(in *coderhub.CreateRelationRequest)
 			ImageId:    in.ImageId,
 			EntityId:   in.EntityId,
 			EntityType: in.EntityType,
-			Sort:       0,
 		},
 	}, nil
 }
