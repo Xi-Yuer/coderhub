@@ -495,10 +495,17 @@ message ImageRelation {
   int64 entity_id = 3;         // 关联实体ID
   string entity_type = 4;      // 关联实体类型(comment/article等)
   string url = 5;             // 图片URL
-  string thumbnail_url = 6;   // 图片缩略图URL
-
-  int32 sort = 7;              // 排序号
-  string created_at = 8;       // 创建时间
+  string thumbnail_url = 6;   // 图片缩略图UR
+  string bucket_name = 7;     // MinIO bucket名称
+  string object_name = 8;     // MinIO中的对象名称
+  string content_type = 9;   // 文件MIME类型
+  int64 size = 10;             // 文件大小(bytes)
+  int32 width = 11;            // 图片宽度(px)
+  int32 height = 12;           // 图片高度(px)
+  string upload_ip = 13;      // 上传者IP
+  int64 user_id = 14;         // 上传者ID
+  int32 sort = 15;              // 排序号
+  int64 created_at = 16;      // 创建时间
 }
 
 // 创建关系请求

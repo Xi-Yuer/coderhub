@@ -74,8 +74,17 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentReplie
 		if img.ImageId > 0 {
 			replyImages[img.EntityId] = append(replyImages[img.EntityId], &coderhub.ImageInfo{
 				ImageId:      img.ImageId,
+				BucketName:   img.BucketName,
+				ObjectName:   img.ObjectName,
 				Url:          img.Url,
 				ThumbnailUrl: img.ThumbnailUrl,
+				ContentType:  img.ContentType,
+				Size:         img.Size,
+				Width:        img.Width,
+				Height:       img.Height,
+				UploadIp:     img.UploadIp,
+				UserId:       img.UserId,
+				CreatedAt:    img.CreatedAt,
 			})
 		}
 	}

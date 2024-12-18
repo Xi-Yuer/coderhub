@@ -74,8 +74,17 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*coderhub.Comme
 		if img.ImageId > 0 {
 			commentImages[img.EntityId] = append(commentImages[img.EntityId], &coderhub.ImageInfo{
 				ImageId:      img.ImageId,
+				BucketName:   img.BucketName,
+				ObjectName:   img.ObjectName,
 				Url:          img.Url,
 				ThumbnailUrl: img.ThumbnailUrl,
+				ContentType:  img.ContentType,
+				Size:         img.Size,
+				Width:        img.Width,
+				Height:       img.Height,
+				UploadIp:     img.UploadIp,
+				UserId:       img.UserId,
+				CreatedAt:    img.CreatedAt,
 			})
 		}
 	}
