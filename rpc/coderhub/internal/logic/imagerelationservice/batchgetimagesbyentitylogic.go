@@ -6,7 +6,6 @@ import (
 	"coderhub/rpc/coderhub/internal/svc"
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
-	"strconv"
 )
 
 type BatchGetImagesByEntityLogic struct {
@@ -71,8 +70,16 @@ func (l *BatchGetImagesByEntityLogic) BatchGetImagesByEntity(in *coderhub.BatchG
 				EntityType:   rel.EntityType,
 				Url:          img.URL,
 				ThumbnailUrl: img.ThumbnailURL,
+				BucketName:   img.BucketName,
+				ObjectName:   img.ObjectName,
+				ContentType:  img.ContentType,
+				Size:         img.Size,
+				Width:        img.Width,
+				Height:       img.Height,
+				UploadIp:     img.UploadIP,
+				UserId:       img.UserID,
 				Sort:         rel.Sort,
-				CreatedAt:    strconv.FormatInt(rel.CreatedAt.Unix(), 10),
+				CreatedAt:    img.CreatedAt.Unix(),
 			})
 		}
 	}
