@@ -6,7 +6,6 @@ import (
 	"coderhub/rpc/coderhub/internal/svc"
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
-	"strconv"
 )
 
 type BatchGetImagesByEntityLogic struct {
@@ -65,14 +64,18 @@ func (l *BatchGetImagesByEntityLogic) BatchGetImagesByEntity(in *coderhub.BatchG
 		if img, ok := imageMap[rel.ImageID]; ok {
 			// 这里可以获取图片的所有信息，目前只返回了图片的地址和缩略图
 			relations = append(relations, &coderhub.ImageRelation{
-				Id:           rel.ID,
-				ImageId:      rel.ImageID,
-				EntityId:     rel.EntityID,
-				EntityType:   rel.EntityType,
+				ImageId:      img.ID,
+				BucketName:   img.BucketName,
+				ObjectName:   img.ObjectName,
 				Url:          img.URL,
 				ThumbnailUrl: img.ThumbnailURL,
-				Sort:         rel.Sort,
-				CreatedAt:    strconv.FormatInt(rel.CreatedAt.Unix(), 10),
+				ContentType:  img.ContentType,
+				Size:         img.Size,
+				Width:        img.Width,
+				Height:       img.Height,
+				UploadIp:     img.UploadIP,
+				UserId:       img.UserID,
+				CreatedAt:    img.CreatedAt.Unix(),
 			})
 		}
 	}
