@@ -17,7 +17,7 @@ type GetCommentLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 获取单个评论
+// NewGetCommentLogic 获取单个评论
 func NewGetCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCommentLogic {
 	return &GetCommentLogic{
 		Logger: logx.WithContext(ctx),
@@ -53,7 +53,16 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 		userInfo = &types.UserInfo{
 			Id:       comment.Comment.UserInfo.UserId,
 			Username: comment.Comment.UserInfo.UserName,
+			Nickname: comment.Comment.UserInfo.UserName,
+			Email:    comment.Comment.UserInfo.Email,
+			Phone:    comment.Comment.UserInfo.Phone,
 			Avatar:   comment.Comment.UserInfo.Avatar,
+			Gender:   comment.Comment.UserInfo.Gender,
+			Age:      comment.Comment.UserInfo.Age,
+			Status:   comment.Comment.UserInfo.Status,
+			IsAdmin:  comment.Comment.UserInfo.IsAdmin,
+			CreateAt: comment.Comment.UserInfo.CreatedAt,
+			UpdateAt: comment.Comment.UserInfo.UpdatedAt,
 		}
 	}
 
@@ -63,6 +72,15 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 			Id:       comment.Comment.ReplyToUserInfo.UserId,
 			Username: comment.Comment.ReplyToUserInfo.UserName,
 			Avatar:   comment.Comment.ReplyToUserInfo.Avatar,
+			Nickname: comment.Comment.ReplyToUserInfo.UserName,
+			Email:    comment.Comment.ReplyToUserInfo.Email,
+			Phone:    comment.Comment.ReplyToUserInfo.Phone,
+			Gender:   comment.Comment.ReplyToUserInfo.Gender,
+			Age:      comment.Comment.ReplyToUserInfo.Age,
+			Status:   comment.Comment.ReplyToUserInfo.Status,
+			IsAdmin:  comment.Comment.ReplyToUserInfo.IsAdmin,
+			CreateAt: comment.Comment.ReplyToUserInfo.CreatedAt,
+			UpdateAt: comment.Comment.ReplyToUserInfo.UpdatedAt,
 		}
 	}
 

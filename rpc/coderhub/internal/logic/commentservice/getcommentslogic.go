@@ -104,9 +104,19 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*coderhub.Comme
 				// 如果用户信息不存在，则添加到映射中
 				if _, ok := userInfos[user.UserId]; !ok {
 					userInfos[user.UserId] = &coderhub.UserInfo{
-						UserId:   user.UserId,
-						UserName: user.UserName,
-						Avatar:   user.Avatar,
+						UserId:    user.UserId,
+						UserName:  user.UserName,
+						Avatar:    user.Avatar,
+						Email:     user.Email,
+						Password:  user.Password,
+						Gender:    user.Gender,
+						Age:       user.Age,
+						Phone:     user.Phone,
+						NickName:  user.NickName,
+						IsAdmin:   user.IsAdmin,
+						Status:    user.Status,
+						CreatedAt: user.CreatedAt,
+						UpdatedAt: user.UserId,
 					}
 				}
 			}

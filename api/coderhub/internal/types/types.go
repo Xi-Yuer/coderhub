@@ -134,7 +134,6 @@ type DeleteCommentResp struct {
 
 type DeleteRequest struct {
 	ImageId int64 `json:"image_id"` // 图片ID
-	UserId  int64 `json:"user_id"`  // 用户ID（用于权限验证）
 }
 
 type DeleteResponse struct {

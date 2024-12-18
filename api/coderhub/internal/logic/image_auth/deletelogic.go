@@ -18,7 +18,7 @@ type DeleteLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 删除图片
+// NewDeleteLogic 删除图片
 func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogic {
 	return &DeleteLogic{
 		Logger: logx.WithContext(ctx),
@@ -29,7 +29,7 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 
 func (l *DeleteLogic) Delete(req *types.DeleteRequest) (resp *types.DeleteResponse, err error) {
 	// 权限校验
-	_, err = utils.GetUserID(l.ctx)
+	UserId, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err)
 	}
@@ -37,7 +37,7 @@ func (l *DeleteLogic) Delete(req *types.DeleteRequest) (resp *types.DeleteRespon
 
 	_, err = l.svcCtx.ImageAuthService.Delete(ctx, &coderhub.DeleteRequest{
 		ImageId: req.ImageId,
-		UserId:  req.UserId,
+		UserId:  UserId,
 	})
 	if err != nil {
 		return l.errorResp(err)

@@ -17,7 +17,7 @@ type GetLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 获取图片信息
+// NewGetLogic 获取图片信息
 func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	return &GetLogic{
 		Logger: logx.WithContext(ctx),
