@@ -33,18 +33,18 @@ type (
 	}
 	// 用户信息
 	UserInfo {
-		Id int64 `json:"id"`                     // 用户ID
+        Id int64 `json:"id"`                     // 用户ID
 		Username string `json:"username"` // 用户名
 		Nickname string `json:"nickname"` // 昵称
-		Email string `json:"email"`              // 邮箱
-		Phone string `json:"phone"`              // 手机号
-		Avatar string `json:"avatar"`            // 头像
-		Gender int32 `json:"gender,options=0|1"` // 性别 0:未知 1:男 2:女
-		Age int32 `json:"age,range=[0:120]"`     // 年龄
-		Status bool `json:"status"`              // 状态 true:正常 false:禁用
-		IsAdmin bool `json:"is_admin"`           // 角色 0:普通用户 1:管理员
-		CreateAt int64 `json:"create_at"`        // 创建时间
-		UpdateAt int64 `json:"update_at"`        // 更新时间
+        Email string `json:"email"`              // 邮箱
+        Phone string `json:"phone"`              // 手机号
+        Avatar string `json:"avatar"`            // 头像
+        Gender int32 `json:"gender,options=0|1"` // 性别 0:未知 1:男 2:女
+        Age int32 `json:"age,range=[0:120]"`     // 年龄
+        Status bool `json:"status"`              // 状态 true:正常 false:禁用
+        IsAdmin bool `json:"is_admin"`           // 角色 0:普通用户 1:管理员
+        CreateAt int64 `json:"create_at"`        // 创建时间
+        UpdateAt int64 `json:"update_at"`        // 更新时间
 	}
 	// 用户注册请求
 	RegisterReq {
@@ -79,21 +79,21 @@ type (
 	UpdateUserInfoReq {
 		Id       int64  `path:"id"` // 用户ID
 		Nickname string `json:"nickname,optional"` // 昵称
-		Email string `json:"email,optional"` // 邮箱
-		Phone string `json:"phone,optional"` // 手机号
-		Gender int32 `json:"gender,options=0|1,optional"` // 性别 0:未知 1:男 2:女
-		Age int32 `json:"age,range=[0:120],optional"` // 年龄
+        Email string `json:"email,optional"` // 邮箱
+        Phone string `json:"phone,optional"` // 手机号
+        Gender int32 `json:"gender,options=0|1,optional"` // 性别 0:未知 1:男 2:女
+        Age int32 `json:"age,range=[0:120],optional"` // 年龄
 	}
 	// 更新用户信息响应
 	UpdateUserInfoResp {
 		Response
 		Data bool `json:"data"` // 是否更新成功
 	}
-		// 更新用户头像
+        // 更新用户头像
 	UpdateUserAvatarReq {
 		Avatar int64 `json:"avatar"` // 头像
 	}
-		// 更新用户头像响应
+        // 更新用户头像响应
 	UpdateUserAvatarResp {
 		Response
 		Data bool `json:"data"` // 是否更新成功
@@ -190,8 +190,8 @@ type (
 	}
 	// 关注列表
 	FollowList {
-		Total int64 `json:"total"`    // 总数
-		List []UserInfo `json:"list"` // 关注列表
+        Total int64 `json:"total"`    // 总数
+        List []UserInfo `json:"list"` // 关注列表
 	}
 	// 获取关注列表响应
 	GetFollowListResp {
@@ -222,7 +222,7 @@ type (
 		Height       int32  `json:"height"` // 图片高度(px)
 		UploadIp     string `json:"upload_ip"` // 上传者IP
 		UserId       int64  `json:"user_id"` // 上传者ID
-		CreatedAt int64 `json:"created_at"` // 创建时间
+        CreatedAt int64 `json:"created_at"` // 创建时间
 	}
 	// 上传图片响应
 	UploadResponse {
@@ -232,7 +232,6 @@ type (
 	// 删除图片请求
 	DeleteRequest {
 		ImageId int64 `json:"image_id"` // 图片ID
-		UserId  int64 `json:"user_id"` // 用户ID（用于权限验证）
 	}
 	// 删除图片响应
 	DeleteResponse {
@@ -336,106 +335,106 @@ type (
 		Response
 		Data bool `json:"data"` // 是否取消点赞成功
 	}
-		// 评论实体
+        // 评论实体
 	Comment {
-		Id int64 `json:"id"`                                  // 评论ID
-		ArticleId int64 `json:"article_id"`                   // 文章ID
-		Content string `json:"content"`                       // 评论内容
-		RootId int64 `json:"root_id"`                         // 根评论ID
-		ParentId int64 `json:"parent_id"`                     // 父评论ID
-		UserInfo *UserInfo `json:"user_info"`                 // 评论者信息
-		CreatedAt int64 `json:"created_at"`                   // 创建时间
-		UpdatedAt int64 `json:"updated_at"`                   // 更新时间
-		Replies []*Comment `json:"replies"`                   // 子评论列表
-		ReplyToUserInfo *UserInfo `json:"reply_to_user_info"` // 被回复者信息
-		RepliesCount int64 `json:"replies_count"`             // 子评论数量
-		LikeCount int32 `json:"like_count"`                   // 点赞数
-		Images []ImageInfo `json:"images"`                    // 评论图片列表
+        Id int64 `json:"id"`                                  // 评论ID
+        ArticleId int64 `json:"article_id"`                   // 文章ID
+        Content string `json:"content"`                       // 评论内容
+        RootId int64 `json:"root_id"`                         // 根评论ID
+        ParentId int64 `json:"parent_id"`                     // 父评论ID
+        UserInfo *UserInfo `json:"user_info"`                 // 评论者信息
+        CreatedAt int64 `json:"created_at"`                   // 创建时间
+        UpdatedAt int64 `json:"updated_at"`                   // 更新时间
+        Replies []*Comment `json:"replies"`                   // 子评论列表
+        ReplyToUserInfo *UserInfo `json:"reply_to_user_info"` // 被回复者信息
+        RepliesCount int64 `json:"replies_count"`             // 子评论数量
+        LikeCount int32 `json:"like_count"`                   // 点赞数
+        Images []ImageInfo `json:"images"`                    // 评论图片列表
 	}
-		// 创建评论请求
+        // 创建评论请求
 	CreateCommentReq {
-		ArticleId int64 `json:"article_id"`    // 文章ID
-		Content string `json:"content"`        // 评论内容
-		RootId int64 `json:"root_id"`          // 根评论ID
-		ParentId int64 `json:"parent_id"`      // 父评论ID（可选）
-		ReplyToUID int64 `json:"reply_to_uid"` // 回复的目标评论ID（可选）
-		ImageIds []int64 `json:"image_ids"`    // 图片ID列表
+        ArticleId int64 `json:"article_id"`    // 文章ID
+        Content string `json:"content"`        // 评论内容
+        RootId int64 `json:"root_id"`          // 根评论ID
+        ParentId int64 `json:"parent_id"`      // 父评论ID（可选）
+        ReplyToUID int64 `json:"reply_to_uid"` // 回复的目标评论ID（可选）
+        ImageIds []int64 `json:"image_ids"`    // 图片ID列表
 	}
-		// 创建评论响应
+        // 创建评论响应
 	CreateCommentResp {
 		Response
 		Data *Comment `json:"data"` // 创建的评论
 	}
-		// 获取评论列表请求
+        // 获取评论列表请求
 	GetCommentsReq {
 		ArticleId int64 `path:"article_id"` // 文章ID
-		Page int32 `form:"page"`            // 页码
-		PageSize int32 `form:"page_size"`   // 每页数量
+        Page int32 `form:"page"`            // 页码
+        PageSize int32 `form:"page_size"`   // 每页数量
 	}
-		// 列表
+        // 列表
 	List {
-		List []*Comment `json:"list"` // 评论列表
-		Total int32 `json:"total"`    // 总评论数
+        List []*Comment `json:"list"` // 评论列表
+        Total int32 `json:"total"`    // 总评论数
 	}
-		// 获取评论列表响应
+        // 获取评论列表响应
 	GetCommentsResp {
 		Response
 		Data List `json:"data"` // 评论列表
 	}
-		// 获取单个评论请求
+        // 获取单个评论请求
 	GetCommentReq {
 		CommentId int64 `path:"comment_id"` // 评论ID
 	}
-		// 获取单个评论响应
+        // 获取单个评论响应
 	GetCommentResp {
 		Response
 		Data *Comment `json:"data"` // 评论详情
 	}
-		// 删除评论请求
+        // 删除评论请求
 	DeleteCommentReq {
 		CommentId int64 `path:"comment_id"` // 评论ID
 	}
-		// 获取某条评论的子评论列表请求
+        // 获取某条评论的子评论列表请求
 	GetCommentRepliesReq {
 		CommentId int64 `path:"comment_id"` // 评论ID
-		Page int32 `form:"page"`            // 页码
-		PageSize int32 `form:"page_size"`   // 每页数量
+        Page int32 `form:"page"`            // 页码
+        PageSize int32 `form:"page_size"`   // 每页数量
 	}
-		// 获取某条评论的子评论列表响应
+        // 获取某条评论的子评论列表响应
 	GetCommentRepliesResp {
 		Response
 		Data List `json:"data"` // 子评论列表
 	}
-		// 删除评论响应
+        // 删除评论响应
 	DeleteCommentResp {
 		Response
 		Data bool `json:"data"` // 删除是否成功
 	}
-		// 更新评论点赞数请求
+        // 更新评论点赞数请求
 	UpdateCommentLikeCountReq {
 		CommentId int64 `json:"comment_id"` // 评论ID
 	}
-		// 更新评论点赞数响应
+        // 更新评论点赞数响应
 	UpdateCommentLikeCountResp {
 		Response
 		Data bool `json:"data"` // 更新是否成功
 	}
 	Article {
-		Id int64 `json:"id" form:"id"`                               // 主键 ID
-		Type string `json:"type" form:"type"`                        // 内容类型：长文或短文
-		Title string `json:"title" form:"title"`                     // 标题
-		Content string `json:"content" form:"content"`               // 内容
-		Summary string `json:"summary" form:"summary"`               // 摘要
-		ImageUrls []string `json:"imageUrls" form:"imageUrls"`       // 图片 URL 列表
-		CoverImage *string `json:"coverImage" form:"coverImage"`     // 封面图片 URL
-		AuthorId int64 `json:"authorId" form:"authorId"`             // 作者 ID
-		Tags []string `json:"tags" form:"tags"`                      // 标签列表
-		ViewCount int64 `json:"viewCount" form:"viewCount"`          // 阅读次数
-		LikeCount int64 `json:"likeCount" form:"likeCount"`          // 点赞次数
-		CommentCount int64 `json:"commentCount" form:"commentCount"` // 评论数
-		Status string `json:"status" form:"status"`                  // 文章状态
-		CreatedAt int64 `json:"createdAt" form:"createdAt"`          // 创建时间
-		UpdatedAt int64 `json:"updatedAt" form:"updatedAt"`          // 更新时间
+        Id int64 `json:"id" form:"id"`                               // 主键 ID
+        Type string `json:"type" form:"type"`                        // 内容类型：长文或短文
+        Title string `json:"title" form:"title"`                     // 标题
+        Content string `json:"content" form:"content"`               // 内容
+        Summary string `json:"summary" form:"summary"`               // 摘要
+        ImageUrls []string `json:"imageUrls" form:"imageUrls"`       // 图片 URL 列表
+        CoverImage *string `json:"coverImage" form:"coverImage"`     // 封面图片 URL
+        AuthorId int64 `json:"authorId" form:"authorId"`             // 作者 ID
+        Tags []string `json:"tags" form:"tags"`                      // 标签列表
+        ViewCount int64 `json:"viewCount" form:"viewCount"`          // 阅读次数
+        LikeCount int64 `json:"likeCount" form:"likeCount"`          // 点赞次数
+        CommentCount int64 `json:"commentCount" form:"commentCount"` // 评论数
+        Status string `json:"status" form:"status"`                  // 文章状态
+        CreatedAt int64 `json:"createdAt" form:"createdAt"`          // 创建时间
+        UpdatedAt int64 `json:"updatedAt" form:"updatedAt"`          // 更新时间
 	}
 	GetArticleReq {
 		Id int64 `path:"id"` // 文章 ID
@@ -445,28 +444,28 @@ type (
 		Data *Article `json:"data"` // 文章详情
 	}
 	CreateArticleReq {
-		Type string `json:"type,options=article|micro_post"`  // 内容类型
-		Title string `json:"title"`                           // 标题
-		Content string `json:"content"`                       // 内容
-		Summary string `json:"summary"`                       // 摘要
-		ImageIds []int64 `json:"imageIds"`                    // 图片 URL 列表
-		CoverImageID int64 `json:"coverImageID"`              // 封面图片 URL
-		Tags []string `json:"tags"`                           // 标签列表
-		Status string `json:"status,options=draft|published"` // 文章状态
+        Type string `json:"type,options=article|micro_post"`  // 内容类型
+        Title string `json:"title"`                           // 标题
+        Content string `json:"content"`                       // 内容
+        Summary string `json:"summary"`                       // 摘要
+        ImageIds []int64 `json:"imageIds"`                    // 图片 URL 列表
+        CoverImageID int64 `json:"coverImageID"`              // 封面图片 URL
+        Tags []string `json:"tags"`                           // 标签列表
+        Status string `json:"status,options=draft|published"` // 文章状态
 	}
 	CreateArticleResp {
 		Response
 		Data int64 `json:"data"` // 文章详情
 	}
 	UpdateArticleReq {
-		Id int64 `path:"id"`                              // 文章 ID
-		Title string `json:"title,optional"`              // 标题
-		Content string `json:"content,optional,optional"` // 内容
-		Summary string `json:"summary,optional"`          // 摘要
-		ImageIds []int64 `json:"imageIds,optional"`       // 图片 URL 列表
-		CoverImageID int64 `json:"coverImageID,optional"` // 封面图片 URL
-		Tags []string `json:"tags,optional"`              // 标签列表
-		Status string `json:"status,optional"`            // 文章状态
+        Id int64 `path:"id"`                              // 文章 ID
+        Title string `json:"title,optional"`              // 标题
+        Content string `json:"content,optional,optional"` // 内容
+        Summary string `json:"summary,optional"`          // 摘要
+        ImageIds []int64 `json:"imageIds,optional"`       // 图片 URL 列表
+        CoverImageID int64 `json:"coverImageID,optional"` // 封面图片 URL
+        Tags []string `json:"tags,optional"`              // 标签列表
+        Status string `json:"status,optional"`            // 文章状态
 	}
 	UpdateArticleResp {
 		Response
@@ -550,7 +549,7 @@ service CodeHubAPI {
 	@handler UpdateUserInfo
 	put /update/:id (UpdateUserInfoReq) returns (UpdateUserInfoResp)
 
-	@doc(
+    @doc(
 		summary: "更新用户头像"
 	)
 	@handler UpdateUserAvatar
@@ -717,42 +716,42 @@ service CodeHubAPI {
 }
 
 @server(
-	jwt: Auth
+    jwt: Auth
 	prefix: /api/comments
-	group: comments_auth
+    group: comments_auth
 )
 service CodeHubAPI {
-	@doc(
+    @doc(
 		summary: "创建评论"
 	)
 	@handler CreateComment
 	post /create (CreateCommentReq) returns (CreateCommentResp)
 
-	@doc(
+    @doc(
 		summary: "获取评论列表"
 	)
 	@handler GetComments
 	get /article/:article_id (GetCommentsReq) returns (GetCommentsResp)
 
-	@doc(
+    @doc(
 		summary: "获取某条评论的子评论列表"
 	)
 	@handler GetCommentReplies
 	get /replies/:comment_id (GetCommentRepliesReq) returns (GetCommentRepliesResp)
 
-	@doc(
+    @doc(
 		summary: "更新评论点赞数"
 	)
 	@handler UpdateCommentLikeCount
 	post /update_like_count (UpdateCommentLikeCountReq) returns (UpdateCommentLikeCountResp)
 
-	@doc(
+    @doc(
 		summary: "获取单个评论"
 	)
 	@handler GetComment
 	get /:comment_id (GetCommentReq) returns (GetCommentResp)
 
-	@doc(
+    @doc(
 		summary: "删除评论"
 	)
 	@handler DeleteComment
@@ -761,10 +760,10 @@ service CodeHubAPI {
 
 @server(
 	prefix: /api/articles
-	group: articles_public
+    group: articles_public
 )
 service CodeHubAPI {
-	@doc(
+    @doc(
 		summary: "获取文章"
 	)
 	@handler GetArticle
@@ -772,30 +771,30 @@ service CodeHubAPI {
 }
 
 @server(
-	jwt: Auth
+    jwt: Auth
 	prefix: /api/articles
-	group: articles_auth
+    group: articles_auth
 )
 service CodeHubAPI {
-	@doc(
+    @doc(
 		summary: "创建文章"
 	)
 	@handler CreateArticle
 	post /create (CreateArticleReq) returns (CreateArticleResp)
 
-	@doc(
+    @doc(
 		summary: "更新文章"
 	)
 	@handler UpdateArticle
 	put /:id (UpdateArticleReq) returns (UpdateArticleResp)
 
-	@doc(
+    @doc(
 		summary: "删除文章"
 	)
 	@handler DeleteArticle
 	delete /:id (DeleteArticleReq) returns (DeleteArticleResp)
 
-	@doc(
+    @doc(
 		summary: "更新文章点赞数"
 	)
 	@handler UpdateLikeCount

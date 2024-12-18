@@ -1937,17 +1937,11 @@
           "type": "integer",
           "format": "int64",
           "description": " 图片ID"
-        },
-        "user_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 用户ID（用于权限验证）"
         }
       },
       "title": "DeleteRequest",
       "required": [
-        "image_id",
-        "user_id"
+        "image_id"
       ]
     },
     "DeleteResponse": {
