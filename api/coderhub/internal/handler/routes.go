@@ -15,6 +15,8 @@ import (
 	follow_public "coderhub/api/coderhub/internal/handler/follow_public"
 	image_auth "coderhub/api/coderhub/internal/handler/image_auth"
 	image_public "coderhub/api/coderhub/internal/handler/image_public"
+	questions_auth "coderhub/api/coderhub/internal/handler/questions_auth"
+	questions_public "coderhub/api/coderhub/internal/handler/questions_public"
 	user_auth "coderhub/api/coderhub/internal/handler/user_auth"
 	user_public "coderhub/api/coderhub/internal/handler/user_public"
 	"coderhub/api/coderhub/internal/svc"
@@ -242,6 +244,61 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/image"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 删除题库
+				Method:  http.MethodDelete,
+				Path:    "/bank/:id",
+				Handler: questions_auth.DeleteQuestionBankHandler(serverCtx),
+			},
+			{
+				// 创建题库
+				Method:  http.MethodPost,
+				Path:    "/bank/create",
+				Handler: questions_auth.CreateQuestionBankHandler(serverCtx),
+			},
+			{
+				// 删除题目
+				Method:  http.MethodDelete,
+				Path:    "/question/:id",
+				Handler: questions_auth.DeleteQuestionHandler(serverCtx),
+			},
+			{
+				// 创建题目
+				Method:  http.MethodPost,
+				Path:    "/question/create",
+				Handler: questions_auth.CreateQuestionHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/questions"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取题库列表
+				Method:  http.MethodGet,
+				Path:    "/bank_list",
+				Handler: questions_public.ListQuestionBanksHandler(serverCtx),
+			},
+			{
+				// 获取题目详情
+				Method:  http.MethodGet,
+				Path:    "/question/:id",
+				Handler: questions_public.GetQuestionBankHandler(serverCtx),
+			},
+			{
+				// 获取题目列表
+				Method:  http.MethodGet,
+				Path:    "/question_list",
+				Handler: questions_public.ListQuestionsHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/questions"),
 	)
 
 	server.AddRoutes(

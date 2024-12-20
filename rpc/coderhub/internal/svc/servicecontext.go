@@ -25,6 +25,8 @@ type ServiceContext struct {
 	ArticlePVRepository            repository.ArticlePVRepository
 	CommentRepository              repository.CommentRepository
 	CommentRelationLikeRepository  repository.CommentRelationLikeRepository
+	QuestionBankRepository         repository.QuestionBankRepository
+	QuestionRepository             repository.QuestionRepository
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -70,5 +72,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		UserRepository:                 repository.NewUserRepositoryImpl(sql, redisDB),
 		UserFollowRepository:           repository.NewUserFollowRepositoryImpl(sql, redisDB),
 		AcademicNavigatorRepository:    repository.NewAcademicNavigatorRepositoryImpl(sql, &cfg),
+		QuestionBankRepository:         repository.NewQuestionRepositoryRepositoryImpl(sql, redisDB),
+		QuestionRepository:             repository.NewQuestionRepositoryImpl(sql, redisDB),
 	}
 }

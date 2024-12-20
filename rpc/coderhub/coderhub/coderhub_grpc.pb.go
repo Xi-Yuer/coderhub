@@ -2312,3 +2312,347 @@ var ImageService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "coderhub.proto",
 }
+
+const (
+	QuestionService_CreateQuestionBank_FullMethodName  = "/coderhub.QuestionService/CreateQuestionBank"
+	QuestionService_DeleteQuestionBank_FullMethodName  = "/coderhub.QuestionService/DeleteQuestionBank"
+	QuestionService_CreateQuestion_FullMethodName      = "/coderhub.QuestionService/CreateQuestion"
+	QuestionService_DeleteQuestion_FullMethodName      = "/coderhub.QuestionService/DeleteQuestion"
+	QuestionService_GetQuestionBankList_FullMethodName = "/coderhub.QuestionService/GetQuestionBankList"
+	QuestionService_GetQuestionTree_FullMethodName     = "/coderhub.QuestionService/GetQuestionTree"
+	QuestionService_GetQuestion_FullMethodName         = "/coderhub.QuestionService/GetQuestion"
+)
+
+// QuestionServiceClient is the client API for QuestionService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type QuestionServiceClient interface {
+	// 创建题库
+	CreateQuestionBank(ctx context.Context, in *CreateQuestionBankRequest, opts ...grpc.CallOption) (*CreateQuestionBankResponse, error)
+	// 删除题库
+	DeleteQuestionBank(ctx context.Context, in *DeleteQuestionBankRequest, opts ...grpc.CallOption) (*DeleteQuestionBankResponse, error)
+	// 创建题目
+	CreateQuestion(ctx context.Context, in *CreateQuestionRequest, opts ...grpc.CallOption) (*CreateQuestionResponse, error)
+	// 删除题目
+	DeleteQuestion(ctx context.Context, in *DeleteQuestionRequest, opts ...grpc.CallOption) (*DeleteQuestionResponse, error)
+	// 获取题库列表
+	GetQuestionBankList(ctx context.Context, in *GetQuestionBankListRequest, opts ...grpc.CallOption) (*GetQuestionBankListResponse, error)
+	// 获取题库下的所有题目目录
+	GetQuestionTree(ctx context.Context, in *GetQuestionTreeRequest, opts ...grpc.CallOption) (*GetQuestionTreeResponse, error)
+	// 获取题目详情
+	GetQuestion(ctx context.Context, in *GetQuestionRequest, opts ...grpc.CallOption) (*GetQuestionResponse, error)
+}
+
+type questionServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewQuestionServiceClient(cc grpc.ClientConnInterface) QuestionServiceClient {
+	return &questionServiceClient{cc}
+}
+
+func (c *questionServiceClient) CreateQuestionBank(ctx context.Context, in *CreateQuestionBankRequest, opts ...grpc.CallOption) (*CreateQuestionBankResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateQuestionBankResponse)
+	err := c.cc.Invoke(ctx, QuestionService_CreateQuestionBank_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *questionServiceClient) DeleteQuestionBank(ctx context.Context, in *DeleteQuestionBankRequest, opts ...grpc.CallOption) (*DeleteQuestionBankResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteQuestionBankResponse)
+	err := c.cc.Invoke(ctx, QuestionService_DeleteQuestionBank_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *questionServiceClient) CreateQuestion(ctx context.Context, in *CreateQuestionRequest, opts ...grpc.CallOption) (*CreateQuestionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateQuestionResponse)
+	err := c.cc.Invoke(ctx, QuestionService_CreateQuestion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *questionServiceClient) DeleteQuestion(ctx context.Context, in *DeleteQuestionRequest, opts ...grpc.CallOption) (*DeleteQuestionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteQuestionResponse)
+	err := c.cc.Invoke(ctx, QuestionService_DeleteQuestion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *questionServiceClient) GetQuestionBankList(ctx context.Context, in *GetQuestionBankListRequest, opts ...grpc.CallOption) (*GetQuestionBankListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetQuestionBankListResponse)
+	err := c.cc.Invoke(ctx, QuestionService_GetQuestionBankList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *questionServiceClient) GetQuestionTree(ctx context.Context, in *GetQuestionTreeRequest, opts ...grpc.CallOption) (*GetQuestionTreeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetQuestionTreeResponse)
+	err := c.cc.Invoke(ctx, QuestionService_GetQuestionTree_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *questionServiceClient) GetQuestion(ctx context.Context, in *GetQuestionRequest, opts ...grpc.CallOption) (*GetQuestionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetQuestionResponse)
+	err := c.cc.Invoke(ctx, QuestionService_GetQuestion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// QuestionServiceServer is the server API for QuestionService service.
+// All implementations must embed UnimplementedQuestionServiceServer
+// for forward compatibility.
+type QuestionServiceServer interface {
+	// 创建题库
+	CreateQuestionBank(context.Context, *CreateQuestionBankRequest) (*CreateQuestionBankResponse, error)
+	// 删除题库
+	DeleteQuestionBank(context.Context, *DeleteQuestionBankRequest) (*DeleteQuestionBankResponse, error)
+	// 创建题目
+	CreateQuestion(context.Context, *CreateQuestionRequest) (*CreateQuestionResponse, error)
+	// 删除题目
+	DeleteQuestion(context.Context, *DeleteQuestionRequest) (*DeleteQuestionResponse, error)
+	// 获取题库列表
+	GetQuestionBankList(context.Context, *GetQuestionBankListRequest) (*GetQuestionBankListResponse, error)
+	// 获取题库下的所有题目目录
+	GetQuestionTree(context.Context, *GetQuestionTreeRequest) (*GetQuestionTreeResponse, error)
+	// 获取题目详情
+	GetQuestion(context.Context, *GetQuestionRequest) (*GetQuestionResponse, error)
+	mustEmbedUnimplementedQuestionServiceServer()
+}
+
+// UnimplementedQuestionServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedQuestionServiceServer struct{}
+
+func (UnimplementedQuestionServiceServer) CreateQuestionBank(context.Context, *CreateQuestionBankRequest) (*CreateQuestionBankResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateQuestionBank not implemented")
+}
+func (UnimplementedQuestionServiceServer) DeleteQuestionBank(context.Context, *DeleteQuestionBankRequest) (*DeleteQuestionBankResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteQuestionBank not implemented")
+}
+func (UnimplementedQuestionServiceServer) CreateQuestion(context.Context, *CreateQuestionRequest) (*CreateQuestionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateQuestion not implemented")
+}
+func (UnimplementedQuestionServiceServer) DeleteQuestion(context.Context, *DeleteQuestionRequest) (*DeleteQuestionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteQuestion not implemented")
+}
+func (UnimplementedQuestionServiceServer) GetQuestionBankList(context.Context, *GetQuestionBankListRequest) (*GetQuestionBankListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetQuestionBankList not implemented")
+}
+func (UnimplementedQuestionServiceServer) GetQuestionTree(context.Context, *GetQuestionTreeRequest) (*GetQuestionTreeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetQuestionTree not implemented")
+}
+func (UnimplementedQuestionServiceServer) GetQuestion(context.Context, *GetQuestionRequest) (*GetQuestionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetQuestion not implemented")
+}
+func (UnimplementedQuestionServiceServer) mustEmbedUnimplementedQuestionServiceServer() {}
+func (UnimplementedQuestionServiceServer) testEmbeddedByValue()                         {}
+
+// UnsafeQuestionServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to QuestionServiceServer will
+// result in compilation errors.
+type UnsafeQuestionServiceServer interface {
+	mustEmbedUnimplementedQuestionServiceServer()
+}
+
+func RegisterQuestionServiceServer(s grpc.ServiceRegistrar, srv QuestionServiceServer) {
+	// If the following call pancis, it indicates UnimplementedQuestionServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&QuestionService_ServiceDesc, srv)
+}
+
+func _QuestionService_CreateQuestionBank_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateQuestionBankRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QuestionServiceServer).CreateQuestionBank(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: QuestionService_CreateQuestionBank_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QuestionServiceServer).CreateQuestionBank(ctx, req.(*CreateQuestionBankRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QuestionService_DeleteQuestionBank_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteQuestionBankRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QuestionServiceServer).DeleteQuestionBank(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: QuestionService_DeleteQuestionBank_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QuestionServiceServer).DeleteQuestionBank(ctx, req.(*DeleteQuestionBankRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QuestionService_CreateQuestion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateQuestionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QuestionServiceServer).CreateQuestion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: QuestionService_CreateQuestion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QuestionServiceServer).CreateQuestion(ctx, req.(*CreateQuestionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QuestionService_DeleteQuestion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteQuestionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QuestionServiceServer).DeleteQuestion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: QuestionService_DeleteQuestion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QuestionServiceServer).DeleteQuestion(ctx, req.(*DeleteQuestionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QuestionService_GetQuestionBankList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetQuestionBankListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QuestionServiceServer).GetQuestionBankList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: QuestionService_GetQuestionBankList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QuestionServiceServer).GetQuestionBankList(ctx, req.(*GetQuestionBankListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QuestionService_GetQuestionTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetQuestionTreeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QuestionServiceServer).GetQuestionTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: QuestionService_GetQuestionTree_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QuestionServiceServer).GetQuestionTree(ctx, req.(*GetQuestionTreeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QuestionService_GetQuestion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetQuestionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QuestionServiceServer).GetQuestion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: QuestionService_GetQuestion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QuestionServiceServer).GetQuestion(ctx, req.(*GetQuestionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// QuestionService_ServiceDesc is the grpc.ServiceDesc for QuestionService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var QuestionService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "coderhub.QuestionService",
+	HandlerType: (*QuestionServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateQuestionBank",
+			Handler:    _QuestionService_CreateQuestionBank_Handler,
+		},
+		{
+			MethodName: "DeleteQuestionBank",
+			Handler:    _QuestionService_DeleteQuestionBank_Handler,
+		},
+		{
+			MethodName: "CreateQuestion",
+			Handler:    _QuestionService_CreateQuestion_Handler,
+		},
+		{
+			MethodName: "DeleteQuestion",
+			Handler:    _QuestionService_DeleteQuestion_Handler,
+		},
+		{
+			MethodName: "GetQuestionBankList",
+			Handler:    _QuestionService_GetQuestionBankList_Handler,
+		},
+		{
+			MethodName: "GetQuestionTree",
+			Handler:    _QuestionService_GetQuestionTree_Handler,
+		},
+		{
+			MethodName: "GetQuestion",
+			Handler:    _QuestionService_GetQuestion_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "coderhub.proto",
+}

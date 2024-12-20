@@ -11,6 +11,7 @@ import (
 	commentserviceServer "coderhub/rpc/coderhub/internal/server/commentservice"
 	imagerelationserviceServer "coderhub/rpc/coderhub/internal/server/imagerelationservice"
 	imageserviceServer "coderhub/rpc/coderhub/internal/server/imageservice"
+	questionserviceServer "coderhub/rpc/coderhub/internal/server/questionservice"
 	userfollowserviceServer "coderhub/rpc/coderhub/internal/server/userfollowservice"
 	userserviceServer "coderhub/rpc/coderhub/internal/server/userservice"
 	"coderhub/rpc/coderhub/internal/svc"
@@ -39,6 +40,7 @@ func main() {
 		coderhub.RegisterCommentServiceServer(grpcServer, commentserviceServer.NewCommentServiceServer(ctx))
 		coderhub.RegisterImageRelationServiceServer(grpcServer, imagerelationserviceServer.NewImageRelationServiceServer(ctx))
 		coderhub.RegisterImageServiceServer(grpcServer, imageserviceServer.NewImageServiceServer(ctx))
+		coderhub.RegisterQuestionServiceServer(grpcServer, questionserviceServer.NewQuestionServiceServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

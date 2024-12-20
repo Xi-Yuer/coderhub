@@ -2,7 +2,7 @@
 // goctl 1.7.3
 // Source: coderhub.proto
 
-package academicnavigatorservice
+package questionservice
 
 import (
 	"context"
@@ -128,56 +128,72 @@ type (
 	UserFollowInfo                     = coderhub.UserFollowInfo
 	UserInfo                           = coderhub.UserInfo
 
-	AcademicNavigatorService interface {
-		// 新增学术导航
-		AddAcademicNavigator(ctx context.Context, in *AddAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
-		// 获取学术导航
-		GetAcademicNavigator(ctx context.Context, in *GetAcademicNavigatorRequest, opts ...grpc.CallOption) (*GetAcademicNavigatorResponse, error)
-		// 删除学术导航
-		DeleteAcademicNavigator(ctx context.Context, in *DeleteAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
-		// 点赞学术导航
-		LikeAcademicNavigator(ctx context.Context, in *LikeAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
-		// 取消点赞学术导航
-		CancelLikeAcademicNavigator(ctx context.Context, in *CancelLikeAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error)
+	QuestionService interface {
+		// 创建题库
+		CreateQuestionBank(ctx context.Context, in *CreateQuestionBankRequest, opts ...grpc.CallOption) (*CreateQuestionBankResponse, error)
+		// 删除题库
+		DeleteQuestionBank(ctx context.Context, in *DeleteQuestionBankRequest, opts ...grpc.CallOption) (*DeleteQuestionBankResponse, error)
+		// 创建题目
+		CreateQuestion(ctx context.Context, in *CreateQuestionRequest, opts ...grpc.CallOption) (*CreateQuestionResponse, error)
+		// 删除题目
+		DeleteQuestion(ctx context.Context, in *DeleteQuestionRequest, opts ...grpc.CallOption) (*DeleteQuestionResponse, error)
+		// 获取题库列表
+		GetQuestionBankList(ctx context.Context, in *GetQuestionBankListRequest, opts ...grpc.CallOption) (*GetQuestionBankListResponse, error)
+		// 获取题库下的所有题目目录
+		GetQuestionTree(ctx context.Context, in *GetQuestionTreeRequest, opts ...grpc.CallOption) (*GetQuestionTreeResponse, error)
+		// 获取题目详情
+		GetQuestion(ctx context.Context, in *GetQuestionRequest, opts ...grpc.CallOption) (*GetQuestionResponse, error)
 	}
 
-	defaultAcademicNavigatorService struct {
+	defaultQuestionService struct {
 		cli zrpc.Client
 	}
 )
 
-func NewAcademicNavigatorService(cli zrpc.Client) AcademicNavigatorService {
-	return &defaultAcademicNavigatorService{
+func NewQuestionService(cli zrpc.Client) QuestionService {
+	return &defaultQuestionService{
 		cli: cli,
 	}
 }
 
-// 新增学术导航
-func (m *defaultAcademicNavigatorService) AddAcademicNavigator(ctx context.Context, in *AddAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error) {
-	client := coderhub.NewAcademicNavigatorServiceClient(m.cli.Conn())
-	return client.AddAcademicNavigator(ctx, in, opts...)
+// 创建题库
+func (m *defaultQuestionService) CreateQuestionBank(ctx context.Context, in *CreateQuestionBankRequest, opts ...grpc.CallOption) (*CreateQuestionBankResponse, error) {
+	client := coderhub.NewQuestionServiceClient(m.cli.Conn())
+	return client.CreateQuestionBank(ctx, in, opts...)
 }
 
-// 获取学术导航
-func (m *defaultAcademicNavigatorService) GetAcademicNavigator(ctx context.Context, in *GetAcademicNavigatorRequest, opts ...grpc.CallOption) (*GetAcademicNavigatorResponse, error) {
-	client := coderhub.NewAcademicNavigatorServiceClient(m.cli.Conn())
-	return client.GetAcademicNavigator(ctx, in, opts...)
+// 删除题库
+func (m *defaultQuestionService) DeleteQuestionBank(ctx context.Context, in *DeleteQuestionBankRequest, opts ...grpc.CallOption) (*DeleteQuestionBankResponse, error) {
+	client := coderhub.NewQuestionServiceClient(m.cli.Conn())
+	return client.DeleteQuestionBank(ctx, in, opts...)
 }
 
-// 删除学术导航
-func (m *defaultAcademicNavigatorService) DeleteAcademicNavigator(ctx context.Context, in *DeleteAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error) {
-	client := coderhub.NewAcademicNavigatorServiceClient(m.cli.Conn())
-	return client.DeleteAcademicNavigator(ctx, in, opts...)
+// 创建题目
+func (m *defaultQuestionService) CreateQuestion(ctx context.Context, in *CreateQuestionRequest, opts ...grpc.CallOption) (*CreateQuestionResponse, error) {
+	client := coderhub.NewQuestionServiceClient(m.cli.Conn())
+	return client.CreateQuestion(ctx, in, opts...)
 }
 
-// 点赞学术导航
-func (m *defaultAcademicNavigatorService) LikeAcademicNavigator(ctx context.Context, in *LikeAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error) {
-	client := coderhub.NewAcademicNavigatorServiceClient(m.cli.Conn())
-	return client.LikeAcademicNavigator(ctx, in, opts...)
+// 删除题目
+func (m *defaultQuestionService) DeleteQuestion(ctx context.Context, in *DeleteQuestionRequest, opts ...grpc.CallOption) (*DeleteQuestionResponse, error) {
+	client := coderhub.NewQuestionServiceClient(m.cli.Conn())
+	return client.DeleteQuestion(ctx, in, opts...)
 }
 
-// 取消点赞学术导航
-func (m *defaultAcademicNavigatorService) CancelLikeAcademicNavigator(ctx context.Context, in *CancelLikeAcademicNavigatorRequest, opts ...grpc.CallOption) (*Response, error) {
-	client := coderhub.NewAcademicNavigatorServiceClient(m.cli.Conn())
-	return client.CancelLikeAcademicNavigator(ctx, in, opts...)
+// 获取题库列表
+func (m *defaultQuestionService) GetQuestionBankList(ctx context.Context, in *GetQuestionBankListRequest, opts ...grpc.CallOption) (*GetQuestionBankListResponse, error) {
+	client := coderhub.NewQuestionServiceClient(m.cli.Conn())
+	return client.GetQuestionBankList(ctx, in, opts...)
+}
+
+// 获取题库下的所有题目目录
+func (m *defaultQuestionService) GetQuestionTree(ctx context.Context, in *GetQuestionTreeRequest, opts ...grpc.CallOption) (*GetQuestionTreeResponse, error) {
+	client := coderhub.NewQuestionServiceClient(m.cli.Conn())
+	return client.GetQuestionTree(ctx, in, opts...)
+}
+
+// 获取题目详情
+func (m *defaultQuestionService) GetQuestion(ctx context.Context, in *GetQuestionRequest, opts ...grpc.CallOption) (*GetQuestionResponse, error) {
+	client := coderhub.NewQuestionServiceClient(m.cli.Conn())
+	return client.GetQuestion(ctx, in, opts...)
 }

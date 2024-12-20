@@ -7,7 +7,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"coderhub/rpc/coderhub/coderhub"
@@ -72,9 +71,8 @@ func (l *GetArticleLogic) GetArticle(in *coderhub.GetArticleRequest) (*coderhub.
 	articleImages := make([]*coderhub.Image, 0)
 	if len(images.Relations) > 0 {
 		for _, image := range images.Relations {
-			imageId := strconv.FormatInt(image.ImageId, 10)
 			articleImages = append(articleImages, &coderhub.Image{
-				ImageId:      imageId,
+				ImageId:      image.ImageId,
 				Url:          image.Url,
 				ThumbnailUrl: image.ThumbnailUrl,
 			})
@@ -83,7 +81,7 @@ func (l *GetArticleLogic) GetArticle(in *coderhub.GetArticleRequest) (*coderhub.
 	var coverImage *coderhub.Image
 	if len(coverImages.Relations) > 0 {
 		coverImage = &coderhub.Image{
-			ImageId:      strconv.FormatInt(coverImages.Relations[0].ImageId, 10),
+			ImageId:      coverImages.Relations[0].ImageId,
 			Url:          coverImages.Relations[0].Url,
 			ThumbnailUrl: coverImages.Relations[0].ThumbnailUrl,
 		}

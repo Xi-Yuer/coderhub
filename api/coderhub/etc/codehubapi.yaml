@@ -39,3 +39,8 @@ CommentService:
     Hosts:
       - etcd:2379
     Key: coderhub.rpc
+QuestionBankService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: coderhub.rpc

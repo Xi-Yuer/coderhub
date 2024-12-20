@@ -39,6 +39,10 @@ type (
 	CreateArticleResponse              = coderhub.CreateArticleResponse
 	CreateCommentRequest               = coderhub.CreateCommentRequest
 	CreateCommentResponse              = coderhub.CreateCommentResponse
+	CreateQuestionBankRequest          = coderhub.CreateQuestionBankRequest
+	CreateQuestionBankResponse         = coderhub.CreateQuestionBankResponse
+	CreateQuestionRequest              = coderhub.CreateQuestionRequest
+	CreateQuestionResponse             = coderhub.CreateQuestionResponse
 	CreateRelationRequest              = coderhub.CreateRelationRequest
 	CreateRelationResponse             = coderhub.CreateRelationResponse
 	CreateUserFollowReq                = coderhub.CreateUserFollowReq
@@ -52,6 +56,10 @@ type (
 	DeleteByEntityIDResponse           = coderhub.DeleteByEntityIDResponse
 	DeleteCommentRequest               = coderhub.DeleteCommentRequest
 	DeleteCommentResponse              = coderhub.DeleteCommentResponse
+	DeleteQuestionBankRequest          = coderhub.DeleteQuestionBankRequest
+	DeleteQuestionBankResponse         = coderhub.DeleteQuestionBankResponse
+	DeleteQuestionRequest              = coderhub.DeleteQuestionRequest
+	DeleteQuestionResponse             = coderhub.DeleteQuestionResponse
 	DeleteRequest                      = coderhub.DeleteRequest
 	DeleteResponse                     = coderhub.DeleteResponse
 	DeleteUserFollowReq                = coderhub.DeleteUserFollowReq
@@ -77,6 +85,12 @@ type (
 	GetImagesByEntityResponse          = coderhub.GetImagesByEntityResponse
 	GetMutualFollowsReq                = coderhub.GetMutualFollowsReq
 	GetMutualFollowsResp               = coderhub.GetMutualFollowsResp
+	GetQuestionBankListRequest         = coderhub.GetQuestionBankListRequest
+	GetQuestionBankListResponse        = coderhub.GetQuestionBankListResponse
+	GetQuestionRequest                 = coderhub.GetQuestionRequest
+	GetQuestionResponse                = coderhub.GetQuestionResponse
+	GetQuestionTreeRequest             = coderhub.GetQuestionTreeRequest
+	GetQuestionTreeResponse            = coderhub.GetQuestionTreeResponse
 	GetRequest                         = coderhub.GetRequest
 	GetUserFansReq                     = coderhub.GetUserFansReq
 	GetUserFansResp                    = coderhub.GetUserFansResp
@@ -92,6 +106,8 @@ type (
 	LikeAcademicNavigatorRequest       = coderhub.LikeAcademicNavigatorRequest
 	ListByUserRequest                  = coderhub.ListByUserRequest
 	ListByUserResponse                 = coderhub.ListByUserResponse
+	QuestionBank                       = coderhub.QuestionBank
+	QuestionTreeNode                   = coderhub.QuestionTreeNode
 	ResetPasswordByLinkRequest         = coderhub.ResetPasswordByLinkRequest
 	ResetPasswordByLinkResponse        = coderhub.ResetPasswordByLinkResponse
 	ResetPasswordRequest               = coderhub.ResetPasswordRequest

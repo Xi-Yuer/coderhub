@@ -105,6 +105,31 @@ type CreateCommentResp struct {
 	Data *Comment `json:"data"` // 创建的评论
 }
 
+type CreateQuestionBankReq struct {
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Difficulty  string   `json:"difficulty,options=default|easy|medium|hard"`
+	Tags        []string `json:"tags"`
+	CoverImage  int64    `json:"coverImage"` // 封面图片 URL
+}
+
+type CreateQuestionBankResp struct {
+	Response
+	Data bool `json:"data"` // 题库详情
+}
+
+type CreateQuestionReq struct {
+	Title      string `json:"title"`
+	BankId     int64  `json:"bankId"`
+	Content    string `json:"content"`
+	Difficulty string `json:"difficulty,options=default|easy|medium|hard"`
+}
+
+type CreateQuestionResp struct {
+	Response
+	Data bool `json:"data"` // 题目详情
+}
+
 type DeleteAcademicNavigatorReq struct {
 	Id int64 `path:"id"` // 学术导航 ID
 }
@@ -130,6 +155,24 @@ type DeleteCommentReq struct {
 type DeleteCommentResp struct {
 	Response
 	Data bool `json:"data"` // 删除是否成功
+}
+
+type DeleteQuestionBankReq struct {
+	Id int64 `path:"id"` // 题库 ID
+}
+
+type DeleteQuestionBankResp struct {
+	Response
+	Data bool `json:"data"` // 是否删除成功
+}
+
+type DeleteQuestionReq struct {
+	Id int64 `path:"id"` // 题目 ID
+}
+
+type DeleteQuestionResp struct {
+	Response
+	Data bool `json:"data"` // 是否删除成功
 }
 
 type DeleteRequest struct {
@@ -242,6 +285,36 @@ type GetFollowListResp struct {
 	Data FollowList `json:"data"` // 关注列表
 }
 
+type GetQuestionBankListReq struct {
+	Page     int32 `json:"page"`
+	PageSize int32 `json:"page_size"`
+}
+
+type GetQuestionBankListResp struct {
+	Response
+	Data QuestionBankList `json:"data"` // 题库列表
+}
+
+type GetQuestionBankReq struct {
+	Id int64 `path:"id"` // 题库 ID
+}
+
+type GetQuestionBankResp struct {
+	Response
+	Data *Question `json:"data"` // 题库详情
+}
+
+type GetQuestionListReq struct {
+	BankId   int64 `json:"bankId"`
+	Page     int32 `json:"page"`
+	PageSize int32 `json:"page_size"`
+}
+
+type GetQuestionListResp struct {
+	Response
+	Data QuestionList `json:"data"` // 题目列表
+}
+
 type GetRequest struct {
 	ImageId int64 `path:"image_id"` // 图片ID
 }
@@ -339,6 +412,43 @@ type PostAcademicNavigatorLikeReq struct {
 type PostAcademicNavigatorLikeResp struct {
 	Response
 	Data bool `json:"data"` // 是否点赞成功
+}
+
+type Question struct {
+	Id        int64  `json:"id"`
+	Title     string `json:"title"`
+	BankId    int64  `json:"bankId"`
+	Content   string `json:"content"`
+	Difficult string `json:"difficult"`
+	CreatedAt int64  `json:"createdAt"`
+	UpdatedAt int64  `json:"updatedAt"`
+}
+
+type QuestionBank struct {
+	Id          int64      `json:"id"`
+	Name        string     `json:"name"`
+	Description string     `json:"description"`
+	Difficulty  string     `json:"difficulty"`
+	Tags        []string   `json:"tags"`
+	CoverImage  *ImageInfo `json:"coverImage" form:"coverImage"`
+	CreateUser  *UserInfo  `json:"createUser"`
+	CreatedAt   int64      `json:"createdAt"`
+	UpdatedAt   int64      `json:"updatedAt"`
+}
+
+type QuestionBankList struct {
+	Total int64           `json:"total"`
+	List  []*QuestionBank `json:"list"`
+}
+
+type QuestionList struct {
+	Total int64            `json:"total"`
+	List  []*QuestionMenus `json:"list"`
+}
+
+type QuestionMenus struct {
+	Id    int64  `json:"id"`
+	Title string `json:"title"`
 }
 
 type RegisterReq struct {
