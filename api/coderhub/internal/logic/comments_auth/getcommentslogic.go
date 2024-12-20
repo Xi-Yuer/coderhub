@@ -28,9 +28,9 @@ func NewGetCommentsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCo
 
 func (l *GetCommentsLogic) GetComments(req *types.GetCommentsReq) (resp *types.GetCommentsResp, err error) {
 	comments, err := l.svcCtx.CommentService.GetComments(l.ctx, &commentservice.GetCommentsRequest{
-		ArticleId: req.ArticleId,
-		Page:      req.Page,
-		PageSize:  req.PageSize,
+		EntityId: req.EntityID,
+		Page:     req.Page,
+		PageSize: req.PageSize,
 	})
 	if err != nil {
 		return l.errorResp(err)
@@ -104,11 +104,11 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 		}
 
 		rootComments[i] = &types.Comment{
-			Id:        val.Id,
-			ArticleId: val.ArticleId,
-			Content:   val.Content,
-			ParentId:  val.ParentId,
-			RootId:    val.RootId,
+			Id:       val.Id,
+			EntityID: val.EntityId,
+			Content:  val.Content,
+			ParentId: val.ParentId,
+			RootId:   val.RootId,
 			UserInfo: &types.UserInfo{
 				Id:       val.Id,
 				Username: val.UserInfo.UserName,

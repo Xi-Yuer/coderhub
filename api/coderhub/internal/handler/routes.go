@@ -134,7 +134,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// 获取评论列表
 				Method:  http.MethodGet,
-				Path:    "/article/:article_id",
+				Path:    "/article/:entity_id",
 				Handler: comments_auth.GetCommentsHandler(serverCtx),
 			},
 			{

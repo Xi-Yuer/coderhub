@@ -18,7 +18,7 @@ type DeleteCommentLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 删除评论
+// NewDeleteCommentLogic 删除评论
 func NewDeleteCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteCommentLogic {
 	return &DeleteCommentLogic{
 		Logger: logx.WithContext(ctx),

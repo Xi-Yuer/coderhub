@@ -35,7 +35,7 @@ func (l *CreateCommentLogic) CreateComment(req *types.CreateCommentReq) (resp *t
 		return nil, err
 	}
 	comment, err := l.svcCtx.CommentService.CreateComment(ctx, &coderhub.CreateCommentRequest{
-		ArticleId:  req.ArticleId,
+		EntityId:   req.EntityID,
 		Content:    req.Content,
 		ParentId:   req.ParentId,
 		RootId:     req.RootId,
@@ -76,7 +76,7 @@ func (l *CreateCommentLogic) successResp(comment *commentservice.CreateCommentRe
 		},
 		Data: &types.Comment{
 			Id:           comment.Comment.Id,
-			ArticleId:    comment.Comment.ArticleId,
+			EntityID:     comment.Comment.EntityId,
 			Content:      comment.Comment.Content,
 			ParentId:     comment.Comment.ParentId,
 			RootId:       comment.Comment.RootId,

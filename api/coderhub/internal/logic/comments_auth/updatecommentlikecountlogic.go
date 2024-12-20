@@ -18,7 +18,7 @@ type UpdateCommentLikeCountLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 更新评论点赞数
+// NewUpdateCommentLikeCountLogic 更新评论点赞数
 func NewUpdateCommentLikeCountLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateCommentLikeCountLogic {
 	return &UpdateCommentLikeCountLogic{
 		Logger: logx.WithContext(ctx),

@@ -422,7 +422,7 @@
         ]
       }
     },
-    "/api/comments/article/{article_id}": {
+    "/api/comments/article/{entity_id}": {
       "get": {
         "summary": "获取评论列表",
         "operationId": "GetComments",
@@ -436,7 +436,7 @@
         },
         "parameters": [
           {
-            "name": "article_id",
+            "name": "entity_id",
             "in": "path",
             "required": true,
             "type": "string"
@@ -1855,7 +1855,7 @@
           "format": "int64",
           "description": " 评论ID"
         },
-        "article_id": {
+        "entity_id": {
           "type": "integer",
           "format": "int64",
           "description": " 文章ID"
@@ -1920,7 +1920,7 @@
       "title": "Comment",
       "required": [
         "id",
-        "article_id",
+        "entity_id",
         "content",
         "root_id",
         "parent_id",
@@ -2024,7 +2024,7 @@
     "CreateCommentReq": {
       "type": "object",
       "properties": {
-        "article_id": {
+        "entity_id": {
           "type": "integer",
           "format": "int64",
           "description": " 文章ID"
@@ -2059,7 +2059,7 @@
       },
       "title": "CreateCommentReq",
       "required": [
-        "article_id",
+        "entity_id",
         "content",
         "root_id",
         "parent_id",

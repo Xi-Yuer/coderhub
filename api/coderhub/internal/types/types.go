@@ -61,7 +61,7 @@ type CancelLikeAcademicNavigatorResp struct {
 
 type Comment struct {
 	Id              int64       `json:"id"`                 // 评论ID
-	ArticleId       int64       `json:"article_id"`         // 文章ID
+	EntityID        int64       `json:"entity_id"`          // 文章ID
 	Content         string      `json:"content"`            // 评论内容
 	RootId          int64       `json:"root_id"`            // 根评论ID
 	ParentId        int64       `json:"parent_id"`          // 父评论ID
@@ -92,7 +92,7 @@ type CreateArticleResp struct {
 }
 
 type CreateCommentReq struct {
-	ArticleId  int64   `json:"article_id"`   // 文章ID
+	EntityID   int64   `json:"entity_id"`    // 文章ID
 	Content    string  `json:"content"`      // 评论内容
 	RootId     int64   `json:"root_id"`      // 根评论ID
 	ParentId   int64   `json:"parent_id"`    // 父评论ID（可选）
@@ -253,9 +253,9 @@ type GetCommentResp struct {
 }
 
 type GetCommentsReq struct {
-	ArticleId int64 `path:"article_id"` // 文章ID
-	Page      int32 `form:"page"`       // 页码
-	PageSize  int32 `form:"page_size"`  // 每页数量
+	EntityID int64 `path:"entity_id"` // 文章ID
+	Page     int32 `form:"page"`      // 页码
+	PageSize int32 `form:"page_size"` // 每页数量
 }
 
 type GetCommentsResp struct {

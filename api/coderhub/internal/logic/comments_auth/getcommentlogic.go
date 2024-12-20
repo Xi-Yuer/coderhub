@@ -110,7 +110,7 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 		},
 		Data: &types.Comment{
 			Id:              comment.Comment.Id,
-			ArticleId:       comment.Comment.ArticleId,
+			EntityID:        comment.Comment.EntityId,
 			Content:         comment.Comment.Content,
 			ParentId:        comment.Comment.ParentId,
 			RootId:          comment.Comment.RootId,

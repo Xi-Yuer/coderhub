@@ -79,7 +79,7 @@ func (l *GetCommentLogic) GetComment(in *coderhub.GetCommentRequest) (*coderhub.
 	return &coderhub.GetCommentResponse{
 		Comment: &coderhub.Comment{
 			Id:              commentModel.ID,
-			ArticleId:       commentModel.ArticleID,
+			EntityId:        commentModel.EntityID,
 			Content:         commentModel.Content,
 			ParentId:        commentModel.ParentID,
 			RootId:          commentModel.RootID,

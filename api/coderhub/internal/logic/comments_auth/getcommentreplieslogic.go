@@ -78,7 +78,7 @@ func (l *GetCommentRepliesLogic) successResp(reply *coderhub.GetCommentRepliesRe
 		}
 		replies[i] = &types.Comment{
 			Id:              val.Id,
-			ArticleId:       val.ArticleId,
+			EntityID:        val.EntityId,
 			Content:         val.Content,
 			ParentId:        val.ParentId,
 			RootId:          val.RootId,

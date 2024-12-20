@@ -31,7 +31,7 @@ func (l *CreateCommentLogic) CreateComment(in *coderhub.CreateCommentRequest) (*
 	CommentID := utils.GenID()
 	commentModel := &model.Comment{
 		ID:         CommentID,
-		ArticleID:  in.ArticleId,
+		EntityID:   in.EntityId,
 		Content:    in.Content,
 		ParentID:   in.ParentId,
 		RootID:     in.RootId,
@@ -76,7 +76,7 @@ func (l *CreateCommentLogic) CreateComment(in *coderhub.CreateCommentRequest) (*
 	return &coderhub.CreateCommentResponse{
 		Comment: &coderhub.Comment{
 			Id:           commentModel.ID,
-			ArticleId:    commentModel.ArticleID,
+			EntityId:     commentModel.EntityID,
 			Content:      commentModel.Content,
 			ParentId:     commentModel.ParentID,
 			RootId:       commentModel.RootID,

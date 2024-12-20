@@ -28,7 +28,7 @@ func NewGetCommentsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCo
 
 // GetComments 获取评论列表
 func (l *GetCommentsLogic) GetComments(in *coderhub.GetCommentsRequest) (*coderhub.GetCommentsResponse, error) {
-	comments, total, err := l.svcCtx.CommentRepository.ListByArticleID(l.ctx, in.ArticleId, int64(in.Page), int64(in.PageSize))
+	comments, total, err := l.svcCtx.CommentRepository.ListByArticleID(l.ctx, in.EntityId, int64(in.Page), int64(in.PageSize))
 	if err != nil {
 		return nil, err
 	}
@@ -147,7 +147,7 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*coderhub.Comme
 
 		rootComments[i] = &coderhub.Comment{
 			Id:              val.ID,
-			ArticleId:       val.ArticleID,
+			EntityId:        val.EntityID,
 			Content:         val.Content,
 			ParentId:        val.ParentID,
 			RootId:          val.RootID,

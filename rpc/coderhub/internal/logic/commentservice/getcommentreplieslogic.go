@@ -146,7 +146,7 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentReplie
 		}
 		commentReplies[i] = &coderhub.Comment{
 			Id:              reply.ID,
-			ArticleId:       reply.ArticleID,
+			EntityId:        reply.EntityID,
 			Content:         reply.Content,
 			ParentId:        reply.ParentID,
 			RootId:          reply.RootID,

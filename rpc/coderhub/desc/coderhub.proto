@@ -400,7 +400,7 @@ message UpdateCommentLikeCountResponse {
 // 评论实体
 message Comment {
   int64 id = 1;                    // 评论ID
-  int64 article_id = 2;            // 文章ID
+  int64 entity_id = 2;            // 实体ID
   string content = 3;              // 评论内容
   int64 parent_id = 4;             // 父评论ID，用于嵌套评论
   int64 root_id = 5;              // 根评论ID（可选）
@@ -416,7 +416,7 @@ message Comment {
 
 // 创建评论请求
 message CreateCommentRequest {
-  int64 article_id = 1;            // 文章ID
+  int64 entity_id = 1;            // 实体ID
   string content = 2;              // 评论内容
   int64 parent_id = 3;             // 父评论ID（可选）
   int64 root_id = 4;              // 根评论ID（可选）
@@ -431,7 +431,7 @@ message CreateCommentResponse {
 
 // 获取评论列表请求
 message GetCommentsRequest {
-  int64 article_id = 1;            // 文章ID
+  int64 entity_id = 1;            // 实体ID
   int32 page = 2;                  // 页码
   int32 page_size = 3;             // 每页数量
 }
