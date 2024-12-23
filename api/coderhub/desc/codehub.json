@@ -205,23 +205,6 @@
         ]
       }
     },
-    "/api/academic_navigator/health": {
-      "get": {
-        "summary": "健康检查",
-        "operationId": "AcademicHealth",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/HealthResp"
-            }
-          }
-        },
-        "tags": [
-          "academic_public"
-        ]
-      }
-    },
     "/api/academic_navigator/like/{id}": {
       "post": {
         "summary": "点赞学术导航",
@@ -419,6 +402,23 @@
           {
             "apiKey": []
           }
+        ]
+      }
+    },
+    "/api/coderhub/health": {
+      "get": {
+        "summary": "健康检查",
+        "operationId": "AcademicHealth",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/HealthResp"
+            }
+          }
+        },
+        "tags": [
+          "coderhub"
         ]
       }
     },
@@ -732,23 +732,6 @@
         ]
       }
     },
-    "/api/follow/health": {
-      "get": {
-        "summary": "健康检查",
-        "operationId": "FollowHealth",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/HealthResp"
-            }
-          }
-        },
-        "tags": [
-          "follow_public"
-        ]
-      }
-    },
     "/api/follow/list": {
       "get": {
         "summary": "获取关注列表",
@@ -888,23 +871,6 @@
           {
             "apiKey": []
           }
-        ]
-      }
-    },
-    "/api/image/health": {
-      "get": {
-        "summary": "健康检查",
-        "operationId": "ImageHealth",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/HealthResp"
-            }
-          }
-        },
-        "tags": [
-          "image_public"
         ]
       }
     },
@@ -1290,23 +1256,6 @@
         ]
       }
     },
-    "/api/user/health": {
-      "get": {
-        "summary": "健康检查",
-        "operationId": "UserHealth",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/HealthResp"
-            }
-          }
-        },
-        "tags": [
-          "user_public"
-        ]
-      }
-    },
     "/api/user/info/{id}": {
       "get": {
         "summary": "获取用户信息",
@@ -1454,39 +1403,6 @@
         ],
         "consumes": [
           "multipart/form-data"
-        ]
-      }
-    },
-    "/api/user/reset_password": {
-      "post": {
-        "summary": "重置密码",
-        "operationId": "ResetPassword",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/ResetPasswordResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": " 重置密码请求",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ResetPasswordReq"
-            }
-          }
-        ],
-        "tags": [
-          "user_auth"
-        ],
-        "security": [
-          {
-            "apiKey": []
-          }
         ]
       }
     },
@@ -3500,52 +3416,6 @@
         }
       },
       "title": "ResetPasswordByLinkResp",
-      "required": [
-        "data"
-      ]
-    },
-    "ResetPasswordReq": {
-      "type": "object",
-      "properties": {
-        "old_password": {
-          "type": "string",
-          "description": " 旧密码"
-        },
-        "new_password": {
-          "type": "string",
-          "description": " 新密码"
-        },
-        "confirm_password": {
-          "type": "string",
-          "description": " 确认密码"
-        }
-      },
-      "title": "ResetPasswordReq",
-      "required": [
-        "old_password",
-        "new_password",
-        "confirm_password"
-      ]
-    },
-    "ResetPasswordResp": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 状态码"
-        },
-        "message": {
-          "type": "string",
-          "description": " 提示信息"
-        },
-        "data": {
-          "type": "boolean",
-          "format": "boolean",
-          "description": " 是否修改成功"
-        }
-      },
-      "title": "ResetPasswordResp",
       "required": [
         "data"
       ]

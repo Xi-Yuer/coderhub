@@ -141,7 +141,7 @@ services:
     networks:
       - coderhub-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8888/api/follow/health"] # 修改为实际的健康检查端点
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/api/coderhub/health" ] # 修改为实际的健康检查端点
       interval: 10s
       retries: 10
       start_period: 30s

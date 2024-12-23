@@ -10,11 +10,11 @@ import (
 	academic_public "coderhub/api/coderhub/internal/handler/academic_public"
 	articles_auth "coderhub/api/coderhub/internal/handler/articles_auth"
 	articles_public "coderhub/api/coderhub/internal/handler/articles_public"
+	coderhub "coderhub/api/coderhub/internal/handler/coderhub"
 	comments_auth "coderhub/api/coderhub/internal/handler/comments_auth"
 	follow_auth "coderhub/api/coderhub/internal/handler/follow_auth"
 	follow_public "coderhub/api/coderhub/internal/handler/follow_public"
 	image_auth "coderhub/api/coderhub/internal/handler/image_auth"
-	image_public "coderhub/api/coderhub/internal/handler/image_public"
 	questions_auth "coderhub/api/coderhub/internal/handler/questions_auth"
 	questions_public "coderhub/api/coderhub/internal/handler/questions_public"
 	user_auth "coderhub/api/coderhub/internal/handler/user_auth"
@@ -64,12 +64,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/get",
 				Handler: academic_public.GetAcademicNavigatorHandler(serverCtx),
 			},
-			{
-				// 健康检查
-				Method:  http.MethodGet,
-				Path:    "/health",
-				Handler: academic_public.AcademicHealthHandler(serverCtx),
-			},
 		},
 		rest.WithPrefix("/api/academic_navigator"),
 	)
@@ -115,6 +109,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/articles"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 健康检查
+				Method:  http.MethodGet,
+				Path:    "/health",
+				Handler: coderhub.AcademicHealthHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/coderhub"),
 	)
 
 	server.AddRoutes(
@@ -188,12 +194,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: follow_public.GetFansListHandler(serverCtx),
 			},
 			{
-				// 健康检查
-				Method:  http.MethodGet,
-				Path:    "/health",
-				Handler: follow_public.FollowHealthHandler(serverCtx),
-			},
-			{
 				// 获取关注列表
 				Method:  http.MethodGet,
 				Path:    "/list",
@@ -231,18 +231,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/api/image"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				// 健康检查
-				Method:  http.MethodGet,
-				Path:    "/health",
-				Handler: image_public.ImageHealthHandler(serverCtx),
-			},
-		},
 		rest.WithPrefix("/api/image"),
 	)
 
@@ -316,12 +304,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user_auth.DeleteUserHandler(serverCtx),
 			},
 			{
-				// 重置密码
-				Method:  http.MethodPost,
-				Path:    "/reset_password",
-				Handler: user_auth.ResetPasswordHandler(serverCtx),
-			},
-			{
 				// 更新用户信息
 				Method:  http.MethodPut,
 				Path:    "/update/:id",
@@ -340,12 +322,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		[]rest.Route{
-			{
-				// 健康检查
-				Method:  http.MethodGet,
-				Path:    "/health",
-				Handler: user_public.UserHealthHandler(serverCtx),
-			},
 			{
 				// 获取用户信息
 				Method:  http.MethodGet,

@@ -473,17 +473,6 @@ type ResetPasswordByLinkResp struct {
 	Data bool `json:"data"` // 是否重置成功
 }
 
-type ResetPasswordReq struct {
-	OldPassword     string `json:"old_password"`     // 旧密码
-	NewPassword     string `json:"new_password"`     // 新密码
-	ConfirmPassword string `json:"confirm_password"` // 确认密码
-}
-
-type ResetPasswordResp struct {
-	Response
-	Data bool `json:"data"` // 是否修改成功
-}
-
 type Response struct {
 	Code    int32  `json:"code"`    // 状态码
 	Message string `json:"message"` // 提示信息
