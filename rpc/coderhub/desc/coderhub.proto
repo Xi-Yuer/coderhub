@@ -825,3 +825,134 @@ service QuestionService {
   rpc GetQuestion(GetQuestionRequest) returns (GetQuestionResponse) {}
 }
 
+// 创建收藏夹
+message CreateFavorFoldRequest {
+  string name = 1;
+  string description = 2;
+  int64 user_id = 3;
+  bool is_public = 4;
+}
+// 创建收藏夹相应
+message CreateFavorFoldResponse {
+  bool success = 1;
+}
+
+// 删除收藏夹
+message DeleteFavorFoldRequest {
+  int64 id = 1;
+  int64 user_id = 2;
+}
+
+// 删除收藏夹相应
+message DeleteFavorFoldResponse {
+  bool success = 1;
+}
+
+// 更新收藏夹
+message UpdateFavorFoldRequest {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  bool is_public = 4;
+}
+
+// 更新收藏夹相应
+message UpdateFavorFoldResponse {
+  bool success = 1;
+}
+
+// 获取收藏夹列表
+message GetFavorFoldListRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  int64 user_id = 3;
+}
+
+// 收藏夹
+message FavorFold {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  bool is_public = 4;
+  int64 user_id = 5;
+  int64 create_time = 6;
+  int64 update_time = 7;
+}
+// 获取收藏夹列表相应
+message GetFavorFoldListResponse {
+  repeated FavorFold FavorFolds = 1;
+  int64 total = 2;
+}
+
+service FavorFoldService {
+  // 创建
+  rpc CreateFavorFold(CreateFavorFoldRequest) returns (CreateFavorFoldResponse) {}
+  // 删除
+  rpc DeleteFavorFold(DeleteFavorFoldRequest) returns (DeleteFavorFoldResponse) {}
+  // 更新
+  rpc UpdateFavorFold(UpdateFavorFoldRequest) returns (UpdateFavorFoldResponse) {}
+  // 获取列表
+  rpc GetFavorFoldList(GetFavorFoldListRequest) returns (GetFavorFoldListResponse) {}
+}
+
+// 创建收藏实体
+message CreateFavorRequest {
+  int64 user_id = 1;
+  int64 favor_folder_id = 2;
+  int64 entity_id = 3;
+  string entity_type = 4;
+}
+
+// 创建收藏响应
+message CreateFavorResponse {
+  bool success = 1;
+}
+
+// 删除收藏实体
+message DeleteFavorRequest {
+  int64 id = 1;
+  int64 user_id = 2;
+  int64 favor_folder_id = 3;
+  int64 entity_id = 4;
+  string entity_type = 5;
+}
+
+// 删除收藏响应
+message DeleteFavorResponse {
+  bool success = 1;
+}
+
+// 获取收藏夹列表
+message GetFavorListRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  int64 user_id = 3;
+  string entity_type = 4;
+  int64 favor_folder_id = 5;
+}
+
+// 收藏夹
+message Favor {
+  int64 id = 1;
+  int64 user_id = 2;
+  int64 favor_folder_id = 3;
+  int64 entity_id = 4;
+  string entity_type = 5;
+  int64 create_time = 6;
+}
+
+// 获取收藏夹列表相应
+message GetFavorListResponse {
+  repeated Favor favors = 1;
+  int64 total = 2;
+}
+
+service FavorService {
+  // 创建
+  rpc CreateFavor(CreateFavorRequest) returns (CreateFavorResponse) {}
+  // 删除
+  rpc DeleteFavor(DeleteFavorRequest) returns (DeleteFavorResponse) {}
+  // 获取列表
+  rpc GetFavorList(GetFavorListRequest) returns (GetFavorListResponse) {}
+}
+

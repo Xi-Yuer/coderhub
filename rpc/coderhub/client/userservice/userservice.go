@@ -39,6 +39,10 @@ type (
 	CreateArticleResponse              = coderhub.CreateArticleResponse
 	CreateCommentRequest               = coderhub.CreateCommentRequest
 	CreateCommentResponse              = coderhub.CreateCommentResponse
+	CreateFavorFoldRequest             = coderhub.CreateFavorFoldRequest
+	CreateFavorFoldResponse            = coderhub.CreateFavorFoldResponse
+	CreateFavorRequest                 = coderhub.CreateFavorRequest
+	CreateFavorResponse                = coderhub.CreateFavorResponse
 	CreateQuestionBankRequest          = coderhub.CreateQuestionBankRequest
 	CreateQuestionBankResponse         = coderhub.CreateQuestionBankResponse
 	CreateQuestionRequest              = coderhub.CreateQuestionRequest
@@ -56,6 +60,10 @@ type (
 	DeleteByEntityIDResponse           = coderhub.DeleteByEntityIDResponse
 	DeleteCommentRequest               = coderhub.DeleteCommentRequest
 	DeleteCommentResponse              = coderhub.DeleteCommentResponse
+	DeleteFavorFoldRequest             = coderhub.DeleteFavorFoldRequest
+	DeleteFavorFoldResponse            = coderhub.DeleteFavorFoldResponse
+	DeleteFavorRequest                 = coderhub.DeleteFavorRequest
+	DeleteFavorResponse                = coderhub.DeleteFavorResponse
 	DeleteQuestionBankRequest          = coderhub.DeleteQuestionBankRequest
 	DeleteQuestionBankResponse         = coderhub.DeleteQuestionBankResponse
 	DeleteQuestionRequest              = coderhub.DeleteQuestionRequest
@@ -67,6 +75,8 @@ type (
 	DeleteUserRequest                  = coderhub.DeleteUserRequest
 	DeleteUserResponse                 = coderhub.DeleteUserResponse
 	EntityInfo                         = coderhub.EntityInfo
+	Favor                              = coderhub.Favor
+	FavorFold                          = coderhub.FavorFold
 	GenerateTokenRequest               = coderhub.GenerateTokenRequest
 	GenerateTokenResponse              = coderhub.GenerateTokenResponse
 	GetAcademicNavigatorRequest        = coderhub.GetAcademicNavigatorRequest
@@ -81,6 +91,10 @@ type (
 	GetCommentsResponse                = coderhub.GetCommentsResponse
 	GetEntitiesByImageRequest          = coderhub.GetEntitiesByImageRequest
 	GetEntitiesByImageResponse         = coderhub.GetEntitiesByImageResponse
+	GetFavorFoldListRequest            = coderhub.GetFavorFoldListRequest
+	GetFavorFoldListResponse           = coderhub.GetFavorFoldListResponse
+	GetFavorListRequest                = coderhub.GetFavorListRequest
+	GetFavorListResponse               = coderhub.GetFavorListResponse
 	GetImagesByEntityRequest           = coderhub.GetImagesByEntityRequest
 	GetImagesByEntityResponse          = coderhub.GetImagesByEntityResponse
 	GetMutualFollowsReq                = coderhub.GetMutualFollowsReq
@@ -117,6 +131,8 @@ type (
 	UpdateArticleResponse              = coderhub.UpdateArticleResponse
 	UpdateCommentLikeCountRequest      = coderhub.UpdateCommentLikeCountRequest
 	UpdateCommentLikeCountResponse     = coderhub.UpdateCommentLikeCountResponse
+	UpdateFavorFoldRequest             = coderhub.UpdateFavorFoldRequest
+	UpdateFavorFoldResponse            = coderhub.UpdateFavorFoldResponse
 	UpdateLikeCountRequest             = coderhub.UpdateLikeCountRequest
 	UpdateLikeCountResponse            = coderhub.UpdateLikeCountResponse
 	UpdateUserInfoRequest              = coderhub.UpdateUserInfoRequest

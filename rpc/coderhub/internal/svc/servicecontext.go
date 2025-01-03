@@ -27,6 +27,8 @@ type ServiceContext struct {
 	CommentRelationLikeRepository  repository.CommentRelationLikeRepository
 	QuestionBankRepository         repository.QuestionBankRepository
 	QuestionRepository             repository.QuestionRepository
+	UserFavorFolderRepository      repository.UserFavorFolderRepository
+	UserFavorEntityRepository      repository.UserFavorEntityRepository
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -74,5 +76,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		AcademicNavigatorRepository:    repository.NewAcademicNavigatorRepositoryImpl(sql, &cfg),
 		QuestionBankRepository:         repository.NewQuestionRepositoryRepositoryImpl(sql, redisDB),
 		QuestionRepository:             repository.NewQuestionRepositoryImpl(sql, redisDB),
+		UserFavorFolderRepository:      repository.NewUserFavorFolderRepository(sql, redisDB),
+		UserFavorEntityRepository:      repository.NewUserFavorEntityRepository(sql, redisDB),
 	}
 }

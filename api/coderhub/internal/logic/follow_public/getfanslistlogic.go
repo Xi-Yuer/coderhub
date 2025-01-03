@@ -17,7 +17,7 @@ type GetFansListLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 获取粉丝列表
+// NewGetFansListLogic 获取粉丝列表
 func NewGetFansListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFansListLogic {
 	return &GetFansListLogic{
 		Logger: logx.WithContext(ctx),

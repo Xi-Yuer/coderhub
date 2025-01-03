@@ -2656,3 +2656,411 @@ var QuestionService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "coderhub.proto",
 }
+
+const (
+	FavorFoldService_CreateFavorFold_FullMethodName  = "/coderhub.FavorFoldService/CreateFavorFold"
+	FavorFoldService_DeleteFavorFold_FullMethodName  = "/coderhub.FavorFoldService/DeleteFavorFold"
+	FavorFoldService_UpdateFavorFold_FullMethodName  = "/coderhub.FavorFoldService/UpdateFavorFold"
+	FavorFoldService_GetFavorFoldList_FullMethodName = "/coderhub.FavorFoldService/GetFavorFoldList"
+)
+
+// FavorFoldServiceClient is the client API for FavorFoldService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type FavorFoldServiceClient interface {
+	// 创建
+	CreateFavorFold(ctx context.Context, in *CreateFavorFoldRequest, opts ...grpc.CallOption) (*CreateFavorFoldResponse, error)
+	// 删除
+	DeleteFavorFold(ctx context.Context, in *DeleteFavorFoldRequest, opts ...grpc.CallOption) (*DeleteFavorFoldResponse, error)
+	// 更新
+	UpdateFavorFold(ctx context.Context, in *UpdateFavorFoldRequest, opts ...grpc.CallOption) (*UpdateFavorFoldResponse, error)
+	// 获取列表
+	GetFavorFoldList(ctx context.Context, in *GetFavorFoldListRequest, opts ...grpc.CallOption) (*GetFavorFoldListResponse, error)
+}
+
+type favorFoldServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewFavorFoldServiceClient(cc grpc.ClientConnInterface) FavorFoldServiceClient {
+	return &favorFoldServiceClient{cc}
+}
+
+func (c *favorFoldServiceClient) CreateFavorFold(ctx context.Context, in *CreateFavorFoldRequest, opts ...grpc.CallOption) (*CreateFavorFoldResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateFavorFoldResponse)
+	err := c.cc.Invoke(ctx, FavorFoldService_CreateFavorFold_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *favorFoldServiceClient) DeleteFavorFold(ctx context.Context, in *DeleteFavorFoldRequest, opts ...grpc.CallOption) (*DeleteFavorFoldResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteFavorFoldResponse)
+	err := c.cc.Invoke(ctx, FavorFoldService_DeleteFavorFold_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *favorFoldServiceClient) UpdateFavorFold(ctx context.Context, in *UpdateFavorFoldRequest, opts ...grpc.CallOption) (*UpdateFavorFoldResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateFavorFoldResponse)
+	err := c.cc.Invoke(ctx, FavorFoldService_UpdateFavorFold_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *favorFoldServiceClient) GetFavorFoldList(ctx context.Context, in *GetFavorFoldListRequest, opts ...grpc.CallOption) (*GetFavorFoldListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetFavorFoldListResponse)
+	err := c.cc.Invoke(ctx, FavorFoldService_GetFavorFoldList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// FavorFoldServiceServer is the server API for FavorFoldService service.
+// All implementations must embed UnimplementedFavorFoldServiceServer
+// for forward compatibility.
+type FavorFoldServiceServer interface {
+	// 创建
+	CreateFavorFold(context.Context, *CreateFavorFoldRequest) (*CreateFavorFoldResponse, error)
+	// 删除
+	DeleteFavorFold(context.Context, *DeleteFavorFoldRequest) (*DeleteFavorFoldResponse, error)
+	// 更新
+	UpdateFavorFold(context.Context, *UpdateFavorFoldRequest) (*UpdateFavorFoldResponse, error)
+	// 获取列表
+	GetFavorFoldList(context.Context, *GetFavorFoldListRequest) (*GetFavorFoldListResponse, error)
+	mustEmbedUnimplementedFavorFoldServiceServer()
+}
+
+// UnimplementedFavorFoldServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedFavorFoldServiceServer struct{}
+
+func (UnimplementedFavorFoldServiceServer) CreateFavorFold(context.Context, *CreateFavorFoldRequest) (*CreateFavorFoldResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateFavorFold not implemented")
+}
+func (UnimplementedFavorFoldServiceServer) DeleteFavorFold(context.Context, *DeleteFavorFoldRequest) (*DeleteFavorFoldResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteFavorFold not implemented")
+}
+func (UnimplementedFavorFoldServiceServer) UpdateFavorFold(context.Context, *UpdateFavorFoldRequest) (*UpdateFavorFoldResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateFavorFold not implemented")
+}
+func (UnimplementedFavorFoldServiceServer) GetFavorFoldList(context.Context, *GetFavorFoldListRequest) (*GetFavorFoldListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFavorFoldList not implemented")
+}
+func (UnimplementedFavorFoldServiceServer) mustEmbedUnimplementedFavorFoldServiceServer() {}
+func (UnimplementedFavorFoldServiceServer) testEmbeddedByValue()                          {}
+
+// UnsafeFavorFoldServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to FavorFoldServiceServer will
+// result in compilation errors.
+type UnsafeFavorFoldServiceServer interface {
+	mustEmbedUnimplementedFavorFoldServiceServer()
+}
+
+func RegisterFavorFoldServiceServer(s grpc.ServiceRegistrar, srv FavorFoldServiceServer) {
+	// If the following call pancis, it indicates UnimplementedFavorFoldServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&FavorFoldService_ServiceDesc, srv)
+}
+
+func _FavorFoldService_CreateFavorFold_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateFavorFoldRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FavorFoldServiceServer).CreateFavorFold(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FavorFoldService_CreateFavorFold_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FavorFoldServiceServer).CreateFavorFold(ctx, req.(*CreateFavorFoldRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FavorFoldService_DeleteFavorFold_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteFavorFoldRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FavorFoldServiceServer).DeleteFavorFold(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FavorFoldService_DeleteFavorFold_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FavorFoldServiceServer).DeleteFavorFold(ctx, req.(*DeleteFavorFoldRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FavorFoldService_UpdateFavorFold_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateFavorFoldRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FavorFoldServiceServer).UpdateFavorFold(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FavorFoldService_UpdateFavorFold_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FavorFoldServiceServer).UpdateFavorFold(ctx, req.(*UpdateFavorFoldRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FavorFoldService_GetFavorFoldList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFavorFoldListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FavorFoldServiceServer).GetFavorFoldList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FavorFoldService_GetFavorFoldList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FavorFoldServiceServer).GetFavorFoldList(ctx, req.(*GetFavorFoldListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// FavorFoldService_ServiceDesc is the grpc.ServiceDesc for FavorFoldService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var FavorFoldService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "coderhub.FavorFoldService",
+	HandlerType: (*FavorFoldServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateFavorFold",
+			Handler:    _FavorFoldService_CreateFavorFold_Handler,
+		},
+		{
+			MethodName: "DeleteFavorFold",
+			Handler:    _FavorFoldService_DeleteFavorFold_Handler,
+		},
+		{
+			MethodName: "UpdateFavorFold",
+			Handler:    _FavorFoldService_UpdateFavorFold_Handler,
+		},
+		{
+			MethodName: "GetFavorFoldList",
+			Handler:    _FavorFoldService_GetFavorFoldList_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "coderhub.proto",
+}
+
+const (
+	FavorService_CreateFavor_FullMethodName  = "/coderhub.FavorService/CreateFavor"
+	FavorService_DeleteFavor_FullMethodName  = "/coderhub.FavorService/DeleteFavor"
+	FavorService_GetFavorList_FullMethodName = "/coderhub.FavorService/GetFavorList"
+)
+
+// FavorServiceClient is the client API for FavorService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type FavorServiceClient interface {
+	// 创建
+	CreateFavor(ctx context.Context, in *CreateFavorRequest, opts ...grpc.CallOption) (*CreateFavorResponse, error)
+	// 删除
+	DeleteFavor(ctx context.Context, in *DeleteFavorRequest, opts ...grpc.CallOption) (*DeleteFavorResponse, error)
+	// 获取列表
+	GetFavorList(ctx context.Context, in *GetFavorListRequest, opts ...grpc.CallOption) (*GetFavorListResponse, error)
+}
+
+type favorServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewFavorServiceClient(cc grpc.ClientConnInterface) FavorServiceClient {
+	return &favorServiceClient{cc}
+}
+
+func (c *favorServiceClient) CreateFavor(ctx context.Context, in *CreateFavorRequest, opts ...grpc.CallOption) (*CreateFavorResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateFavorResponse)
+	err := c.cc.Invoke(ctx, FavorService_CreateFavor_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *favorServiceClient) DeleteFavor(ctx context.Context, in *DeleteFavorRequest, opts ...grpc.CallOption) (*DeleteFavorResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteFavorResponse)
+	err := c.cc.Invoke(ctx, FavorService_DeleteFavor_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *favorServiceClient) GetFavorList(ctx context.Context, in *GetFavorListRequest, opts ...grpc.CallOption) (*GetFavorListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetFavorListResponse)
+	err := c.cc.Invoke(ctx, FavorService_GetFavorList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// FavorServiceServer is the server API for FavorService service.
+// All implementations must embed UnimplementedFavorServiceServer
+// for forward compatibility.
+type FavorServiceServer interface {
+	// 创建
+	CreateFavor(context.Context, *CreateFavorRequest) (*CreateFavorResponse, error)
+	// 删除
+	DeleteFavor(context.Context, *DeleteFavorRequest) (*DeleteFavorResponse, error)
+	// 获取列表
+	GetFavorList(context.Context, *GetFavorListRequest) (*GetFavorListResponse, error)
+	mustEmbedUnimplementedFavorServiceServer()
+}
+
+// UnimplementedFavorServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedFavorServiceServer struct{}
+
+func (UnimplementedFavorServiceServer) CreateFavor(context.Context, *CreateFavorRequest) (*CreateFavorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateFavor not implemented")
+}
+func (UnimplementedFavorServiceServer) DeleteFavor(context.Context, *DeleteFavorRequest) (*DeleteFavorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteFavor not implemented")
+}
+func (UnimplementedFavorServiceServer) GetFavorList(context.Context, *GetFavorListRequest) (*GetFavorListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFavorList not implemented")
+}
+func (UnimplementedFavorServiceServer) mustEmbedUnimplementedFavorServiceServer() {}
+func (UnimplementedFavorServiceServer) testEmbeddedByValue()                      {}
+
+// UnsafeFavorServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to FavorServiceServer will
+// result in compilation errors.
+type UnsafeFavorServiceServer interface {
+	mustEmbedUnimplementedFavorServiceServer()
+}
+
+func RegisterFavorServiceServer(s grpc.ServiceRegistrar, srv FavorServiceServer) {
+	// If the following call pancis, it indicates UnimplementedFavorServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&FavorService_ServiceDesc, srv)
+}
+
+func _FavorService_CreateFavor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateFavorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FavorServiceServer).CreateFavor(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FavorService_CreateFavor_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FavorServiceServer).CreateFavor(ctx, req.(*CreateFavorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FavorService_DeleteFavor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteFavorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FavorServiceServer).DeleteFavor(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FavorService_DeleteFavor_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FavorServiceServer).DeleteFavor(ctx, req.(*DeleteFavorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FavorService_GetFavorList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFavorListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FavorServiceServer).GetFavorList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FavorService_GetFavorList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FavorServiceServer).GetFavorList(ctx, req.(*GetFavorListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// FavorService_ServiceDesc is the grpc.ServiceDesc for FavorService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var FavorService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "coderhub.FavorService",
+	HandlerType: (*FavorServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateFavor",
+			Handler:    _FavorService_CreateFavor_Handler,
+		},
+		{
+			MethodName: "DeleteFavor",
+			Handler:    _FavorService_DeleteFavor_Handler,
+		},
+		{
+			MethodName: "GetFavorList",
+			Handler:    _FavorService_GetFavorList_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "coderhub.proto",
+}

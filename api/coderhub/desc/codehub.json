@@ -653,6 +653,284 @@
         ]
       }
     },
+    "/api/favorites/add": {
+      "post": {
+        "summary": "添加收藏内容",
+        "operationId": "AddFavoriteContent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateFavorResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 创建收藏实体",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateFavorReq"
+            }
+          }
+        ],
+        "tags": [
+          "favorites_auth"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/favorites/content/{id}": {
+      "delete": {
+        "summary": "删除收藏夹内容",
+        "operationId": "DeleteFavoriteContent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DeleteFavorResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": "  删除收藏实体",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteFavorReq"
+            }
+          }
+        ],
+        "tags": [
+          "favorites_auth"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/favorites/content_list": {
+      "get": {
+        "summary": "获取收藏内容列表",
+        "operationId": "ListFavoriteContent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetFavorListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "entity_type",
+            "description": " 实体类型",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "article",
+              "question"
+            ]
+          },
+          {
+            "name": "favor_fold_id",
+            "description": " 收藏夹 ID",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "description": " 页码",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页数量",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "favorites_public"
+        ]
+      }
+    },
+    "/api/favorites/create": {
+      "post": {
+        "summary": "创建收藏夹",
+        "operationId": "CreateFavorite",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateFavorFoldResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 创建收藏夹",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateFavorFoldReq"
+            }
+          }
+        ],
+        "tags": [
+          "favorites_auth"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/favorites/list": {
+      "get": {
+        "summary": "获取收藏夹列表",
+        "operationId": "ListFavorite",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetFavorFoldListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "description": " 用户 ID",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "description": " 页码",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页数量",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "favorites_public"
+        ]
+      }
+    },
+    "/api/favorites/{id}": {
+      "delete": {
+        "summary": "删除收藏夹",
+        "operationId": "DeleteFavorite",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DeleteFavorFoldResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 删除收藏夹",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteFavorFoldReq"
+            }
+          }
+        ],
+        "tags": [
+          "favorites_auth"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "更新收藏夹",
+        "operationId": "UpdateFavorite",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UpdateFavorFoldResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 更新收藏夹",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateFavorFoldReq"
+            }
+          }
+        ],
+        "tags": [
+          "favorites_auth"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
     "/api/follow/fans": {
       "get": {
         "summary": "获取粉丝列表",
@@ -1159,6 +1437,7 @@
         "parameters": [
           {
             "name": "bankId",
+            "description": " 题库 ID",
             "in": "query",
             "required": true,
             "type": "integer",
@@ -1166,6 +1445,7 @@
           },
           {
             "name": "page",
+            "description": " 页码",
             "in": "query",
             "required": true,
             "type": "integer",
@@ -1173,6 +1453,7 @@
           },
           {
             "name": "page_size",
+            "description": " 每页数量",
             "in": "query",
             "required": true,
             "type": "integer",
@@ -2005,6 +2286,105 @@
         "data"
       ]
     },
+    "CreateFavorFoldReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 收藏夹名称"
+        },
+        "description": {
+          "type": "string",
+          "description": " 描述"
+        },
+        "isPublic": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否公开"
+        }
+      },
+      "title": "CreateFavorFoldReq",
+      "required": [
+        "name",
+        "description",
+        "isPublic"
+      ]
+    },
+    "CreateFavorFoldResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 收藏夹详情"
+        }
+      },
+      "title": "CreateFavorFoldResp",
+      "required": [
+        "data"
+      ]
+    },
+    "CreateFavorReq": {
+      "type": "object",
+      "properties": {
+        "foldId": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 收藏夹 ID"
+        },
+        "entityId": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 实体 ID"
+        },
+        "entity_type": {
+          "type": "string",
+          "enum": [
+            "article",
+            "question"
+          ],
+          "description": " 实体类型"
+        }
+      },
+      "title": "CreateFavorReq",
+      "required": [
+        "foldId",
+        "entityId",
+        "entity_type"
+      ]
+    },
+    "CreateFavorResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 收藏夹详情"
+        }
+      },
+      "title": "CreateFavorResp",
+      "required": [
+        "data"
+      ]
+    },
     "CreateQuestionBankReq": {
       "type": "object",
       "properties": {
@@ -2202,6 +2582,80 @@
         "data"
       ]
     },
+    "DeleteFavorFoldReq": {
+      "type": "object",
+      "title": "DeleteFavorFoldReq"
+    },
+    "DeleteFavorFoldResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "DeleteFavorFoldResp",
+      "required": [
+        "data"
+      ]
+    },
+    "DeleteFavorReq": {
+      "type": "object",
+      "properties": {
+        "favor_fold_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "entity_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "entity_type": {
+          "type": "string",
+          "enum": [
+            "article",
+            "question"
+          ]
+        }
+      },
+      "title": "DeleteFavorReq",
+      "required": [
+        "favor_fold_id",
+        "entity_id",
+        "entity_type"
+      ]
+    },
+    "DeleteFavorResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "DeleteFavorResp",
+      "required": [
+        "data"
+      ]
+    },
     "DeleteQuestionBankReq": {
       "type": "object",
       "title": "DeleteQuestionBankReq"
@@ -2318,6 +2772,124 @@
       "title": "DeleteUserResp",
       "required": [
         "data"
+      ]
+    },
+    "Favor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "create_user": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "favor_fold_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "entity_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "entity_type": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "Favor",
+      "required": [
+        "id",
+        "create_user",
+        "favor_fold_id",
+        "entity_id",
+        "entity_type",
+        "createdAt"
+      ]
+    },
+    "FavorFold": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "is_public": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "create_user": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "updatedAt": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "FavorFold",
+      "required": [
+        "id",
+        "name",
+        "description",
+        "is_public",
+        "create_user",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "FavorFoldList": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FavorFold"
+          }
+        }
+      },
+      "title": "FavorFoldList",
+      "required": [
+        "total",
+        "list"
+      ]
+    },
+    "FavorList": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Favor"
+          }
+        }
+      },
+      "title": "FavorList",
+      "required": [
+        "total",
+        "list"
       ]
     },
     "FollowList": {
@@ -2630,6 +3202,109 @@
         "data"
       ]
     },
+    "GetFavorFoldListReq": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 用户 ID"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 页码"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 每页数量"
+        }
+      },
+      "title": "GetFavorFoldListReq",
+      "required": [
+        "userId",
+        "page",
+        "page_size"
+      ]
+    },
+    "GetFavorFoldListResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "$ref": "#/definitions/FavorFoldList"
+        }
+      },
+      "title": "GetFavorFoldListResp",
+      "required": [
+        "data"
+      ]
+    },
+    "GetFavorListReq": {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "enum": [
+            "article",
+            "question"
+          ],
+          "description": " 实体类型"
+        },
+        "favor_fold_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 收藏夹 ID"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 页码"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 每页数量"
+        }
+      },
+      "title": "GetFavorListReq",
+      "required": [
+        "entity_type",
+        "favor_fold_id",
+        "page",
+        "page_size"
+      ]
+    },
+    "GetFavorListResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "$ref": "#/definitions/FavorList"
+        }
+      },
+      "title": "GetFavorListResp",
+      "required": [
+        "data"
+      ]
+    },
     "GetFollowListReq": {
       "type": "object",
       "properties": {
@@ -2749,15 +3424,18 @@
       "properties": {
         "bankId": {
           "type": "integer",
-          "format": "int64"
+          "format": "int64",
+          "description": " 题库 ID"
         },
         "page": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": " 页码"
         },
         "page_size": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": " 每页数量"
         }
       },
       "title": "GetQuestionListReq",
@@ -3610,6 +4288,48 @@
         }
       },
       "title": "UpdateCommentLikeCountResp",
+      "required": [
+        "data"
+      ]
+    },
+    "UpdateFavorFoldReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 收藏夹名称"
+        },
+        "description": {
+          "type": "string",
+          "description": " 描述"
+        },
+        "isPublic": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否公开"
+        }
+      },
+      "title": "UpdateFavorFoldReq"
+    },
+    "UpdateFavorFoldResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 收藏夹详情"
+        }
+      },
+      "title": "UpdateFavorFoldResp",
       "required": [
         "data"
       ]

@@ -105,6 +105,28 @@ type CreateCommentResp struct {
 	Data *Comment `json:"data"` // 创建的评论
 }
 
+type CreateFavorFoldReq struct {
+	Name        string `json:"name"`        // 收藏夹名称
+	Description string `json:"description"` // 描述
+	IsPublic    bool   `json:"isPublic"`    // 是否公开
+}
+
+type CreateFavorFoldResp struct {
+	Response
+	Data bool `json:"data"` // 收藏夹详情
+}
+
+type CreateFavorReq struct {
+	FoldId     int64  `json:"foldId"`                               // 收藏夹 ID
+	EntityId   int64  `json:"entityId"`                             // 实体 ID
+	EntityType string `json:"entity_type,options=article|question"` // 实体类型
+}
+
+type CreateFavorResp struct {
+	Response
+	Data bool `json:"data"` // 收藏夹详情
+}
+
 type CreateQuestionBankReq struct {
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
@@ -157,6 +179,27 @@ type DeleteCommentResp struct {
 	Data bool `json:"data"` // 删除是否成功
 }
 
+type DeleteFavorFoldReq struct {
+	Id int64 `path:"id"` // 收藏夹 ID
+}
+
+type DeleteFavorFoldResp struct {
+	Response
+	Data bool `json:"data"`
+}
+
+type DeleteFavorReq struct {
+	Id          int64  `path:"id"` // 收藏夹 ID
+	FavorFoldId int64  `json:"favor_fold_id"`
+	EntityId    int64  `json:"entity_id"`
+	EntityType  string `json:"entity_type,options=article|question"`
+}
+
+type DeleteFavorResp struct {
+	Response
+	Data bool `json:"data"`
+}
+
 type DeleteQuestionBankReq struct {
 	Id int64 `path:"id"` // 题库 ID
 }
@@ -191,6 +234,35 @@ type DeleteUserReq struct {
 type DeleteUserResp struct {
 	Response
 	Data bool `json:"data"` // 是否删除成功
+}
+
+type Favor struct {
+	ID          int64  `json:"id"`
+	CreateUser  int64  `json:"create_user"`
+	FavorFoldId int64  `json:"favor_fold_id"`
+	EntityId    int64  `json:"entity_id"`
+	EntityType  string `json:"entity_type"`
+	CreatedAt   int64  `json:"createdAt"`
+}
+
+type FavorFold struct {
+	ID          int64  `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	IsPublic    bool   `json:"is_public"`
+	CreateUser  int64  `json:"create_user"`
+	CreatedAt   int64  `json:"createdAt"`
+	UpdatedAt   int64  `json:"updatedAt"`
+}
+
+type FavorFoldList struct {
+	Total int64        `json:"total"`
+	List  []*FavorFold `json:"list"`
+}
+
+type FavorList struct {
+	Total int64    `json:"total"`
+	List  []*Favor `json:"list"`
 }
 
 type FollowList struct {
@@ -274,6 +346,29 @@ type GetFansListResp struct {
 	Data FollowList `json:"data"` // 粉丝列表
 }
 
+type GetFavorFoldListReq struct {
+	UserId   int64 `json:"userId"`    // 用户 ID
+	Page     int32 `json:"page"`      // 页码
+	PageSize int32 `json:"page_size"` // 每页数量
+}
+
+type GetFavorFoldListResp struct {
+	Response
+	Data FavorFoldList `json:"data"`
+}
+
+type GetFavorListReq struct {
+	EntityType  string `json:"entity_type,options=article|question"` // 实体类型
+	FavorFoldId int64  `json:"favor_fold_id"`                        // 收藏夹 ID
+	Page        int32  `json:"page"`                                 // 页码
+	PageSize    int32  `json:"page_size"`                            // 每页数量
+}
+
+type GetFavorListResp struct {
+	Response
+	Data FavorList `json:"data"`
+}
+
 type GetFollowListReq struct {
 	UserId   int64 `form:"user_id"`   // 用户ID
 	Page     int64 `form:"page"`      // 页码
@@ -305,9 +400,9 @@ type GetQuestionBankResp struct {
 }
 
 type GetQuestionListReq struct {
-	BankId   int64 `json:"bankId"`
-	Page     int32 `json:"page"`
-	PageSize int32 `json:"page_size"`
+	BankId   int64 `json:"bankId"`    // 题库 ID
+	Page     int32 `json:"page"`      // 页码
+	PageSize int32 `json:"page_size"` // 每页数量
 }
 
 type GetQuestionListResp struct {
@@ -519,6 +614,18 @@ type UpdateCommentLikeCountReq struct {
 type UpdateCommentLikeCountResp struct {
 	Response
 	Data bool `json:"data"` // 更新是否成功
+}
+
+type UpdateFavorFoldReq struct {
+	Id          int64  `path:"id"`                   // 收藏夹 ID
+	Name        string `json:"name,optional"`        // 收藏夹名称
+	Description string `json:"description,optional"` // 描述
+	IsPublic    bool   `json:"isPublic,optional"`    // 是否公开
+}
+
+type UpdateFavorFoldResp struct {
+	Response
+	Data bool `json:"data"` // 收藏夹详情
 }
 
 type UpdateLikeCountReq struct {

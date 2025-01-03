@@ -566,9 +566,9 @@ type (
 	}
 		// 获取题目列表
 	GetQuestionListReq {
-		BankId int64 `json:"bankId"`
-		Page int32 `json:"page"`
-		PageSize int32 `json:"page_size"`
+		BankId int64 `json:"bankId"`      // 题库 ID
+		Page int32 `json:"page"`          // 页码
+		PageSize int32 `json:"page_size"` // 每页数量
 	}
 		// 题目列表
 	QuestionList {
@@ -579,6 +579,111 @@ type (
 	GetQuestionListResp {
 		Response
 		Data QuestionList `json:"data"` // 题目列表
+	}
+		// 创建收藏夹
+	CreateFavorFoldReq {
+		Name string `json:"name"`               // 收藏夹名称
+		Description string `json:"description"` // 描述
+		IsPublic bool `json:"isPublic"`         // 是否公开
+	}
+		// 创建收藏夹相应
+	CreateFavorFoldResp {
+		Response
+		Data bool `json:"data"` // 收藏夹详情
+	}
+		// 删除收藏夹
+	DeleteFavorFoldReq {
+		Id int64 `path:"id"` // 收藏夹 ID
+	}
+		// 删除收藏夹相应
+	DeleteFavorFoldResp {
+		Response
+		Data bool `json:"data"`
+	}
+		// 更新收藏夹
+	UpdateFavorFoldReq {
+		Id int64 `path:"id"`                             // 收藏夹 ID
+		Name string `json:"name,optional"`               // 收藏夹名称
+		Description string `json:"description,optional"` // 描述
+		IsPublic bool `json:"isPublic,optional"`         // 是否公开
+	}
+		// 更新收藏夹相应
+	UpdateFavorFoldResp {
+		Response
+		Data bool `json:"data"` // 收藏夹详情
+	}
+		// 获取收藏夹列表
+	GetFavorFoldListReq {
+		UserId int64 `json:"userId"`      // 用户 ID
+		Page int32 `json:"page"`          // 页码
+		PageSize int32 `json:"page_size"` // 每页数量
+	}
+		// 收藏夹
+	FavorFold {
+		ID int64 `json:"id"`
+		Name string `json:"name"`
+		Description string `json:"description"`
+		IsPublic bool `json:"is_public"`
+		CreateUser int64 `json:"create_user"`
+		CreatedAt int64 `json:"createdAt"`
+		UpdatedAt int64 `json:"updatedAt"`
+	}
+	FavorFoldList {
+		Total int64 `json:"total"`
+		List []*FavorFold `json:"list"`
+	}
+		// 获取收藏夹列表相应
+	GetFavorFoldListResp {
+		Response
+		Data FavorFoldList `json:"data"`
+	}
+		// 创建收藏实体
+	CreateFavorReq {
+		FoldId int64 `json:"foldId"`                                    // 收藏夹 ID
+		EntityId int64 `json:"entityId"`                                // 实体 ID
+		EntityType string `json:"entity_type,options=article|question"` // 实体类型
+	}
+		// 创建收藏实体相应
+	CreateFavorResp {
+		Response
+		Data bool `json:"data"` // 收藏夹详情
+	}
+		//  删除收藏实体
+	DeleteFavorReq {
+		Id int64 `path:"id"` // 收藏夹 ID
+		FavorFoldId int64 `json:"favor_fold_id"`
+		EntityId int64 `json:"entity_id"`
+		EntityType string `json:"entity_type,options=article|question"`
+	}
+		// 删除收藏响应
+	DeleteFavorResp {
+		Response
+		Data bool `json:"data"`
+	}
+		// 获取收藏夹列表
+	GetFavorListReq {
+		EntityType string `json:"entity_type,options=article|question"` // 实体类型
+		FavorFoldId int64 `json:"favor_fold_id"`                        // 收藏夹 ID
+		Page int32 `json:"page"`                                        // 页码
+		PageSize int32 `json:"page_size"`                               // 每页数量
+	}
+		// 收藏夹
+	Favor {
+		ID int64 `json:"id"`
+		CreateUser int64 `json:"create_user"`
+		FavorFoldId int64 `json:"favor_fold_id"`
+		EntityId int64 `json:"entity_id"`
+		EntityType string `json:"entity_type"`
+		CreatedAt int64 `json:"createdAt"`
+	}
+	FavorList {
+		Total int64 `json:"total"`
+		List []*Favor `json:"list"`
+	}
+		// 获取收藏夹列表相应
+	GetFavorListResp {
+		Response
+		Data FavorList `json:"data"`
 	}
 )
 
@@ -924,5 +1029,60 @@ service CodeHubAPI {
 	)
 	@handler GetQuestionBank
 	get /question/:id (GetQuestionBankReq) returns (GetQuestionBankResp)
+}
+
+@server(
+	prefix: /api/favorites
+	group: favorites_public
+)
+service CodeHubAPI {
+	@doc(
+		summary: "获取收藏夹列表"
+	)
+	@handler ListFavorite
+	get /list (GetFavorFoldListReq) returns (GetFavorFoldListResp)
+
+	@doc(
+		summary: "获取收藏内容列表"
+	)
+	@handler ListFavoriteContent
+	get /content_list (GetFavorListReq) returns (GetFavorListResp)
+}
+
+@server(
+	jwt: Auth
+	prefix: /api/favorites
+	group: favorites_auth
+)
+service CodeHubAPI {
+	@doc(
+		summary: "创建收藏夹"
+	)
+	@handler CreateFavorite
+	post /create (CreateFavorFoldReq) returns (CreateFavorFoldResp)
+
+	@doc(
+		summary: "更新收藏夹"
+	)
+	@handler UpdateFavorite
+	put /:id (UpdateFavorFoldReq) returns (UpdateFavorFoldResp)
+
+	@doc(
+		summary: "删除收藏夹"
+	)
+	@handler DeleteFavorite
+	delete /:id (DeleteFavorFoldReq) returns (DeleteFavorFoldResp)
+
+	@doc(
+		summary: "添加收藏内容"
+	)
+	@handler AddFavoriteContent
+	post /add (CreateFavorReq) returns (CreateFavorResp)
+
+	@doc(
+		summary: "删除收藏夹内容"
+	)
+	@handler DeleteFavoriteContent
+	delete /content/:id (DeleteFavorReq) returns (DeleteFavorResp)
 }
 

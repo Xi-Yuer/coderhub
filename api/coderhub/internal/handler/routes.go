@@ -12,6 +12,8 @@ import (
 	articles_public "coderhub/api/coderhub/internal/handler/articles_public"
 	coderhub "coderhub/api/coderhub/internal/handler/coderhub"
 	comments_auth "coderhub/api/coderhub/internal/handler/comments_auth"
+	favorites_auth "coderhub/api/coderhub/internal/handler/favorites_auth"
+	favorites_public "coderhub/api/coderhub/internal/handler/favorites_public"
 	follow_auth "coderhub/api/coderhub/internal/handler/follow_auth"
 	follow_public "coderhub/api/coderhub/internal/handler/follow_public"
 	image_auth "coderhub/api/coderhub/internal/handler/image_auth"
@@ -164,6 +166,61 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/comments"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 更新收藏夹
+				Method:  http.MethodPut,
+				Path:    "/:id",
+				Handler: favorites_auth.UpdateFavoriteHandler(serverCtx),
+			},
+			{
+				// 删除收藏夹
+				Method:  http.MethodDelete,
+				Path:    "/:id",
+				Handler: favorites_auth.DeleteFavoriteHandler(serverCtx),
+			},
+			{
+				// 添加收藏内容
+				Method:  http.MethodPost,
+				Path:    "/add",
+				Handler: favorites_auth.AddFavoriteContentHandler(serverCtx),
+			},
+			{
+				// 删除收藏夹内容
+				Method:  http.MethodDelete,
+				Path:    "/content/:id",
+				Handler: favorites_auth.DeleteFavoriteContentHandler(serverCtx),
+			},
+			{
+				// 创建收藏夹
+				Method:  http.MethodPost,
+				Path:    "/create",
+				Handler: favorites_auth.CreateFavoriteHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/favorites"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取收藏内容列表
+				Method:  http.MethodGet,
+				Path:    "/content_list",
+				Handler: favorites_public.ListFavoriteContentHandler(serverCtx),
+			},
+			{
+				// 获取收藏夹列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: favorites_public.ListFavoriteHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/favorites"),
 	)
 
 	server.AddRoutes(

@@ -44,3 +44,13 @@ QuestionBankService:
     Hosts:
       - etcd:2379
     Key: coderhub.rpc
+FavoriteService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: coderhub.rpc
+FavoriteContentService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: coderhub.rpc
