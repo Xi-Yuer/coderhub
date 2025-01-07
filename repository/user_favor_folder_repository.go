@@ -57,11 +57,11 @@ func (r *UserFavorFolderRepositoryImpl) GetList(ctx context.Context, userID int6
 	var count int64
 	// 请求的用户不是自己的话，只能查看公开收藏夹
 	if requestUserId != userID {
-		err := r.DB.WithContext(ctx).Where("user_id = ? AND is_public = ?", userID, true).Order("created_at desc").Offset(int(page * pageSize)).Limit(int(pageSize)).Find(&userFavorFolders).Count(&count).Error
+		err := r.DB.WithContext(ctx).Where("user_id = ? AND is_public = ?", userID, true).Order("created_at desc").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&userFavorFolders).Count(&count).Error
 		return userFavorFolders, count, err
 	} else {
 		// 请求用户是自己的话，可以查看所有收藏夹
-		err := r.DB.WithContext(ctx).Where("user_id = ?", userID).Order("created_at desc").Offset(int(page * pageSize)).Limit(int(pageSize)).Find(&userFavorFolders).Count(&count).Error
+		err := r.DB.WithContext(ctx).Where("user_id = ?", userID).Order("created_at desc").Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&userFavorFolders).Count(&count).Error
 		return userFavorFolders, count, err
 	}
 }

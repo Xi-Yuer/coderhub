@@ -866,6 +866,7 @@ message GetFavorFoldListRequest {
   int32 page = 1;
   int32 page_size = 2;
   int64 user_id = 3;
+  int64 request_user_id = 4;
 }
 
 // 收藏夹

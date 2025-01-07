@@ -347,9 +347,10 @@ type GetFansListResp struct {
 }
 
 type GetFavorFoldListReq struct {
-	UserId   int64 `json:"userId"`    // 用户 ID
-	Page     int32 `json:"page"`      // 页码
-	PageSize int32 `json:"page_size"` // 每页数量
+	UserId        int64 `json:"user_id"`                  // 用户 ID
+	RequestUserId int64 `json:"request_user_id,optional"` // 请求用户 ID
+	Page          int32 `json:"page"`                     // 页码
+	PageSize      int32 `json:"page_size"`                //requestUserId 每页数量
 }
 
 type GetFavorFoldListResp struct {

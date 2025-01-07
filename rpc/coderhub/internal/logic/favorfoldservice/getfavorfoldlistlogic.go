@@ -3,10 +3,8 @@ package favorfoldservicelogic
 import (
 	"coderhub/rpc/coderhub/coderhub"
 	"coderhub/rpc/coderhub/internal/svc"
-	"coderhub/shared/utils"
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
-	"strconv"
 )
 
 type GetFavorFoldListLogic struct {
@@ -26,17 +24,7 @@ func NewGetFavorFoldListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 // GetFavorFoldList 获取列表
 func (l *GetFavorFoldListLogic) GetFavorFoldList(in *coderhub.GetFavorFoldListRequest) (*coderhub.GetFavorFoldListResponse, error) {
 	logx.Infof("获取收藏夹列表: %+v", in)
-	userId, err := utils.GetUserMetaData(l.ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	formatInt, err := strconv.ParseInt(userId, 10, 64)
-	if err != nil {
-		return nil, err
-	}
-
-	list, total, err := l.svcCtx.UserFavorFolderRepository.GetList(l.ctx, in.UserId, formatInt, int64(in.Page), int64(in.PageSize))
+	list, total, err := l.svcCtx.UserFavorFolderRepository.GetList(l.ctx, in.UserId, in.RequestUserId, int64(in.Page), int64(in.PageSize))
 	if err != nil {
 		return nil, err
 	}
