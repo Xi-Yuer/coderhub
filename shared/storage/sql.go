@@ -25,7 +25,7 @@ func NewGorm() *gorm.DB {
 			log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 			logger.Config{
 				SlowThreshold:             time.Second, // Slow SQL threshold
-				LogLevel:                  logger.Warn, // Log level set to Warn for better debugging
+				LogLevel:                  logger.Info, // Log level set to Info for development
 				IgnoreRecordNotFoundError: false,       // Log ErrRecordNotFound errors
 				ParameterizedQueries:      true,        // Include params in SQL log for easier debugging
 				Colorful:                  true,        // Enable colored output

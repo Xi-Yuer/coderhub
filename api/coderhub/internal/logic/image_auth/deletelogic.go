@@ -33,9 +33,8 @@ func (l *DeleteLogic) Delete(req *types.DeleteRequest) (resp *types.DeleteRespon
 	if err != nil {
 		return l.errorResp(err)
 	}
-	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 
-	_, err = l.svcCtx.ImageAuthService.Delete(ctx, &coderhub.DeleteRequest{
+	_, err = l.svcCtx.ImageAuthService.Delete(utils.SetUserMetaData(l.ctx), &coderhub.DeleteRequest{
 		ImageId: req.ImageId,
 		UserId:  UserId,
 	})

@@ -32,9 +32,8 @@ func (l *UpdateCommentLikeCountLogic) UpdateCommentLikeCount(req *types.UpdateCo
 	if err != nil {
 		return l.errorResp(err), nil
 	}
-	ctx := utils.SetUserMetaData(l.ctx)
 
-	if _, err := l.svcCtx.CommentService.UpdateCommentLikeCount(ctx, &coderhub.UpdateCommentLikeCountRequest{
+	if _, err := l.svcCtx.CommentService.UpdateCommentLikeCount(utils.SetUserMetaData(l.ctx), &coderhub.UpdateCommentLikeCountRequest{
 		CommentId: req.CommentId,
 		UserId:    userId,
 	}); err != nil {

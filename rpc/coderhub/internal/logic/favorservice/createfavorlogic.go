@@ -36,16 +36,6 @@ func (l *CreateFavorLogic) CreateFavor(in *coderhub.CreateFavorRequest) (*coderh
 	if folder == nil {
 		return nil, errors.New("收藏夹不存在")
 	}
-	favor, err := l.svcCtx.UserFavorEntityRepository.GetFavorByEntityID(l.ctx, in.EntityId, in.EntityType, in.UserId)
-
-	if err != nil {
-		return nil, err
-	}
-	if favor != nil {
-		return &coderhub.CreateFavorResponse{
-			Success: true,
-		}, nil
-	}
 
 	err = l.svcCtx.UserFavorEntityRepository.Create(l.ctx, &model.UserFavor{
 		UserId:      in.UserId,

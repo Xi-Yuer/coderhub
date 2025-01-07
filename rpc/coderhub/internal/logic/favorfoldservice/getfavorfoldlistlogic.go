@@ -5,9 +5,8 @@ import (
 	"coderhub/rpc/coderhub/internal/svc"
 	"coderhub/shared/utils"
 	"context"
-	"strconv"
-
 	"github.com/zeromicro/go-zero/core/logx"
+	"strconv"
 )
 
 type GetFavorFoldListLogic struct {

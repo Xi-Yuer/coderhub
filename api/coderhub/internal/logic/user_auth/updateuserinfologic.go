@@ -33,9 +33,8 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(req *types.UpdateUserInfoReq) (resp
 	if err != nil {
 		return l.errorResp(err)
 	}
-	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 
-	userInfo, err := l.svcCtx.UserService.UpdateUserInfo(ctx, &coderhub.UpdateUserInfoRequest{
+	userInfo, err := l.svcCtx.UserService.UpdateUserInfo(utils.SetUserMetaData(l.ctx), &coderhub.UpdateUserInfoRequest{
 		UserId:   userID,
 		Email:    req.Email,
 		Nickname: req.Nickname,

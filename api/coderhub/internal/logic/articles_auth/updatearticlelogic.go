@@ -33,7 +33,6 @@ func (l *UpdateArticleLogic) UpdateArticle(req *types.UpdateArticleReq) (resp *t
 	if err != nil {
 		return l.errorResp(err), nil
 	}
-	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 	// 1. 参数验证
 	if err := utils.NewValidator().ArticleID(req.Id).Check(); err != nil {
 		return l.errorResp(err), nil
@@ -51,7 +50,7 @@ func (l *UpdateArticleLogic) UpdateArticle(req *types.UpdateArticleReq) (resp *t
 	}
 
 	// 5. 更新文章逻辑
-	if _, err := l.updateArticle(ctx, req); err != nil {
+	if _, err := l.updateArticle(utils.SetUserMetaData(l.ctx), req); err != nil {
 		return l.errorResp(err), nil
 	}
 

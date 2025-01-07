@@ -32,8 +32,7 @@ func (l *UpdateUserAvatarLogic) UpdateUserAvatar(req *types.UpdateUserAvatarReq)
 	if err != nil {
 		return l.errorResp(err)
 	}
-	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
-	_, err = l.svcCtx.UserService.UploadAvatar(ctx, &coderhub.UploadAvatarRequest{
+	_, err = l.svcCtx.UserService.UploadAvatar(utils.SetUserMetaData(l.ctx), &coderhub.UploadAvatarRequest{
 		UserId:  userID,
 		ImageId: req.Avatar,
 	})

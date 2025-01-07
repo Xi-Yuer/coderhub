@@ -47,8 +47,7 @@ func (l *ChangePasswordLogic) ChangePassword(req *types.UpdatePasswordReq) (resp
 			},
 		}, nil
 	}
-	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
-	response, err := l.svcCtx.UserService.ChangePassword(ctx, &coderhub.ChangePasswordRequest{
+	response, err := l.svcCtx.UserService.ChangePassword(utils.SetUserMetaData(l.ctx), &coderhub.ChangePasswordRequest{
 		UserId:      userID,
 		OldPassword: req.OldPassword,
 		NewPassword: req.NewPassword,

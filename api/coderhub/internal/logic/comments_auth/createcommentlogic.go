@@ -29,12 +29,11 @@ func NewCreateCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 }
 
 func (l *CreateCommentLogic) CreateComment(req *types.CreateCommentReq) (resp *types.CreateCommentResp, err error) {
-	ctx := utils.SetUserMetaData(l.ctx)
 	userID, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return nil, err
 	}
-	comment, err := l.svcCtx.CommentService.CreateComment(ctx, &coderhub.CreateCommentRequest{
+	comment, err := l.svcCtx.CommentService.CreateComment(utils.SetUserMetaData(l.ctx), &coderhub.CreateCommentRequest{
 		EntityId:   req.EntityID,
 		Content:    req.Content,
 		ParentId:   req.ParentId,

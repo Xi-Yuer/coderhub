@@ -358,6 +358,7 @@ type GetFavorFoldListResp struct {
 }
 
 type GetFavorListReq struct {
+	UserId      int64  `json:"userId"`                               // 用户 ID
 	EntityType  string `json:"entity_type,options=article|question"` // 实体类型
 	FavorFoldId int64  `json:"favor_fold_id"`                        // 收藏夹 ID
 	Page        int32  `json:"page"`                                 // 页码

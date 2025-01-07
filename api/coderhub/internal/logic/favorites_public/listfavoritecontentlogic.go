@@ -3,7 +3,6 @@ package favorites_public
 import (
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
-	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/coderhub/internal/svc"
@@ -28,14 +27,13 @@ func NewListFavoriteContentLogic(ctx context.Context, svcCtx *svc.ServiceContext
 }
 
 func (l *ListFavoriteContentLogic) ListFavoriteContent(req *types.GetFavorListReq) (resp *types.GetFavorListResp, err error) {
-	userID, err := utils.GetUserID(l.ctx)
 	if err != nil {
 		return l.errorResp(err)
 	}
 	list, err := l.svcCtx.FavoriteContentService.GetFavorList(l.ctx, &coderhub.GetFavorListRequest{
 		Page:          req.Page,
 		PageSize:      req.PageSize,
-		UserId:        userID,
+		UserId:        req.UserId,
 		EntityType:    req.EntityType,
 		FavorFolderId: req.FavorFoldId,
 	})
@@ -43,7 +41,7 @@ func (l *ListFavoriteContentLogic) ListFavoriteContent(req *types.GetFavorListRe
 		return l.errorResp(err)
 	}
 
-	response := make([]*types.Favor, len(list.Favors))
+	response := make([]*types.Favor, 0, len(list.Favors))
 
 	for _, v := range list.Favors {
 		response = append(response, &types.Favor{

@@ -4,6 +4,7 @@ import (
 	"coderhub/model"
 	"coderhub/shared/storage"
 	"context"
+	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -11,7 +12,6 @@ type UserFavorEntityRepository interface {
 	Create(ctx context.Context, userFavorEntity *model.UserFavor) error
 	Delete(ctx context.Context, userFavorEntity *model.UserFavor) error
 	GetList(ctx context.Context, userFavorEntity *model.UserFavor, page, pageSize int) ([]*model.UserFavor, int64, error)
-	GetFavorByEntityID(ctx context.Context, id int64, entityType string, id2 int64) (*model.UserFavor, error)
 }
 
 type UserFavorEntityRepositoryImpl struct {
@@ -45,15 +45,13 @@ func (r *UserFavorEntityRepositoryImpl) Delete(ctx context.Context, userFavorEnt
 	})
 }
 
-func (r *UserFavorEntityRepositoryImpl) GetFavorByEntityID(ctx context.Context, id int64, entityType string, id2 int64) (*model.UserFavor, error) {
-	var userFavorEntity model.UserFavor
-	r.DB.WithContext(ctx).Where("user_id = ? AND favor_fold_id = ? AND entity_id = ? AND entity_type = ?", id, id2, id2, entityType).First(&userFavorEntity)
-	return &userFavorEntity, nil
-}
-
+// GetList 获取收藏夹内容
 func (r *UserFavorEntityRepositoryImpl) GetList(ctx context.Context, userFavorEntity *model.UserFavor, page, pageSize int) ([]*model.UserFavor, int64, error) {
 	var userFavorEntities []*model.UserFavor
 	var total int64
-	err := r.DB.WithContext(ctx).Model(userFavorEntity).Where("user_id = ? AND favor_fold_id = ? AND entity_type = ?", userFavorEntity.UserId, userFavorEntity.FavorFoldId, userFavorEntity.EntityType).Limit(pageSize).Offset((page - 1) * pageSize).Count(&total).Find(&userFavorEntities).Error
+	fmt.Println("userFavorEntity.UserId", userFavorEntity.UserId)
+	fmt.Println("userFavorEntity.FavorFoldId", userFavorEntity.FavorFoldId)
+	fmt.Println("userFavorEntity.EntityType", userFavorEntity.EntityType)
+	err := r.DB.WithContext(ctx).Model(&model.UserFavor{}).Where("user_id = ? AND favor_fold_id = ? AND entity_type = ?", userFavorEntity.UserId, userFavorEntity.FavorFoldId, userFavorEntity.EntityType).Limit(pageSize).Offset((page - 1) * pageSize).Count(&total).Find(&userFavorEntities).Error
 	return userFavorEntities, total, err
 }

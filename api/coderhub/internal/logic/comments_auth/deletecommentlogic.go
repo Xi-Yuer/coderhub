@@ -33,9 +33,8 @@ func (l *DeleteCommentLogic) DeleteComment(req *types.DeleteCommentReq) (resp *t
 	if err != nil {
 		return l.errorResp(err)
 	}
-	ctx := utils.SetUserMetaData(l.ctx) // 设置元数据
 
-	_, err = l.svcCtx.CommentService.DeleteComment(ctx, &commentservice.DeleteCommentRequest{
+	_, err = l.svcCtx.CommentService.DeleteComment(utils.SetUserMetaData(l.ctx), &commentservice.DeleteCommentRequest{
 		CommentId: req.CommentId,
 	})
 	if err != nil {
