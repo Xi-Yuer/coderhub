@@ -32,8 +32,10 @@ func (l *GetQuestionBankListLogic) GetQuestionBankList(in *coderhub.GetQuestionB
 
 	// 获取封面
 	entityIds := make([]int64, 0)
+	userIds := make([]int64, 0)
 	for _, bank := range banks {
 		entityIds = append(entityIds, bank.ID)
+		userIds = append(userIds, bank.CreateUser)
 	}
 	batchGetImagesByEntityService := imagerelationservicelogic.NewBatchGetImagesByEntityLogic(l.ctx, l.svcCtx)
 	imageRelations, err := batchGetImagesByEntityService.BatchGetImagesByEntity(&coderhub.BatchGetImagesByEntityRequest{
@@ -71,6 +73,29 @@ func (l *GetQuestionBankListLogic) GetQuestionBankList(in *coderhub.GetQuestionB
 
 	l.Logger.Infof("构建评论ID到图片列表的映射: %v", commentImages)
 
+	users, err := l.svcCtx.UserRepository.BatchGetUserByID(userIds)
+	if err != nil {
+		return nil, err
+	}
+	userMap := make(map[int64]*coderhub.UserInfo, len(users))
+	for _, user := range users {
+		userMap[user.ID] = &coderhub.UserInfo{
+			UserId:    user.ID,
+			UserName:  user.UserName,
+			Avatar:    user.Avatar.String,
+			Email:     user.Email.String,
+			Password:  "",
+			Gender:    user.Gender,
+			Age:       user.Age,
+			Phone:     user.Phone.String,
+			NickName:  user.NickName.String,
+			IsAdmin:   user.IsAdmin,
+			Status:    user.Status,
+			CreatedAt: user.CreatedAt.Unix(),
+			UpdatedAt: user.UpdatedAt.Unix(),
+		}
+	}
+
 	list := make([]*coderhub.QuestionBank, len(banks))
 	for i, bank := range banks {
 		coverImage := &coderhub.ImageInfo{}
@@ -95,7 +120,7 @@ func (l *GetQuestionBankListLogic) GetQuestionBankList(in *coderhub.GetQuestionB
 			Description: bank.Description,
 			Difficulty:  bank.Difficulty,
 			Tags:        strings.Split(bank.Tags, ","),
-			CreateUser:  bank.CreateUser,
+			CreateUser:  userMap[bank.CreateUser],
 			Name:        bank.Name,
 			CoverImage:  coverImage,
 			CreateTime:  bank.CreatedAt.Unix(),

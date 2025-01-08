@@ -57,9 +57,22 @@ func (l *ListQuestionBanksLogic) ListQuestionBanks(req *types.GetQuestionBankLis
 				UserId:       bank.CoverImage.UserId,
 				CreatedAt:    bank.CoverImage.CreatedAt,
 			},
-			CreateUser: nil,
-			CreatedAt:  bank.CreateTime,
-			UpdatedAt:  bank.UpdateTime,
+			CreateUser: &types.UserInfo{
+				Id:       bank.CreateUser.UserId,
+				Username: bank.CreateUser.UserName,
+				Nickname: bank.CreateUser.NickName,
+				Email:    bank.CreateUser.Email,
+				Phone:    bank.CreateUser.Phone,
+				Avatar:   bank.CreateUser.Avatar,
+				Gender:   bank.CreateUser.Gender,
+				Age:      bank.CreateUser.Age,
+				Status:   bank.CreateUser.Status,
+				IsAdmin:  bank.CreateUser.IsAdmin,
+				CreateAt: bank.CreateUser.CreatedAt,
+				UpdateAt: bank.CreateUser.UpdatedAt,
+			},
+			CreatedAt: bank.CreateTime,
+			UpdatedAt: bank.UpdateTime,
 		})
 	}
 	return l.successResp(banks, list.Total)
