@@ -34,8 +34,66 @@ func (l *GetFavorListLogic) GetFavorList(in *coderhub.GetFavorListRequest) (*cod
 	if err != nil {
 		return nil, err
 	}
+
+	// 实体id
+	ids := make([]int64, 0, len(list))
+	for _, v := range list {
+		ids = append(ids, v.EntityId)
+	}
+
+	// 获取收藏夹内容
+	entityValue := make(map[int64]*coderhub.FavorPreview)
+
+	// 获取收藏夹内容详情
+	if in.EntityType == "article" {
+		articles, err := l.svcCtx.ArticleRepository.BatchGetArticle(ids)
+		if err != nil {
+			return nil, err
+		}
+		for _, v := range articles {
+			entityValue[v.ArticleID] = &coderhub.FavorPreview{
+				EntityId:   v.ArticleID,
+				Title:      v.Title,
+				Content:    v.Summary,
+				EntityType: "article",
+				CoverImage: v.CoverImage,
+				User: &coderhub.UserInfo{
+					UserId:   v.AuthID,
+					UserName: v.AuthName,
+					Avatar:   v.Avatar,
+				},
+			}
+		}
+	}
+
+	// 获取收藏夹内容详情
+	if in.EntityType == "question" {
+		banks, err := l.svcCtx.QuestionBankRepository.BatchGetQuestion(l.ctx, ids)
+		if err != nil {
+			return nil, err
+		}
+		for _, v := range banks {
+			entityValue[v.ID] = &coderhub.FavorPreview{
+				EntityId:   v.ID,
+				Title:      v.Name,
+				Content:    v.Description,
+				EntityType: "question",
+				CoverImage: v.CoverImage,
+				User: &coderhub.UserInfo{
+					UserId:   v.CreateUserID,
+					UserName: v.Name,
+					Avatar:   v.Avatar,
+				},
+			}
+		}
+	}
+
 	favors := make([]*coderhub.Favor, 0, len(list))
 	for _, v := range list {
+		entity, ok := entityValue[v.EntityId]
+		if !ok || entity == nil {
+			break
+		}
 		favor := &coderhub.Favor{
 			Id:            int64(v.ID),
 			UserId:        v.UserId,
@@ -43,6 +101,7 @@ func (l *GetFavorListLogic) GetFavorList(in *coderhub.GetFavorListRequest) (*cod
 			EntityId:      v.EntityId,
 			EntityType:    v.EntityType,
 			CreateTime:    v.CreatedAt.Unix(),
+			EntityValue:   entity,
 		}
 		favors = append(favors, favor)
 	}

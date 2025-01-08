@@ -49,8 +49,29 @@ func (l *ListFavoriteContentLogic) ListFavoriteContent(req *types.GetFavorListRe
 			CreateUser:  v.UserId,
 			FavorFoldId: v.FavorFolderId,
 			EntityId:    v.EntityId,
-			EntityType:  v.EntityType,
-			CreatedAt:   v.CreateTime,
+			EntityValue: types.EntityPreviewValue{
+				EntityId:   v.EntityValue.EntityId,
+				Title:      v.EntityValue.Title,
+				Content:    v.EntityValue.Content,
+				EntityType: v.EntityValue.EntityType,
+				CoverImage: v.EntityValue.CoverImage,
+				UserInfo: types.UserInfo{
+					Id:       v.EntityValue.User.UserId,
+					Username: v.EntityValue.User.UserName,
+					Nickname: v.EntityValue.User.NickName,
+					Email:    v.EntityValue.User.Email,
+					Phone:    v.EntityValue.User.Phone,
+					Avatar:   v.EntityValue.User.Avatar,
+					Gender:   v.EntityValue.User.Gender,
+					Age:      v.EntityValue.User.Age,
+					Status:   v.EntityValue.User.Status,
+					IsAdmin:  v.EntityValue.User.IsAdmin,
+					CreateAt: v.EntityValue.User.CreatedAt,
+					UpdateAt: v.EntityValue.User.UpdatedAt,
+				},
+			},
+			EntityType: v.EntityType,
+			CreatedAt:  v.CreateTime,
 		})
 	}
 

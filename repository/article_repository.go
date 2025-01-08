@@ -13,6 +13,7 @@ import (
 type ArticleRepository interface {
 	CreateArticle(article *model.Articles) error
 	GetArticleByID(id int64) (*model.Articles, error)
+	BatchGetArticle(ids []int64) ([]*model.ArticlePreviewWithAuthInfo, error)
 	UpdateArticle(article *model.Articles) error
 	DeleteArticle(id int64) error
 }
@@ -61,6 +62,31 @@ func (r *ArticleRepositoryImpl) GetArticleByID(id int64) (*model.Articles, error
 	}()
 
 	return &article, nil
+}
+
+func (r *ArticleRepositoryImpl) BatchGetArticle(ids []int64) ([]*model.ArticlePreviewWithAuthInfo, error) {
+	// 查找文章并且获取文章的创建者
+	var articles []*model.ArticlePreviewWithAuthInfo
+	err := r.DB.Table("articles AS a").
+		Select(`
+        a.id AS article_id, 
+        a.title, 
+        img.url AS cover_image, 
+        a.summary, 
+        a.created_at AS create_time, 
+        u.id AS author_id, 
+        u.user_name AS auth_name, 
+        u.avatar
+    `).
+		Joins("JOIN users u ON a.author_id = u.id").
+		Joins("JOIN image_relations ir ON a.id = ir.entity_id AND ir.entity_type = ?", "article_cover").
+		Joins("JOIN images img ON ir.image_id = img.id").
+		Where("a.id IN ?", ids).
+		Scan(&articles).Error
+	if err != nil {
+		return nil, err
+	}
+	return articles, nil
 }
 
 func (r *ArticleRepositoryImpl) UpdateArticle(article *model.Articles) error {

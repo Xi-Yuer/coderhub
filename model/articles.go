@@ -32,3 +32,14 @@ type Articles struct {
 func (a *Articles) CacheKeyByID(id int64) string {
 	return fmt.Sprintf("Articles:id:%d", id)
 }
+
+type ArticlePreviewWithAuthInfo struct {
+	ArticleID  int64     `json:"article_id"`  // 文章 ID
+	Title      string    `json:"title"`       // 文章标题
+	CoverImage string    `json:"cover_image"` // 封面图片
+	Summary    string    `json:"summary"`     // 文章内容
+	CreateTime time.Time `json:"create_time"` // 创建时间
+	AuthID     int64     `json:"author_id"`   // 作者 ID
+	AuthName   string    `json:"auth_name"`   // 作者名
+	Avatar     string    `json:"avatar"`      // 作者头像
+}

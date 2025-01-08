@@ -236,13 +236,23 @@ type DeleteUserResp struct {
 	Data bool `json:"data"` // 是否删除成功
 }
 
+type EntityPreviewValue struct {
+	EntityId   int64    `json:"entity_id"`
+	Title      string   `json:"title"`
+	Content    string   `json:"content"`
+	EntityType string   `json:"entity_type"`
+	CoverImage string   `json:"cover_image"`
+	UserInfo   UserInfo `json:"user_info"`
+}
+
 type Favor struct {
-	ID          int64  `json:"id"`
-	CreateUser  int64  `json:"create_user"`
-	FavorFoldId int64  `json:"favor_fold_id"`
-	EntityId    int64  `json:"entity_id"`
-	EntityType  string `json:"entity_type"`
-	CreatedAt   int64  `json:"createdAt"`
+	ID          int64              `json:"id"`
+	CreateUser  int64              `json:"create_user"`
+	FavorFoldId int64              `json:"favor_fold_id"`
+	EntityId    int64              `json:"entity_id"`
+	EntityValue EntityPreviewValue `json:"entity_value"`
+	EntityType  string             `json:"entity_type"`
+	CreatedAt   int64              `json:"createdAt"`
 }
 
 type FavorFold struct {

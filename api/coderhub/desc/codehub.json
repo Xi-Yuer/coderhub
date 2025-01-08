@@ -2790,6 +2790,39 @@
         "data"
       ]
     },
+    "EntityPreviewValue": {
+      "type": "object",
+      "properties": {
+        "entity_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "entity_type": {
+          "type": "string"
+        },
+        "cover_image": {
+          "type": "string"
+        },
+        "user_info": {
+          "$ref": "#/definitions/UserInfo"
+        }
+      },
+      "title": "EntityPreviewValue",
+      "required": [
+        "entity_id",
+        "title",
+        "content",
+        "entity_type",
+        "cover_image",
+        "user_info"
+      ]
+    },
     "Favor": {
       "type": "object",
       "properties": {
@@ -2809,6 +2842,9 @@
           "type": "integer",
           "format": "int64"
         },
+        "entity_value": {
+          "$ref": "#/definitions/EntityPreviewValue"
+        },
         "entity_type": {
           "type": "string"
         },
@@ -2823,6 +2859,7 @@
         "create_user",
         "favor_fold_id",
         "entity_id",
+        "entity_value",
         "entity_type",
         "createdAt"
       ]

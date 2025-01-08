@@ -940,6 +940,17 @@ message Favor {
   int64 entity_id = 4;
   string entity_type = 5;
   int64 create_time = 6;
+  FavorPreview entity_value = 7;
+}
+
+// 收藏内容预览
+message FavorPreview {
+  int64 entity_id = 1;
+  string title = 2;
+  string content = 3;
+  string entity_type = 4;
+  string cover_image = 5;
+  UserInfo user = 6;
 }
 
 // 获取收藏夹列表相应

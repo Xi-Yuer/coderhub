@@ -77,6 +77,7 @@ type (
 	EntityInfo                         = coderhub.EntityInfo
 	Favor                              = coderhub.Favor
 	FavorFold                          = coderhub.FavorFold
+	FavorPreview                       = coderhub.FavorPreview
 	GenerateTokenRequest               = coderhub.GenerateTokenRequest
 	GenerateTokenResponse              = coderhub.GenerateTokenResponse
 	GetAcademicNavigatorRequest        = coderhub.GetAcademicNavigatorRequest

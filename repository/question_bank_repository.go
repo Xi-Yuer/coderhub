@@ -10,6 +10,7 @@ import (
 type QuestionBankRepository interface {
 	CreateQuestionBank(ctx context.Context, questionBank *model.QuestionBank) error
 	GetQuestionBankByID(ctx context.Context, id int64) (*model.QuestionBank, error)
+	BatchGetQuestion(ctx context.Context, ids []int64) ([]*model.QuestionBanksPreviewWithCreateUser, error)
 	GetQuestionBanks(ctx context.Context, page, pageSize int32) ([]*model.QuestionBank, int64, error)
 	UpdateQuestionBank(ctx context.Context, questionBank *model.QuestionBank) error
 	DeleteQuestionBank(ctx context.Context, id int64) error
@@ -44,6 +45,29 @@ func (r *QuestionRepositoryRepositoryImpl) GetQuestionBanks(ctx context.Context,
 	var total int64
 	err := r.DB.WithContext(ctx).Model(&model.QuestionBank{}).Limit(int(pageSize)).Offset(int((page - 1) * pageSize)).Find(&questionBanks).Count(&total).Error
 	return questionBanks, total, err
+}
+
+func (r *QuestionRepositoryRepositoryImpl) BatchGetQuestion(ctx context.Context, ids []int64) ([]*model.QuestionBanksPreviewWithCreateUser, error) {
+	var questionBanks []*model.QuestionBanksPreviewWithCreateUser
+	err := r.DB.Table("question_banks AS qb").
+		Select(`
+        qb.id AS id, 
+        qb.name, 
+        img.url AS cover_image, 
+        qb.description, 
+        qb.difficulty, 
+        qb.tags, 
+        qb.created_at AS create_time, 
+        u.id AS create_user_id, 
+        u.user_name AS create_user_name, 
+        u.avatar
+    `).
+		Joins("JOIN users u ON qb.create_user = u.id").
+		Joins("JOIN image_relations ir ON qb.id = ir.entity_id AND ir.entity_type = ?", "question_cover").
+		Joins("JOIN images img ON ir.image_id = img.id").
+		Where("qb.id IN ?", ids).
+		Scan(&questionBanks).Error
+	return questionBanks, err
 }
 
 func (r *QuestionRepositoryRepositoryImpl) UpdateQuestionBank(ctx context.Context, questionBank *model.QuestionBank) error {
