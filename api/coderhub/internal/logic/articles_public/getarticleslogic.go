@@ -1,0 +1,160 @@
+package articles_public
+
+import (
+	"coderhub/api/coderhub/internal/svc"
+	"coderhub/api/coderhub/internal/types"
+	"coderhub/conf"
+	"coderhub/rpc/coderhub/coderhub"
+	"context"
+	"fmt"
+	"github.com/zeromicro/go-zero/core/logx"
+)
+
+type GetArticlesLogic struct {
+	logx.Logger
+	ctx    context.Context
+	svcCtx *svc.ServiceContext
+}
+
+// NewGetArticlesLogic 获取文章列表
+func NewGetArticlesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetArticlesLogic {
+	return &GetArticlesLogic{
+		Logger: logx.WithContext(ctx),
+		ctx:    ctx,
+		svcCtx: svcCtx,
+	}
+}
+
+func (l *GetArticlesLogic) GetArticles(req *types.GetArticlesReq) (resp *types.GetArticlesResp, err error) {
+	// 获取推荐文章列表ID
+	articles, err := l.svcCtx.ArticlesService.ListRecommendedArticles(l.ctx, &coderhub.ListRecommendedArticlesRequest{
+		Type:     req.Type,
+		Page:     int64(req.Page),
+		PageSize: int64(req.PageSize),
+	})
+	if err != nil {
+		return l.errorResp(err)
+	}
+
+	fmt.Println("articlesIDs: ", articles.Ids)
+	if len(articles.Ids) == 0 {
+		return &types.GetArticlesResp{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpStatusOK,
+				Message: "No recommended articles found",
+			},
+			Data: nil,
+		}, nil
+	}
+
+	// 获取文章列表详情
+	response, err := l.svcCtx.ArticlesService.ListArticles(l.ctx, &coderhub.GetArticlesRequest{
+		Ids: articles.Ids,
+	})
+	if err != nil {
+		return l.errorResp(err)
+	}
+
+	if len(response.Articles) == 0 {
+		return &types.GetArticlesResp{
+			Response: types.Response{
+				Code:    conf.HttpCode.HttpStatusOK,
+				Message: "No articles found for given IDs",
+			},
+			Data: nil,
+		}, nil
+	}
+
+	// 构建文章列表
+	var list []*types.GetArticle
+	for _, article := range response.Articles {
+		fmt.Printf("article: %#v\n", article)
+		if converted := l.convertToArticleType(article); converted != nil {
+			list = append(list, converted)
+		}
+	}
+
+	return &types.GetArticlesResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpStatusOK,
+			Message: conf.HttpMessage.MsgOK,
+		},
+		Data: list,
+	}, nil
+}
+
+func (l *GetArticlesLogic) errorResp(err error) (*types.GetArticlesResp, error) {
+	return &types.GetArticlesResp{
+		Response: types.Response{
+			Code:    conf.HttpCode.HttpBadRequest,
+			Message: err.Error(),
+		},
+		Data: nil,
+	}, nil
+}
+
+func (l *GetArticlesLogic) convertToArticleType(article *coderhub.GetArticleResponse) *types.GetArticle {
+	if article == nil {
+		fmt.Println("article is nil")
+		return nil
+	}
+	if article.Article == nil {
+		fmt.Println("article.Article is nil")
+		return nil
+	}
+	if article.Author == nil {
+		fmt.Println("article.Author is nil")
+		return nil
+	}
+
+	fmt.Printf("article.Article.Images: %#v\n", article.Article.Images)
+	fmt.Printf("article.Article.CoverImage: %#v\n", article.Article.CoverImage)
+
+	images := make([]string, len(article.Article.Images))
+	for i, image := range article.Article.Images {
+		if image != nil {
+			images[i] = image.Url
+		} else {
+			fmt.Printf("article.Article.Images[%d] is nil\n", i)
+		}
+	}
+
+	return &types.GetArticle{
+		Article: &types.Article{
+			Id:        article.Article.Id,
+			Type:      article.Article.Type,
+			Title:     article.Article.Title,
+			Content:   article.Article.Content,
+			Summary:   article.Article.Summary,
+			ImageUrls: images,
+			CoverImage: func(img *coderhub.Image) *string {
+				if img == nil {
+					return nil
+				}
+				return &img.Url
+			}(article.Article.CoverImage),
+			AuthorId:     article.Article.AuthorId,
+			Tags:         article.Article.Tags,
+			ViewCount:    article.Article.ViewCount,
+			LikeCount:    article.Article.LikeCount,
+			CommentCount: article.Article.CommentCount,
+			Status:       article.Article.Status,
+			CreatedAt:    article.Article.CreatedAt,
+			UpdatedAt:    article.Article.UpdatedAt,
+		},
+		Author: &types.UserInfo{
+			Id:       article.Author.UserId,
+			Username: article.Author.UserName,
+			Nickname: article.Author.NickName,
+			Email:    article.Author.Email,
+			Phone:    article.Author.Phone,
+			Avatar:   article.Author.Avatar,
+			Gender:   article.Author.Gender,
+			Age:      article.Author.Age,
+			Status:   article.Author.Status,
+			IsAdmin:  article.Author.IsAdmin,
+			CreateAt: article.Author.CreatedAt,
+			UpdateAt: article.Author.UpdatedAt,
+		},
+	}
+}

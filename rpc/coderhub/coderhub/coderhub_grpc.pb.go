@@ -1132,11 +1132,13 @@ var AcademicNavigatorService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	ArticleService_GetArticle_FullMethodName      = "/coderhub.ArticleService/GetArticle"
-	ArticleService_CreateArticle_FullMethodName   = "/coderhub.ArticleService/CreateArticle"
-	ArticleService_UpdateArticle_FullMethodName   = "/coderhub.ArticleService/UpdateArticle"
-	ArticleService_UpdateLikeCount_FullMethodName = "/coderhub.ArticleService/UpdateLikeCount"
-	ArticleService_DeleteArticle_FullMethodName   = "/coderhub.ArticleService/DeleteArticle"
+	ArticleService_GetArticle_FullMethodName              = "/coderhub.ArticleService/GetArticle"
+	ArticleService_ListRecommendedArticles_FullMethodName = "/coderhub.ArticleService/ListRecommendedArticles"
+	ArticleService_ListArticles_FullMethodName            = "/coderhub.ArticleService/ListArticles"
+	ArticleService_CreateArticle_FullMethodName           = "/coderhub.ArticleService/CreateArticle"
+	ArticleService_UpdateArticle_FullMethodName           = "/coderhub.ArticleService/UpdateArticle"
+	ArticleService_UpdateLikeCount_FullMethodName         = "/coderhub.ArticleService/UpdateLikeCount"
+	ArticleService_DeleteArticle_FullMethodName           = "/coderhub.ArticleService/DeleteArticle"
 )
 
 // ArticleServiceClient is the client API for ArticleService service.
@@ -1146,6 +1148,8 @@ const (
 // RPC 服务定义
 type ArticleServiceClient interface {
 	GetArticle(ctx context.Context, in *GetArticleRequest, opts ...grpc.CallOption) (*GetArticleResponse, error)
+	ListRecommendedArticles(ctx context.Context, in *ListRecommendedArticlesRequest, opts ...grpc.CallOption) (*ListRecommendedArticlesResponse, error)
+	ListArticles(ctx context.Context, in *GetArticlesRequest, opts ...grpc.CallOption) (*GetArticlesResponse, error)
 	CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*CreateArticleResponse, error)
 	UpdateArticle(ctx context.Context, in *UpdateArticleRequest, opts ...grpc.CallOption) (*UpdateArticleResponse, error)
 	UpdateLikeCount(ctx context.Context, in *UpdateLikeCountRequest, opts ...grpc.CallOption) (*UpdateLikeCountResponse, error)
@@ -1164,6 +1168,26 @@ func (c *articleServiceClient) GetArticle(ctx context.Context, in *GetArticleReq
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetArticleResponse)
 	err := c.cc.Invoke(ctx, ArticleService_GetArticle_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleServiceClient) ListRecommendedArticles(ctx context.Context, in *ListRecommendedArticlesRequest, opts ...grpc.CallOption) (*ListRecommendedArticlesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListRecommendedArticlesResponse)
+	err := c.cc.Invoke(ctx, ArticleService_ListRecommendedArticles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleServiceClient) ListArticles(ctx context.Context, in *GetArticlesRequest, opts ...grpc.CallOption) (*GetArticlesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetArticlesResponse)
+	err := c.cc.Invoke(ctx, ArticleService_ListArticles_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1217,6 +1241,8 @@ func (c *articleServiceClient) DeleteArticle(ctx context.Context, in *DeleteArti
 // RPC 服务定义
 type ArticleServiceServer interface {
 	GetArticle(context.Context, *GetArticleRequest) (*GetArticleResponse, error)
+	ListRecommendedArticles(context.Context, *ListRecommendedArticlesRequest) (*ListRecommendedArticlesResponse, error)
+	ListArticles(context.Context, *GetArticlesRequest) (*GetArticlesResponse, error)
 	CreateArticle(context.Context, *CreateArticleRequest) (*CreateArticleResponse, error)
 	UpdateArticle(context.Context, *UpdateArticleRequest) (*UpdateArticleResponse, error)
 	UpdateLikeCount(context.Context, *UpdateLikeCountRequest) (*UpdateLikeCountResponse, error)
@@ -1233,6 +1259,12 @@ type UnimplementedArticleServiceServer struct{}
 
 func (UnimplementedArticleServiceServer) GetArticle(context.Context, *GetArticleRequest) (*GetArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetArticle not implemented")
+}
+func (UnimplementedArticleServiceServer) ListRecommendedArticles(context.Context, *ListRecommendedArticlesRequest) (*ListRecommendedArticlesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRecommendedArticles not implemented")
+}
+func (UnimplementedArticleServiceServer) ListArticles(context.Context, *GetArticlesRequest) (*GetArticlesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListArticles not implemented")
 }
 func (UnimplementedArticleServiceServer) CreateArticle(context.Context, *CreateArticleRequest) (*CreateArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateArticle not implemented")
@@ -1281,6 +1313,42 @@ func _ArticleService_GetArticle_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ArticleServiceServer).GetArticle(ctx, req.(*GetArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleService_ListRecommendedArticles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRecommendedArticlesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServiceServer).ListRecommendedArticles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleService_ListRecommendedArticles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServiceServer).ListRecommendedArticles(ctx, req.(*ListRecommendedArticlesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleService_ListArticles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArticlesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServiceServer).ListArticles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleService_ListArticles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServiceServer).ListArticles(ctx, req.(*GetArticlesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1367,6 +1435,14 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetArticle",
 			Handler:    _ArticleService_GetArticle_Handler,
+		},
+		{
+			MethodName: "ListRecommendedArticles",
+			Handler:    _ArticleService_ListRecommendedArticles_Handler,
+		},
+		{
+			MethodName: "ListArticles",
+			Handler:    _ArticleService_ListArticles_Handler,
 		},
 		{
 			MethodName: "CreateArticle",

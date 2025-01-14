@@ -84,6 +84,8 @@ type (
 	GetAcademicNavigatorResponse       = coderhub.GetAcademicNavigatorResponse
 	GetArticleRequest                  = coderhub.GetArticleRequest
 	GetArticleResponse                 = coderhub.GetArticleResponse
+	GetArticlesRequest                 = coderhub.GetArticlesRequest
+	GetArticlesResponse                = coderhub.GetArticlesResponse
 	GetCommentRepliesRequest           = coderhub.GetCommentRepliesRequest
 	GetCommentRepliesResponse          = coderhub.GetCommentRepliesResponse
 	GetCommentRequest                  = coderhub.GetCommentRequest
@@ -121,6 +123,8 @@ type (
 	LikeAcademicNavigatorRequest       = coderhub.LikeAcademicNavigatorRequest
 	ListByUserRequest                  = coderhub.ListByUserRequest
 	ListByUserResponse                 = coderhub.ListByUserResponse
+	ListRecommendedArticlesRequest     = coderhub.ListRecommendedArticlesRequest
+	ListRecommendedArticlesResponse    = coderhub.ListRecommendedArticlesResponse
 	QuestionBank                       = coderhub.QuestionBank
 	QuestionTreeNode                   = coderhub.QuestionTreeNode
 	ResetPasswordByLinkRequest         = coderhub.ResetPasswordByLinkRequest
@@ -147,6 +151,8 @@ type (
 
 	ArticleService interface {
 		GetArticle(ctx context.Context, in *GetArticleRequest, opts ...grpc.CallOption) (*GetArticleResponse, error)
+		ListRecommendedArticles(ctx context.Context, in *ListRecommendedArticlesRequest, opts ...grpc.CallOption) (*ListRecommendedArticlesResponse, error)
+		ListArticles(ctx context.Context, in *GetArticlesRequest, opts ...grpc.CallOption) (*GetArticlesResponse, error)
 		CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*CreateArticleResponse, error)
 		UpdateArticle(ctx context.Context, in *UpdateArticleRequest, opts ...grpc.CallOption) (*UpdateArticleResponse, error)
 		UpdateLikeCount(ctx context.Context, in *UpdateLikeCountRequest, opts ...grpc.CallOption) (*UpdateLikeCountResponse, error)
@@ -167,6 +173,16 @@ func NewArticleService(cli zrpc.Client) ArticleService {
 func (m *defaultArticleService) GetArticle(ctx context.Context, in *GetArticleRequest, opts ...grpc.CallOption) (*GetArticleResponse, error) {
 	client := coderhub.NewArticleServiceClient(m.cli.Conn())
 	return client.GetArticle(ctx, in, opts...)
+}
+
+func (m *defaultArticleService) ListRecommendedArticles(ctx context.Context, in *ListRecommendedArticlesRequest, opts ...grpc.CallOption) (*ListRecommendedArticlesResponse, error) {
+	client := coderhub.NewArticleServiceClient(m.cli.Conn())
+	return client.ListRecommendedArticles(ctx, in, opts...)
+}
+
+func (m *defaultArticleService) ListArticles(ctx context.Context, in *GetArticlesRequest, opts ...grpc.CallOption) (*GetArticlesResponse, error) {
+	client := coderhub.NewArticleServiceClient(m.cli.Conn())
+	return client.ListArticles(ctx, in, opts...)
 }
 
 func (m *defaultArticleService) CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*CreateArticleResponse, error) {

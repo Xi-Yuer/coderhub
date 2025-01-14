@@ -13,6 +13,8 @@ import (
 type ArticleRepository interface {
 	CreateArticle(article *model.Articles) error
 	GetArticleByID(id int64) (*model.Articles, error)
+	GetArticlesByIDs(ids []int64) ([]*model.Articles, error)
+	ListRecommendedArticles(type_ string, page, pageSize int64) ([]int64, error)
 	BatchGetArticle(ids []int64) ([]*model.ArticlePreviewWithAuthInfo, error)
 	UpdateArticle(article *model.Articles) error
 	DeleteArticle(id int64) error
@@ -62,6 +64,28 @@ func (r *ArticleRepositoryImpl) GetArticleByID(id int64) (*model.Articles, error
 	}()
 
 	return &article, nil
+}
+
+func (r *ArticleRepositoryImpl) GetArticlesByIDs(ids []int64) ([]*model.Articles, error) {
+	var articles []*model.Articles
+	if err := r.DB.Where("id IN ?", ids).Find(&articles).Error; err != nil {
+		return nil, err
+	}
+	return articles, nil
+}
+
+func (r *ArticleRepositoryImpl) ListRecommendedArticles(type_ string, page, pageSize int64) ([]int64, error) {
+	var ids []int64
+	if err := r.DB.Table("articles").
+		Select("id").
+		Where("type = ?", type_).
+		Order("created_at DESC").
+		Limit(int(pageSize)).
+		Offset(int((page-1)*pageSize)).
+		Pluck("id", &ids).Error; err != nil {
+		return nil, err
+	}
+	return ids, nil
 }
 
 func (r *ArticleRepositoryImpl) BatchGetArticle(ids []int64) ([]*model.ArticlePreviewWithAuthInfo, error) {

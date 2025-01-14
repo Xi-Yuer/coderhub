@@ -106,8 +106,14 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// 获取文章
 				Method:  http.MethodGet,
-				Path:    "/:id",
+				Path:    "/detail/:id",
 				Handler: articles_public.GetArticleHandler(serverCtx),
+			},
+			{
+				// 获取文章列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: articles_public.GetArticlesHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/articles"),

@@ -14,6 +14,7 @@ import (
 type ArticlePVRepository interface {
 	CreateArticlePV(articlePV *model.ArticlePV) error
 	GetArticlePVByArticleID(articleID int64) (*model.ArticlePV, error)
+	GetArticlePVsByArticleIDs(articleIDs []int64) ([]*model.ArticlePV, error)
 	SyncIncrementalPVToDB() error
 }
 
@@ -125,6 +126,12 @@ func (r *ArticlePVRepositoryImpl) GetArticlePVByArticleID(articleID int64) (*mod
 		return nil, err
 	}
 	return &articlePV, nil
+}
+
+func (r *ArticlePVRepositoryImpl) GetArticlePVsByArticleIDs(articleIDs []int64) ([]*model.ArticlePV, error) {
+	var articlePVs []*model.ArticlePV
+	err := r.DB.Where("article_id IN (?)", articleIDs).Find(&articlePVs).Error
+	return articlePVs, err
 }
 
 func (r *ArticlePVRepositoryImpl) SyncIncrementalPVToDB() error {

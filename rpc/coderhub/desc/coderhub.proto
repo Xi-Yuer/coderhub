@@ -314,11 +314,28 @@ message Article {
 message GetArticleRequest {
   int64 id = 1;                     // 文章 ID
 }
+message GetArticlesRequest {
+  repeated int64 ids = 1;                     // 文章 ID
+}
+
+message ListRecommendedArticlesRequest {
+  string type = 1; // 内容类型
+  int64 page = 2;
+  int64 page_size = 3;
+}
 
 // 响应文章详情
 message GetArticleResponse {
   Article article = 1;               // 文章详情
   UserInfo Author = 2;
+}
+
+message GetArticlesResponse {
+  repeated GetArticleResponse articles = 1;     // 文章列表
+}
+
+message ListRecommendedArticlesResponse {
+  repeated int64 ids = 1;     // 推荐文章列表ids
 }
 
 // 创建文章请求
@@ -381,6 +398,8 @@ message DeleteArticleResponse {
 // RPC 服务定义
 service ArticleService {
   rpc GetArticle(GetArticleRequest) returns (GetArticleResponse);     // 获取文章详情
+  rpc ListRecommendedArticles(ListRecommendedArticlesRequest) returns (ListRecommendedArticlesResponse); // 获取推荐文章列表ids
+  rpc ListArticles(GetArticlesRequest) returns (GetArticlesResponse); // 获取文章列表
   rpc CreateArticle(CreateArticleRequest) returns (CreateArticleResponse); // 创建文章
   rpc UpdateArticle(UpdateArticleRequest) returns (UpdateArticleResponse); // 更新文章
   rpc UpdateLikeCount(UpdateLikeCountRequest) returns (UpdateLikeCountResponse); // 更新点赞数

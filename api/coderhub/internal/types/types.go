@@ -319,6 +319,17 @@ type GetArticleResp struct {
 	Data *GetArticle `json:"data"` // 文章详情
 }
 
+type GetArticlesReq struct {
+	Type     string `form:"type,options=article|micro_post"` // 内容类型
+	Page     int32  `form:"page"`                            // 页码
+	PageSize int32  `form:"page_size"`                       // 每页数量
+}
+
+type GetArticlesResp struct {
+	Response
+	Data []*GetArticle `json:"data"` // 文章列表
+}
+
 type GetCommentRepliesReq struct {
 	CommentId int64 `path:"comment_id"` // 评论ID
 	Page      int32 `form:"page"`       // 页码

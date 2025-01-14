@@ -14,6 +14,7 @@ import (
 type CommentRepository interface {
 	Create(ctx context.Context, comment *model.Comment) error
 	GetByID(ctx context.Context, id int64) (*model.Comment, error)
+	BatchCountByArticleIDs(ctx context.Context, articleIDs []int64) (map[int64]int64, error)
 	Delete(ctx context.Context, id int64) error
 	ListByArticleID(ctx context.Context, articleID int64, page int64, pageSize int64) ([]model.Comment, int64, error)
 	ListReplies(ctx context.Context, rootID int64, page int64, pageSize int64) ([]model.Comment, int64, error)
@@ -51,6 +52,19 @@ func (r *commentRepository) GetByID(ctx context.Context, id int64) (*model.Comme
 		return nil, err
 	}
 	return comment, nil
+}
+
+// BatchCountByArticleIDs 批量获取文章的评论数
+func (r *commentRepository) BatchCountByArticleIDs(ctx context.Context, articleIDs []int64) (map[int64]int64, error) {
+	articlesComments := make([]model.Comment, 0)
+	if err := r.DB.WithContext(ctx).Where("entity_id IN (?)", articleIDs).Find(&articlesComments).Error; err != nil {
+		return nil, err
+	}
+	articlesRelationLikes := make(map[int64]int64)
+	for _, v := range articlesComments {
+		articlesRelationLikes[v.EntityID]++
+	}
+	return articlesRelationLikes, nil
 }
 
 // Delete 删除评论并清除缓存

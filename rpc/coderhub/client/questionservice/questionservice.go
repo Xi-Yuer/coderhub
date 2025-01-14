@@ -84,6 +84,8 @@ type (
 	GetAcademicNavigatorResponse       = coderhub.GetAcademicNavigatorResponse
 	GetArticleRequest                  = coderhub.GetArticleRequest
 	GetArticleResponse                 = coderhub.GetArticleResponse
+	GetArticlesRequest                 = coderhub.GetArticlesRequest
+	GetArticlesResponse                = coderhub.GetArticlesResponse
 	GetCommentRepliesRequest           = coderhub.GetCommentRepliesRequest
 	GetCommentRepliesResponse          = coderhub.GetCommentRepliesResponse
 	GetCommentRequest                  = coderhub.GetCommentRequest
@@ -121,6 +123,8 @@ type (
 	LikeAcademicNavigatorRequest       = coderhub.LikeAcademicNavigatorRequest
 	ListByUserRequest                  = coderhub.ListByUserRequest
 	ListByUserResponse                 = coderhub.ListByUserResponse
+	ListRecommendedArticlesRequest     = coderhub.ListRecommendedArticlesRequest
+	ListRecommendedArticlesResponse    = coderhub.ListRecommendedArticlesResponse
 	QuestionBank                       = coderhub.QuestionBank
 	QuestionTreeNode                   = coderhub.QuestionTreeNode
 	ResetPasswordByLinkRequest         = coderhub.ResetPasswordByLinkRequest

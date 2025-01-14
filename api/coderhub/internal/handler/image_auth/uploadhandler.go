@@ -8,7 +8,7 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-// 上传图片
+// UploadHandler 上传图片
 func UploadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		l := image_auth.NewUploadLogic(r.Context(), svcCtx, r)

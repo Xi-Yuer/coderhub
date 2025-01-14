@@ -13,8 +13,8 @@ type ArticlesRelationLikeRepository interface {
 	Delete(ctx context.Context, articleRelationLike *model.ArticlesRelationLike) error
 	Get(ctx context.Context, articleRelationLike *model.ArticlesRelationLike) bool
 	List(ctx context.Context, articleID int64) (int64, error)
+	BatchList(ctx context.Context, articleIDs []int64) (map[int64]int64, error)
 }
-
 type articlesRelationLikeRepository struct {
 	DB    *gorm.DB
 	Redis storage.RedisDB
@@ -49,4 +49,21 @@ func (r *articlesRelationLikeRepository) List(ctx context.Context, articleID int
 	var articlesRelationLikesCount int64
 	r.DB.Model(&model.ArticlesRelationLike{}).Where("article_id = ?", articleID).Count(&articlesRelationLikesCount)
 	return articlesRelationLikesCount, nil
+}
+
+// 批量获取文章点赞数
+
+func (r *articlesRelationLikeRepository) BatchList(ctx context.Context, articleIDs []int64) (map[int64]int64, error) {
+	articlesRelationLikes := make([]model.ArticlesRelationLike, 0)
+	err := r.DB.Where("article_id IN (?)", articleIDs).Find(&articlesRelationLikes).Error
+	if err != nil {
+		return nil, err
+	}
+	articlesRelationLikeCountMap := make(map[int64]int64)
+	for _, articlesRelationLike := range articlesRelationLikes {
+		if _, ok := articlesRelationLikeCountMap[articlesRelationLike.ArticleID]; !ok {
+			articlesRelationLikeCountMap[articlesRelationLike.ArticleID] = 1
+		}
+	}
+	return articlesRelationLikeCountMap, nil
 }
