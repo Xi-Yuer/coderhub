@@ -361,6 +361,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user_auth.DeleteUserHandler(serverCtx),
 			},
 			{
+				// 根据用户的token获取用户信息
+				Method:  http.MethodGet,
+				Path:    "/info_by_token",
+				Handler: user_auth.GetUserInfoByTokenHandler(serverCtx),
+			},
+			{
 				// 更新用户信息
 				Method:  http.MethodPut,
 				Path:    "/update/:id",

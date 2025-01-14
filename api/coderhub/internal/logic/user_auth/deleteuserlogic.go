@@ -17,7 +17,7 @@ type DeleteUserLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 删除用户
+// NewDeleteUserLogic 删除用户
 func NewDeleteUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteUserLogic {
 	return &DeleteUserLogic{
 		Logger: logx.WithContext(ctx),
