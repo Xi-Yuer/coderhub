@@ -18,7 +18,7 @@ type GetArticleLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 获取文章
+// NewGetArticleLogic 获取文章
 func NewGetArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetArticleLogic {
 	return &GetArticleLogic{
 		Logger: logx.WithContext(ctx),
@@ -58,7 +58,7 @@ func (l *GetArticleLogic) successResp(article *coderhub.GetArticleResponse) *typ
 			Code:    conf.HttpCode.HttpStatusOK,
 			Message: conf.HttpMessage.MsgOK,
 		},
-		Data: l.convertToArticleType(article.Article),
+		Data: l.convertToArticleType(article),
 	}
 }
 
@@ -68,15 +68,15 @@ func (l *GetArticleLogic) getArticle(articleId int64) (*coderhub.GetArticleRespo
 	})
 }
 
-func (l *GetArticleLogic) convertToArticleType(article *coderhub.Article) *types.Article {
+func (l *GetArticleLogic) convertToArticleType(article *coderhub.GetArticleResponse) *types.GetArticle {
 	if article == nil {
 		return nil
 	}
 
 	// 将图片模型转换为图片URL
 	imageUrls := make([]string, 0)
-	if article.Images != nil {
-		for _, image := range article.Images {
+	if article.Article.Images != nil {
+		for _, image := range article.Article.Images {
 			if image != nil {
 				imageUrls = append(imageUrls, image.Url)
 			}
@@ -85,27 +85,43 @@ func (l *GetArticleLogic) convertToArticleType(article *coderhub.Article) *types
 	l.Logger.Info("API: 获取文章配图成功, 配图数量:", len(imageUrls))
 
 	coverImageUrl := ""
-	if article.CoverImage != nil {
-		coverImageUrl = article.CoverImage.Url
+	if article.Article.CoverImage != nil {
+		coverImageUrl = article.Article.CoverImage.Url
 	}
 	l.Logger.Info("API: 获取文章封面成功, 封面URL:", coverImageUrl)
 
-	return &types.Article{
-		Id:           article.Id,
-		Type:         article.Type,
-		Title:        article.Title,
-		Content:      article.Content,
-		Summary:      article.Summary,
-		CoverImage:   &coverImageUrl,
-		ImageUrls:    imageUrls,
-		AuthorId:     article.AuthorId,
-		Tags:         article.Tags,
-		ViewCount:    article.ViewCount,
-		LikeCount:    article.LikeCount,
-		CommentCount: article.CommentCount,
-		Status:       article.Status,
-		CreatedAt:    article.CreatedAt,
-		UpdatedAt:    article.UpdatedAt,
+	return &types.GetArticle{
+		Article: &types.Article{
+			Id:           article.Article.Id,
+			Type:         article.Article.Type,
+			Title:        article.Article.Title,
+			Content:      article.Article.Content,
+			Summary:      article.Article.Summary,
+			CoverImage:   &coverImageUrl,
+			ImageUrls:    imageUrls,
+			AuthorId:     article.Article.AuthorId,
+			Tags:         article.Article.Tags,
+			ViewCount:    article.Article.ViewCount,
+			LikeCount:    article.Article.LikeCount,
+			CommentCount: article.Article.CommentCount,
+			Status:       article.Article.Status,
+			CreatedAt:    article.Article.CreatedAt,
+			UpdatedAt:    article.Article.UpdatedAt,
+		},
+		Author: &types.UserInfo{
+			Id:       article.Author.UserId,
+			Username: article.Author.UserName,
+			Nickname: article.Author.NickName,
+			Email:    article.Author.Email,
+			Phone:    article.Author.Phone,
+			Avatar:   article.Author.Avatar,
+			Gender:   article.Author.Gender,
+			Age:      article.Author.Age,
+			Status:   article.Author.Status,
+			IsAdmin:  article.Author.IsAdmin,
+			CreateAt: article.Author.CreatedAt,
+			UpdateAt: article.Author.UpdatedAt,
+		},
 	}
 }
 

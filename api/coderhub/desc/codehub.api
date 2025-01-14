@@ -428,9 +428,13 @@ type (
 	GetArticleReq {
 		Id int64 `path:"id"` // 文章 ID
 	}
+	GetArticle {
+		Article *Article `json:"article"` // 文章详情
+		Author *UserInfo `json:"author"`  // 作者信息
+	}
 	GetArticleResp {
 		Response
-		Data *Article `json:"data"` // 文章详情
+		Data *GetArticle `json:"data"` // 文章详情
 	}
 	CreateArticleReq {
 		Type string `json:"type,options=article|micro_post"`  // 内容类型

@@ -318,6 +318,7 @@ message GetArticleRequest {
 // 响应文章详情
 message GetArticleResponse {
   Article article = 1;               // 文章详情
+  UserInfo Author = 2;
 }
 
 // 创建文章请求

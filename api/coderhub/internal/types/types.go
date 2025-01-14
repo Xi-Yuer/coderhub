@@ -305,13 +305,18 @@ type GetAcademicNavigatorResp struct {
 	Data *AcademicList `json:"data"` // 学术导航列表
 }
 
+type GetArticle struct {
+	Article *Article  `json:"article"` // 文章详情
+	Author  *UserInfo `json:"author"`  // 作者信息
+}
+
 type GetArticleReq struct {
 	Id int64 `path:"id"` // 文章 ID
 }
 
 type GetArticleResp struct {
 	Response
-	Data *Article `json:"data"` // 文章详情
+	Data *GetArticle `json:"data"` // 文章详情
 }
 
 type GetCommentRepliesReq struct {

@@ -3093,6 +3093,24 @@
         "data"
       ]
     },
+    "GetArticle": {
+      "type": "object",
+      "properties": {
+        "article": {
+          "$ref": "#/definitions/Article",
+          "description": " 文章详情"
+        },
+        "author": {
+          "$ref": "#/definitions/UserInfo",
+          "description": " 作者信息"
+        }
+      },
+      "title": "GetArticle",
+      "required": [
+        "article",
+        "author"
+      ]
+    },
     "GetArticleReq": {
       "type": "object",
       "title": "GetArticleReq"
@@ -3110,7 +3128,7 @@
           "description": " 提示信息"
         },
         "data": {
-          "$ref": "#/definitions/Article",
+          "$ref": "#/definitions/GetArticle",
           "description": " 文章详情"
         }
       },

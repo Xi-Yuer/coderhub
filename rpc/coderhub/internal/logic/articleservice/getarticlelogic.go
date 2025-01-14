@@ -125,6 +125,12 @@ func (l *GetArticleLogic) GetArticle(in *coderhub.GetArticleRequest) (*coderhub.
 		// 如果Tags为空，则返回空数组
 		tags = []string{}
 	}
+	// 获取作者信息
+	author, err := l.svcCtx.UserRepository.GetUserByID(article.AuthorID)
+	if err != nil {
+		l.Logger.Errorf("获取作者信息失败: %v", err)
+		return nil, fmt.Errorf("获取作者信息失败: %v", err)
+	}
 	response := &coderhub.GetArticleResponse{
 		Article: &coderhub.Article{
 			Id:           article.ID,
@@ -142,6 +148,20 @@ func (l *GetArticleLogic) GetArticle(in *coderhub.GetArticleRequest) (*coderhub.
 			Status:       article.Status,
 			CreatedAt:    article.CreatedAt.Unix(),
 			UpdatedAt:    article.UpdatedAt.Unix(),
+		},
+		Author: &coderhub.UserInfo{
+			UserId:    author.ID,
+			UserName:  author.UserName,
+			Avatar:    author.Avatar.String,
+			Email:     author.Email.String,
+			Gender:    author.Gender,
+			Age:       author.Age,
+			Phone:     author.Phone.String,
+			NickName:  author.NickName.String,
+			IsAdmin:   author.IsAdmin,
+			Status:    author.Status,
+			CreatedAt: author.CreatedAt.Unix(),
+			UpdatedAt: author.UpdatedAt.Unix(),
 		},
 	}
 	return response, nil

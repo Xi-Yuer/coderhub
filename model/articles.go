@@ -43,3 +43,24 @@ type ArticlePreviewWithAuthInfo struct {
 	AuthName   string    `json:"auth_name"`   // 作者名
 	Avatar     string    `json:"avatar"`      // 作者头像
 }
+
+type Auth struct {
+	ID        int64     `json:"auth_id"`
+	UserName  string    `json:"user_name"`
+	NickName  string    `json:"nick_name"`
+	Avatar    string    `json:"avatar"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Gender    int32     `json:"gender"`
+	Age       int32     `json:"age"`
+	Status    bool      `json:"status"`
+	IsAdmin   bool      `json:"is_admin"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type ArticleAndAuthInfo struct {
+	Articles
+	Author Auth     `json:"author"`
+	Images []string `gorm:"-" json:"images"` // 多张图片 URL 列表
+}
