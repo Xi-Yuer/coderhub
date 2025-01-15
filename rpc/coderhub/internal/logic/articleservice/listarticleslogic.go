@@ -154,10 +154,16 @@ func (l *ListArticlesLogic) ListArticles(in *coderhub.GetArticlesRequest) (*code
 		}
 		response = append(response, &coderhub.GetArticleResponse{
 			Article: &coderhub.Article{
-				Id:           article.ID,
-				Type:         article.Type,
-				Title:        article.Title,
-				Content:      article.Content,
+				Id:    article.ID,
+				Type:  article.Type,
+				Title: article.Title,
+				Content: func() string {
+					if article.Type == "article" {
+						return article.Summary
+					} else {
+						return article.Content
+					}
+				}(),
 				Summary:      article.Summary,
 				Images:       images,
 				CoverImage:   coverImage,
