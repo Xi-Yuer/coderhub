@@ -2,6 +2,7 @@ package articles_auth
 
 import (
 	"coderhub/conf"
+	"coderhub/model"
 	"coderhub/rpc/coderhub/coderhub"
 	"coderhub/shared/utils"
 	"context"
@@ -18,7 +19,7 @@ type CreateArticleLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 创建文章
+// NewCreateArticleLogic 创建文章
 func NewCreateArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateArticleLogic {
 	return &CreateArticleLogic{
 		Logger: logx.WithContext(ctx),
@@ -75,20 +76,24 @@ func (l *CreateArticleLogic) successResp(articleId int64) *types.CreateArticleRe
 
 func (l *CreateArticleLogic) validateArticleData(req *types.CreateArticleReq) error {
 	return utils.NewValidator().
-		Title(req.Title).
 		Content(req.Content).
 		ArticleType(req.Type).
-		Tags(req.Tags).
 		Check()
 }
 
 func (l *CreateArticleLogic) prepareArticleData(req *types.CreateArticleReq, userId int64) *coderhub.CreateArticleRequest {
 	l.Logger.Info("API: 准备文章数据, 文章类型:", req.Type, "标题:", req.Title, "内容:", req.Content, "摘要:", req.Summary, "配图ID:", req.ImageIds, "封面ID:", req.CoverImageID, "作者ID:", userId, "标签:", req.Tags, "状态:", req.Status)
 	return &coderhub.CreateArticleRequest{
-		Type:         req.Type,
-		Title:        req.Title,
-		Content:      req.Content,
-		Summary:      l.generateSummary(req.Summary, req.Content),
+		Type:    req.Type,
+		Title:   req.Title,
+		Content: req.Content,
+		Summary: func() string {
+			if req.Type == model.ArticleType {
+				return l.generateSummary(req.Summary, req.Content)
+			} else {
+				return ""
+			}
+		}(),
 		ImageIds:     req.ImageIds,
 		CoverImageId: req.CoverImageID,
 		AuthorId:     userId,

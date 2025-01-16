@@ -64,3 +64,8 @@ type ArticleAndAuthInfo struct {
 	Author Auth     `json:"author"`
 	Images []string `gorm:"-" json:"images"` // 多张图片 URL 列表
 }
+
+const (
+	ArticleType   = "article"
+	MicroPostType = "micro_post"
+)

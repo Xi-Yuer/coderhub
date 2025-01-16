@@ -76,14 +76,14 @@ type Comment struct {
 }
 
 type CreateArticleReq struct {
-	Type         string   `json:"type,options=article|micro_post"` // 内容类型
-	Title        string   `json:"title"`                           // 标题
-	Content      string   `json:"content"`                         // 内容
-	Summary      string   `json:"summary"`                         // 摘要
-	ImageIds     []int64  `json:"imageIds"`                        // 图片 URL 列表
-	CoverImageID int64    `json:"coverImageID"`                    // 封面图片 URL
-	Tags         []string `json:"tags"`                            // 标签列表
-	Status       string   `json:"status,options=draft|published"`  // 文章状态
+	Type         string   `json:"type,options=article|micro_post"`                  // 内容类型
+	Title        string   `json:"title,optional"`                                   // 标题
+	Content      string   `json:"content"`                                          // 内容
+	Summary      string   `json:"summary,optional"`                                 // 摘要
+	ImageIds     []int64  `json:"imageIds,optional"`                                // 图片 URL 列表
+	CoverImageID int64    `json:"coverImageID,optional"`                            // 封面图片 URL
+	Tags         []string `json:"tags,optional"`                                    // 标签列表
+	Status       string   `json:"status,options=draft|published,default=published"` // 文章状态
 }
 
 type CreateArticleResp struct {

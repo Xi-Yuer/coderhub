@@ -2269,18 +2269,14 @@
             "draft",
             "published"
           ],
+          "default": "published",
           "description": " 文章状态"
         }
       },
       "title": "CreateArticleReq",
       "required": [
         "type",
-        "title",
         "content",
-        "summary",
-        "imageIds",
-        "coverImageID",
-        "tags",
         "status"
       ]
     },
