@@ -117,10 +117,7 @@ func (l *CreateArticleLogic) CreateArticle(in *coderhub.CreateArticleRequest) (*
 func (l *CreateArticleLogic) validateCreateArticleRequest(req *coderhub.CreateArticleRequest) error {
 	// 验证基本字段
 	if err := utils.NewValidator().
-		Title(req.Title).
-		Summary(req.Summary).
 		Content(req.Content).
-		Tags(req.Tags).
 		Check(); err != nil {
 		return fmt.Errorf("字段验证失败: %w", err)
 	}
