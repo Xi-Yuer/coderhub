@@ -54,3 +54,8 @@ FavoriteContentService:
     Hosts:
       - etcd:2379
     Key: coderhub.rpc
+EmotionService:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: coderhub.rpc

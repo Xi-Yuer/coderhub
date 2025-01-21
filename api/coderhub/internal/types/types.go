@@ -105,6 +105,17 @@ type CreateCommentResp struct {
 	Data *Comment `json:"data"` // 创建的评论
 }
 
+type CreateEmojiReq struct {
+	Code        string `json:"code"`        // 表情包名称
+	Description string `json:"description"` // 描述
+	URL         string `json:"url"`         // 图片地址
+}
+
+type CreateEmojiResp struct {
+	Response
+	Data bool `json:"data"` // 表情包详情
+}
+
 type CreateFavorFoldReq struct {
 	Name        string `json:"name"`        // 收藏夹名称
 	Description string `json:"description"` // 描述
@@ -179,6 +190,15 @@ type DeleteCommentResp struct {
 	Data bool `json:"data"` // 删除是否成功
 }
 
+type DeleteEmojiReq struct {
+	Id string `path:"id"` // 表情包 ID
+}
+
+type DeleteEmojiResp struct {
+	Response
+	Data bool `json:"data"`
+}
+
 type DeleteFavorFoldReq struct {
 	Id string `path:"id"` // 收藏夹 ID
 }
@@ -234,6 +254,20 @@ type DeleteUserReq struct {
 type DeleteUserResp struct {
 	Response
 	Data bool `json:"data"` // 是否删除成功
+}
+
+type Emoji struct {
+	ID          string `json:"id"`
+	Code        string `json:"code"`
+	Description string `json:"description"`
+	URL         string `json:"url"`
+	CreatedAt   int64  `json:"createdAt"`
+	UpdatedAt   int64  `json:"updatedAt"`
+}
+
+type EmojiList struct {
+	Total int64    `json:"total"`
+	List  []*Emoji `json:"list"`
 }
 
 type EntityPreviewValue struct {
@@ -359,6 +393,16 @@ type GetCommentsReq struct {
 type GetCommentsResp struct {
 	Response
 	Data List `json:"data"` // 评论列表
+}
+
+type GetEmojiListReq struct {
+	Page     int32 `json:"page"`      // 页码
+	PageSize int32 `json:"page_size"` // 每页数量
+}
+
+type GetEmojiListResp struct {
+	Response
+	Data EmojiList `json:"data"`
 }
 
 type GetFansListReq struct {

@@ -39,6 +39,8 @@ type (
 	CreateArticleResponse              = coderhub.CreateArticleResponse
 	CreateCommentRequest               = coderhub.CreateCommentRequest
 	CreateCommentResponse              = coderhub.CreateCommentResponse
+	CreateEmotionRequest               = coderhub.CreateEmotionRequest
+	CreateEmotionResponse              = coderhub.CreateEmotionResponse
 	CreateFavorFoldRequest             = coderhub.CreateFavorFoldRequest
 	CreateFavorFoldResponse            = coderhub.CreateFavorFoldResponse
 	CreateFavorRequest                 = coderhub.CreateFavorRequest
@@ -60,6 +62,8 @@ type (
 	DeleteByEntityIDResponse           = coderhub.DeleteByEntityIDResponse
 	DeleteCommentRequest               = coderhub.DeleteCommentRequest
 	DeleteCommentResponse              = coderhub.DeleteCommentResponse
+	DeleteEmotionRequest               = coderhub.DeleteEmotionRequest
+	DeleteEmotionResponse              = coderhub.DeleteEmotionResponse
 	DeleteFavorFoldRequest             = coderhub.DeleteFavorFoldRequest
 	DeleteFavorFoldResponse            = coderhub.DeleteFavorFoldResponse
 	DeleteFavorRequest                 = coderhub.DeleteFavorRequest
@@ -74,6 +78,7 @@ type (
 	DeleteUserFollowResp               = coderhub.DeleteUserFollowResp
 	DeleteUserRequest                  = coderhub.DeleteUserRequest
 	DeleteUserResponse                 = coderhub.DeleteUserResponse
+	Emotion                            = coderhub.Emotion
 	EntityInfo                         = coderhub.EntityInfo
 	Favor                              = coderhub.Favor
 	FavorFold                          = coderhub.FavorFold
@@ -92,6 +97,8 @@ type (
 	GetCommentResponse                 = coderhub.GetCommentResponse
 	GetCommentsRequest                 = coderhub.GetCommentsRequest
 	GetCommentsResponse                = coderhub.GetCommentsResponse
+	GetEmotionListRequest              = coderhub.GetEmotionListRequest
+	GetEmotionListResponse             = coderhub.GetEmotionListResponse
 	GetEntitiesByImageRequest          = coderhub.GetEntitiesByImageRequest
 	GetEntitiesByImageResponse         = coderhub.GetEntitiesByImageResponse
 	GetFavorFoldListRequest            = coderhub.GetFavorFoldListRequest

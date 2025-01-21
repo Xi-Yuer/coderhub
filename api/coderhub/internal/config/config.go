@@ -21,4 +21,5 @@ type Config struct {
 	QuestionBankService    zrpc.RpcClientConf
 	FavoriteService        zrpc.RpcClientConf
 	FavoriteContentService zrpc.RpcClientConf
+	EmotionService         zrpc.RpcClientConf
 }

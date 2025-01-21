@@ -12,6 +12,8 @@ import (
 	articles_public "coderhub/api/coderhub/internal/handler/articles_public"
 	coderhub "coderhub/api/coderhub/internal/handler/coderhub"
 	comments_auth "coderhub/api/coderhub/internal/handler/comments_auth"
+	emotion_auth "coderhub/api/coderhub/internal/handler/emotion_auth"
+	emotion_public "coderhub/api/coderhub/internal/handler/emotion_public"
 	favorites_auth "coderhub/api/coderhub/internal/handler/favorites_auth"
 	favorites_public "coderhub/api/coderhub/internal/handler/favorites_public"
 	follow_auth "coderhub/api/coderhub/internal/handler/follow_auth"
@@ -172,6 +174,37 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/comments"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 删除表情包
+				Method:  http.MethodDelete,
+				Path:    "/:id",
+				Handler: emotion_auth.DeleteEmotionHandler(serverCtx),
+			},
+			{
+				// 创建表情包
+				Method:  http.MethodPost,
+				Path:    "/create",
+				Handler: emotion_auth.CreateEmotionHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/emotion"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取表情包列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: emotion_public.ListEmotionHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/emotion"),
 	)
 
 	server.AddRoutes(

@@ -709,6 +709,49 @@ type (
 		Response
 		Data FavorList `json:"data"`
 	}
+		// 创建表情包
+	CreateEmojiReq {
+		Code string `json:"code"`               // 表情包名称
+		Description string `json:"description"` // 描述
+		URL string `json:"url"`                 // 图片地址
+	}
+		// 创建表情包相应
+	CreateEmojiResp {
+		Response
+		Data bool `json:"data"` // 表情包详情
+	}
+		// 删除表情包
+	DeleteEmojiReq {
+		Id string `path:"id"` // 表情包 ID
+	}
+		// 删除表情包相应
+	DeleteEmojiResp {
+		Response
+		Data bool `json:"data"`
+	}
+	Emoji {
+		ID string `json:"id"`
+		Code string `json:"code"`
+		Description string `json:"description"`
+		URL string `json:"url"`
+		CreatedAt int64 `json:"createdAt"`
+		UpdatedAt int64 `json:"updatedAt"`
+	}
+		// 表情包列表
+	EmojiList {
+		Total int64 `json:"total"`
+		List []*Emoji `json:"list"`
+	}
+		// 获取表情包列表
+	GetEmojiListReq {
+		Page int32 `json:"page"`          // 页码
+		PageSize int32 `json:"page_size"` // 每页数量
+	}
+		// 获取表情包列表相应
+	GetEmojiListResp {
+		Response
+		Data EmojiList `json:"data"`
+	}
 )
 
 @server (
@@ -1120,5 +1163,36 @@ service CodeHubAPI {
 	)
 	@handler DeleteFavoriteContent
 	delete /content/:id (DeleteFavorReq) returns (DeleteFavorResp)
+}
+
+@server(
+	prefix: /api/emotion
+	group: emotion_public
+)
+service CodeHubAPI {
+	@doc(
+		summary: "获取表情包列表"
+	)
+	@handler ListEmotion
+	get /list (GetEmojiListReq) returns (GetEmojiListResp)
+}
+
+@server(
+	jwt: Auth
+	prefix: /api/emotion
+	group: emotion_auth
+)
+service CodeHubAPI {
+	@doc(
+		summary: "创建表情包"
+	)
+	@handler CreateEmotion
+	post /create (CreateEmojiReq) returns (CreateEmojiResp)
+
+	@doc(
+		summary: "删除表情包"
+	)
+	@handler DeleteEmotion
+	delete /:id (DeleteEmojiReq) returns (DeleteEmojiResp)
 }
 

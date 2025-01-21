@@ -29,6 +29,7 @@ type ServiceContext struct {
 	QuestionRepository             repository.QuestionRepository
 	UserFavorFolderRepository      repository.UserFavorFolderRepository
 	UserFavorEntityRepository      repository.UserFavorEntityRepository
+	EmotionRepository              repository.Repository
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -78,5 +79,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		QuestionRepository:             repository.NewQuestionRepositoryImpl(sql, redisDB),
 		UserFavorFolderRepository:      repository.NewUserFavorFolderRepository(sql, redisDB),
 		UserFavorEntityRepository:      repository.NewUserFavorEntityRepository(sql, redisDB),
+		EmotionRepository:              repository.NewEmoticonRepository(sql),
 	}
 }

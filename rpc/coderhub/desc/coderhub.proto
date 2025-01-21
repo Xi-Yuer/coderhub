@@ -988,3 +988,44 @@ service FavorService {
   rpc GetFavorList(GetFavorListRequest) returns (GetFavorListResponse) {}
 }
 
+
+message  CreateEmotionRequest {
+  string code = 1;
+  string url = 2;
+  string description = 3;
+}
+
+message CreateEmotionResponse {
+  bool success = 1;
+}
+
+message DeleteEmotionRequest {
+  int64 id = 1;
+}
+
+message DeleteEmotionResponse {
+  bool success = 1;
+}
+
+message GetEmotionListRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+message Emotion {
+  int64 id = 1;
+  string code = 2;
+  string url = 3;
+  string description = 4;
+  int64 create_time = 5;
+}
+
+message GetEmotionListResponse {
+  repeated Emotion emotions = 1;
+  int64 total = 2;
+}
+
+service EmotionService {
+  rpc CreateEmotion(CreateEmotionRequest) returns (CreateEmotionResponse) {}
+  rpc DeleteEmotion(DeleteEmotionRequest) returns (DeleteEmotionResponse) {}
+  rpc GetEmotionList(GetEmotionListRequest) returns (GetEmotionListResponse) {}
+}

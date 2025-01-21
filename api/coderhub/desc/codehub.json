@@ -703,6 +703,113 @@
         ]
       }
     },
+    "/api/emotion/create": {
+      "post": {
+        "summary": "创建表情包",
+        "operationId": "CreateEmotion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateEmojiResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 创建表情包",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateEmojiReq"
+            }
+          }
+        ],
+        "tags": [
+          "emotion_auth"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/emotion/list": {
+      "get": {
+        "summary": "获取表情包列表",
+        "operationId": "ListEmotion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetEmojiListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 页码",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页数量",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "emotion_public"
+        ]
+      }
+    },
+    "/api/emotion/{id}": {
+      "delete": {
+        "summary": "删除表情包",
+        "operationId": "DeleteEmotion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DeleteEmojiResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 删除表情包",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteEmojiReq"
+            }
+          }
+        ],
+        "tags": [
+          "emotion_auth"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
     "/api/favorites/add": {
       "post": {
         "summary": "添加收藏内容",
@@ -2346,6 +2453,52 @@
         "data"
       ]
     },
+    "CreateEmojiReq": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": " 表情包名称"
+        },
+        "description": {
+          "type": "string",
+          "description": " 描述"
+        },
+        "url": {
+          "type": "string",
+          "description": " 图片地址"
+        }
+      },
+      "title": "CreateEmojiReq",
+      "required": [
+        "code",
+        "description",
+        "url"
+      ]
+    },
+    "CreateEmojiResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 表情包详情"
+        }
+      },
+      "title": "CreateEmojiResp",
+      "required": [
+        "data"
+      ]
+    },
     "CreateFavorFoldReq": {
       "type": "object",
       "properties": {
@@ -2638,6 +2791,32 @@
         "data"
       ]
     },
+    "DeleteEmojiReq": {
+      "type": "object",
+      "title": "DeleteEmojiReq"
+    },
+    "DeleteEmojiResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "DeleteEmojiResp",
+      "required": [
+        "data"
+      ]
+    },
     "DeleteFavorFoldReq": {
       "type": "object",
       "title": "DeleteFavorFoldReq"
@@ -2825,6 +3004,60 @@
       "title": "DeleteUserResp",
       "required": [
         "data"
+      ]
+    },
+    "Emoji": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "updatedAt": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "Emoji",
+      "required": [
+        "id",
+        "code",
+        "description",
+        "url",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "EmojiList": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Emoji"
+          }
+        }
+      },
+      "title": "EmojiList",
+      "required": [
+        "total",
+        "list"
       ]
     },
     "EntityPreviewValue": {
@@ -3303,6 +3536,47 @@
         }
       },
       "title": "GetCommentsResp",
+      "required": [
+        "data"
+      ]
+    },
+    "GetEmojiListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 页码"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 每页数量"
+        }
+      },
+      "title": "GetEmojiListReq",
+      "required": [
+        "page",
+        "page_size"
+      ]
+    },
+    "GetEmojiListResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态码"
+        },
+        "message": {
+          "type": "string",
+          "description": " 提示信息"
+        },
+        "data": {
+          "$ref": "#/definitions/EmojiList"
+        }
+      },
+      "title": "GetEmojiListResp",
       "required": [
         "data"
       ]

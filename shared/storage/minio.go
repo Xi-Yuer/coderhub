@@ -84,12 +84,12 @@ func (m *Minio) Connect() error {
 	return nil
 }
 
-// 创建桶
+// CreateBucket 创建桶
 func (m *Minio) CreateBucket(bucketName string) error {
 	return m.Client.MakeBucket(context.Background(), bucketName, minio.MakeBucketOptions{Region: m.Region})
 }
 
-// 上传文件
+// UploadFile 上传文件
 func (m *Minio) UploadFile(bucketName, objectName string, reader io.Reader, objectSize int64, contentType string) (minio.UploadInfo, error) {
 	// 判断桶是否存在
 	exists, err := m.Client.BucketExists(context.Background(), bucketName)
@@ -102,12 +102,12 @@ func (m *Minio) UploadFile(bucketName, objectName string, reader io.Reader, obje
 	return m.Client.PutObject(context.Background(), bucketName, objectName, reader, objectSize, minio.PutObjectOptions{ContentType: contentType})
 }
 
-// 获取文件
+// GetFile 获取文件
 func (m *Minio) GetFile(bucketName, objectName string) (*minio.Object, error) {
 	return m.Client.GetObject(context.Background(), bucketName, objectName, minio.GetObjectOptions{})
 }
 
-// 删除文件
+// DeleteFile 删除文件
 func (m *Minio) DeleteFile(bucketName, objectName string) error {
 	return m.Client.RemoveObject(context.Background(), bucketName, objectName, minio.RemoveObjectOptions{})
 }

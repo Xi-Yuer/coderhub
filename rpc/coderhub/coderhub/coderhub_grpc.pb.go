@@ -3140,3 +3140,181 @@ var FavorService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "coderhub.proto",
 }
+
+const (
+	EmotionService_CreateEmotion_FullMethodName  = "/coderhub.EmotionService/CreateEmotion"
+	EmotionService_DeleteEmotion_FullMethodName  = "/coderhub.EmotionService/DeleteEmotion"
+	EmotionService_GetEmotionList_FullMethodName = "/coderhub.EmotionService/GetEmotionList"
+)
+
+// EmotionServiceClient is the client API for EmotionService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type EmotionServiceClient interface {
+	CreateEmotion(ctx context.Context, in *CreateEmotionRequest, opts ...grpc.CallOption) (*CreateEmotionResponse, error)
+	DeleteEmotion(ctx context.Context, in *DeleteEmotionRequest, opts ...grpc.CallOption) (*DeleteEmotionResponse, error)
+	GetEmotionList(ctx context.Context, in *GetEmotionListRequest, opts ...grpc.CallOption) (*GetEmotionListResponse, error)
+}
+
+type emotionServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewEmotionServiceClient(cc grpc.ClientConnInterface) EmotionServiceClient {
+	return &emotionServiceClient{cc}
+}
+
+func (c *emotionServiceClient) CreateEmotion(ctx context.Context, in *CreateEmotionRequest, opts ...grpc.CallOption) (*CreateEmotionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateEmotionResponse)
+	err := c.cc.Invoke(ctx, EmotionService_CreateEmotion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emotionServiceClient) DeleteEmotion(ctx context.Context, in *DeleteEmotionRequest, opts ...grpc.CallOption) (*DeleteEmotionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteEmotionResponse)
+	err := c.cc.Invoke(ctx, EmotionService_DeleteEmotion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emotionServiceClient) GetEmotionList(ctx context.Context, in *GetEmotionListRequest, opts ...grpc.CallOption) (*GetEmotionListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetEmotionListResponse)
+	err := c.cc.Invoke(ctx, EmotionService_GetEmotionList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// EmotionServiceServer is the server API for EmotionService service.
+// All implementations must embed UnimplementedEmotionServiceServer
+// for forward compatibility.
+type EmotionServiceServer interface {
+	CreateEmotion(context.Context, *CreateEmotionRequest) (*CreateEmotionResponse, error)
+	DeleteEmotion(context.Context, *DeleteEmotionRequest) (*DeleteEmotionResponse, error)
+	GetEmotionList(context.Context, *GetEmotionListRequest) (*GetEmotionListResponse, error)
+	mustEmbedUnimplementedEmotionServiceServer()
+}
+
+// UnimplementedEmotionServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedEmotionServiceServer struct{}
+
+func (UnimplementedEmotionServiceServer) CreateEmotion(context.Context, *CreateEmotionRequest) (*CreateEmotionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateEmotion not implemented")
+}
+func (UnimplementedEmotionServiceServer) DeleteEmotion(context.Context, *DeleteEmotionRequest) (*DeleteEmotionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteEmotion not implemented")
+}
+func (UnimplementedEmotionServiceServer) GetEmotionList(context.Context, *GetEmotionListRequest) (*GetEmotionListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEmotionList not implemented")
+}
+func (UnimplementedEmotionServiceServer) mustEmbedUnimplementedEmotionServiceServer() {}
+func (UnimplementedEmotionServiceServer) testEmbeddedByValue()                        {}
+
+// UnsafeEmotionServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to EmotionServiceServer will
+// result in compilation errors.
+type UnsafeEmotionServiceServer interface {
+	mustEmbedUnimplementedEmotionServiceServer()
+}
+
+func RegisterEmotionServiceServer(s grpc.ServiceRegistrar, srv EmotionServiceServer) {
+	// If the following call pancis, it indicates UnimplementedEmotionServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&EmotionService_ServiceDesc, srv)
+}
+
+func _EmotionService_CreateEmotion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateEmotionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmotionServiceServer).CreateEmotion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EmotionService_CreateEmotion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmotionServiceServer).CreateEmotion(ctx, req.(*CreateEmotionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EmotionService_DeleteEmotion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteEmotionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmotionServiceServer).DeleteEmotion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EmotionService_DeleteEmotion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmotionServiceServer).DeleteEmotion(ctx, req.(*DeleteEmotionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EmotionService_GetEmotionList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEmotionListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmotionServiceServer).GetEmotionList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EmotionService_GetEmotionList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmotionServiceServer).GetEmotionList(ctx, req.(*GetEmotionListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// EmotionService_ServiceDesc is the grpc.ServiceDesc for EmotionService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var EmotionService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "coderhub.EmotionService",
+	HandlerType: (*EmotionServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateEmotion",
+			Handler:    _EmotionService_CreateEmotion_Handler,
+		},
+		{
+			MethodName: "DeleteEmotion",
+			Handler:    _EmotionService_DeleteEmotion_Handler,
+		},
+		{
+			MethodName: "GetEmotionList",
+			Handler:    _EmotionService_GetEmotionList_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "coderhub.proto",
+}
