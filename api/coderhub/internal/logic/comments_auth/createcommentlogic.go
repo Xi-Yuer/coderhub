@@ -34,13 +34,13 @@ func (l *CreateCommentLogic) CreateComment(req *types.CreateCommentReq) (resp *t
 		return nil, err
 	}
 	comment, err := l.svcCtx.CommentService.CreateComment(utils.SetUserMetaData(l.ctx), &coderhub.CreateCommentRequest{
-		EntityId:   req.EntityID,
+		EntityId:   utils.String2Int(req.EntityID),
 		Content:    req.Content,
-		ParentId:   req.ParentId,
-		RootId:     req.RootId,
+		ParentId:   utils.String2Int(req.ParentId),
+		RootId:     utils.String2Int(req.RootId),
 		UserId:     userID,
-		ReplyToUid: req.ReplyToUID,
-		ImageIds:   req.ImageIds,
+		ReplyToUid: utils.String2Int(req.ReplyToUID),
+		ImageIds:   utils.StringArray2Int64Array(req.ImageIds),
 	})
 	if err != nil {
 		return l.errorResp(err)
@@ -54,7 +54,7 @@ func (l *CreateCommentLogic) successResp(comment *commentservice.CreateCommentRe
 	Images := make([]types.ImageInfo, len(comment.Comment.Images))
 	for _, image := range comment.Comment.Images {
 		Images = append(Images, types.ImageInfo{
-			ImageId:      image.ImageId,
+			ImageId:      utils.Int2String(image.ImageId),
 			BucketName:   image.BucketName,
 			ObjectName:   image.ObjectName,
 			Url:          image.Url,
@@ -64,7 +64,7 @@ func (l *CreateCommentLogic) successResp(comment *commentservice.CreateCommentRe
 			Width:        image.Width,
 			Height:       image.Height,
 			UploadIp:     image.UploadIp,
-			UserId:       image.UserId,
+			UserId:       utils.Int2String(image.UserId),
 			CreatedAt:    image.CreatedAt,
 		})
 	}
@@ -74,12 +74,12 @@ func (l *CreateCommentLogic) successResp(comment *commentservice.CreateCommentRe
 			Message: conf.HttpMessage.MsgOK,
 		},
 		Data: &types.Comment{
-			Id:           comment.Comment.Id,
-			EntityID:     comment.Comment.EntityId,
+			Id:           utils.Int2String(comment.Comment.Id),
+			EntityID:     utils.Int2String(comment.Comment.EntityId),
 			Content:      comment.Comment.Content,
-			ParentId:     comment.Comment.ParentId,
-			RootId:       comment.Comment.RootId,
-			UserInfo:     &types.UserInfo{Id: comment.Comment.UserInfo.UserId, Username: comment.Comment.UserInfo.UserName, Avatar: comment.Comment.UserInfo.Avatar},
+			ParentId:     utils.Int2String(comment.Comment.ParentId),
+			RootId:       utils.Int2String(comment.Comment.RootId),
+			UserInfo:     &types.UserInfo{Id: utils.Int2String(comment.Comment.UserInfo.UserId), Username: comment.Comment.UserInfo.UserName, Avatar: comment.Comment.UserInfo.Avatar},
 			CreatedAt:    comment.Comment.CreatedAt,
 			UpdatedAt:    comment.Comment.UpdatedAt,
 			Replies:      nil,

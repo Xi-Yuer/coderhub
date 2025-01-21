@@ -28,16 +28,16 @@ func NewGetArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetArt
 }
 
 func (l *GetArticleLogic) GetArticle(req *types.GetArticleReq) (resp *types.GetArticleResp, err error) {
-	if err := utils.NewValidator().ArticleID(req.Id).Check(); err != nil {
+	if err := utils.NewValidator().ArticleID(utils.String2Int(req.Id)).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
 
-	article, err := l.getArticle(req.Id)
+	article, err := l.getArticle(utils.String2Int(req.Id))
 	if err != nil {
 		return l.errorResp(err), nil
 	}
 
-	go l.incrementViewCount(req.Id)
+	go l.incrementViewCount(utils.String2Int(req.Id))
 
 	return l.successResp(article), nil
 }
@@ -92,14 +92,14 @@ func (l *GetArticleLogic) convertToArticleType(article *coderhub.GetArticleRespo
 
 	return &types.GetArticle{
 		Article: &types.Article{
-			Id:           article.Article.Id,
+			Id:           utils.Int2String(article.Article.Id),
 			Type:         article.Article.Type,
 			Title:        article.Article.Title,
 			Content:      article.Article.Content,
 			Summary:      article.Article.Summary,
 			CoverImage:   &coverImageUrl,
 			ImageUrls:    imageUrls,
-			AuthorId:     article.Article.AuthorId,
+			AuthorId:     utils.Int2String(article.Article.AuthorId),
 			Tags:         article.Article.Tags,
 			ViewCount:    article.Article.ViewCount,
 			LikeCount:    article.Article.LikeCount,
@@ -109,7 +109,7 @@ func (l *GetArticleLogic) convertToArticleType(article *coderhub.GetArticleRespo
 			UpdatedAt:    article.Article.UpdatedAt,
 		},
 		Author: &types.UserInfo{
-			Id:       article.Author.UserId,
+			Id:       utils.Int2String(article.Author.UserId),
 			Username: article.Author.UserName,
 			Nickname: article.Author.NickName,
 			Email:    article.Author.Email,

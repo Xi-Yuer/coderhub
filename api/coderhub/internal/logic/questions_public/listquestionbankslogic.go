@@ -3,6 +3,7 @@ package questions_public
 import (
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/coderhub/internal/svc"
@@ -38,13 +39,13 @@ func (l *ListQuestionBanksLogic) ListQuestionBanks(req *types.GetQuestionBankLis
 	banks := make([]*types.QuestionBank, 0, len(list.Banks))
 	for _, bank := range list.Banks {
 		banks = append(banks, &types.QuestionBank{
-			Id:          bank.Id,
+			Id:          utils.Int2String(bank.Id),
 			Name:        bank.Name,
 			Description: bank.Description,
 			Difficulty:  bank.Difficulty,
 			Tags:        bank.Tags,
 			CoverImage: &types.ImageInfo{
-				ImageId:      bank.CoverImage.ImageId,
+				ImageId:      utils.Int2String(bank.CoverImage.ImageId),
 				BucketName:   bank.CoverImage.BucketName,
 				ObjectName:   bank.CoverImage.ObjectName,
 				Url:          bank.CoverImage.Url,
@@ -54,11 +55,11 @@ func (l *ListQuestionBanksLogic) ListQuestionBanks(req *types.GetQuestionBankLis
 				Width:        bank.CoverImage.Width,
 				Height:       bank.CoverImage.Height,
 				UploadIp:     bank.CoverImage.UploadIp,
-				UserId:       bank.CoverImage.UserId,
+				UserId:       utils.Int2String(bank.CoverImage.UserId),
 				CreatedAt:    bank.CoverImage.CreatedAt,
 			},
 			CreateUser: &types.UserInfo{
-				Id:       bank.CreateUser.UserId,
+				Id:       utils.Int2String(bank.CreateUser.UserId),
 				Username: bank.CreateUser.UserName,
 				Nickname: bank.CreateUser.NickName,
 				Email:    bank.CreateUser.Email,

@@ -34,12 +34,12 @@ func (l *UpdateArticleLogic) UpdateArticle(req *types.UpdateArticleReq) (resp *t
 		return l.errorResp(err), nil
 	}
 	// 1. 参数验证
-	if err := utils.NewValidator().ArticleID(req.Id).Check(); err != nil {
+	if err := utils.NewValidator().ArticleID(utils.String2Int(req.Id)).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
 
 	// 3. 获取文章信息
-	article, err := l.getArticle(req.Id)
+	article, err := l.getArticle(utils.String2Int(req.Id))
 	if err != nil {
 		return l.errorResp(err), nil
 	}
@@ -89,12 +89,12 @@ func (l *UpdateArticleLogic) getArticle(articleId int64) (*coderhub.GetArticleRe
 // 更新文章
 func (l *UpdateArticleLogic) updateArticle(ctx context.Context, req *types.UpdateArticleReq) (*coderhub.UpdateArticleResponse, error) {
 	return l.svcCtx.ArticlesService.UpdateArticle(ctx, &coderhub.UpdateArticleRequest{
-		Id:           req.Id,
+		Id:           utils.String2Int(req.Id),
 		Title:        req.Title,
 		Content:      req.Content,
 		Summary:      l.generateSummary(req.Summary, req.Content),
-		ImageIds:     req.ImageIds,
-		CoverImageId: req.CoverImageID,
+		ImageIds:     utils.StringArray2Int64Array(req.ImageIds),
+		CoverImageId: utils.String2Int(req.CoverImageID),
 		Tags:         req.Tags,
 		Status:       req.Status,
 	})

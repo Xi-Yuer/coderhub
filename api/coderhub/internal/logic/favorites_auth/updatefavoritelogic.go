@@ -3,6 +3,7 @@ package favorites_auth
 import (
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/coderhub/internal/svc"
@@ -28,7 +29,7 @@ func NewUpdateFavoriteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 
 func (l *UpdateFavoriteLogic) UpdateFavorite(req *types.UpdateFavorFoldReq) (resp *types.UpdateFavorFoldResp, err error) {
 	if _, err := l.svcCtx.FavoriteService.UpdateFavorFold(l.ctx, &coderhub.UpdateFavorFoldRequest{
-		Id:          req.Id,
+		Id:          utils.String2Int(req.Id),
 		Name:        req.Name,
 		Description: req.Description,
 		IsPublic:    req.IsPublic,

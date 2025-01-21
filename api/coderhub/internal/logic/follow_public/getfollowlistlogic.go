@@ -7,6 +7,7 @@ import (
 	"coderhub/api/coderhub/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +29,7 @@ func NewGetFollowListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 
 func (l *GetFollowListLogic) GetFollowList(req *types.GetFollowListReq) (resp *types.GetFollowListResp, err error) {
 	userFollowsResp, err := l.svcCtx.UserFollowService.GetUserFollows(l.ctx, &coderhub.GetUserFollowsReq{
-		FollowerId: req.UserId,
+		FollowerId: utils.String2Int(req.UserId),
 		Page:       int32(req.Page),
 		PageSize:   int32(req.PageSize),
 	})
@@ -42,7 +43,7 @@ func (l *GetFollowListLogic) successResp(userFollowsResp *coderhub.GetUserFollow
 	userFollowsList := make([]types.UserInfo, 0, len(userFollowsResp.UserFollows))
 	for _, userFollow := range userFollowsResp.UserFollows {
 		userFollowsList = append(userFollowsList, types.UserInfo{
-			Id:       userFollow.UserId,
+			Id:       utils.Int2String(userFollow.UserId),
 			Username: userFollow.UserName,
 			Nickname: userFollow.NickName,
 			Email:    userFollow.Email,

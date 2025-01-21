@@ -34,7 +34,7 @@ func (l *CancelLikeAcademicNavigatorLogic) CancelLikeAcademicNavigator(req *type
 		return l.errorResp(err)
 	}
 	_, err = l.svcCtx.AcademicService.CancelLikeAcademicNavigator(l.ctx, &coderhub.CancelLikeAcademicNavigatorRequest{
-		Id:     req.Id,
+		Id:     utils.String2Int(req.Id),
 		UserId: userId,
 	})
 	if err != nil {

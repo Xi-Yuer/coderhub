@@ -33,7 +33,7 @@ func (l *CreateQuestionBankLogic) CreateQuestionBank(req *types.CreateQuestionBa
 	}
 
 	imageInfo, err := l.svcCtx.ImagesService.Get(l.ctx, &coderhub.GetRequest{
-		ImageId: req.CoverImage,
+		ImageId: utils.String2Int(req.CoverImage),
 	})
 	if err != nil {
 		return nil, err

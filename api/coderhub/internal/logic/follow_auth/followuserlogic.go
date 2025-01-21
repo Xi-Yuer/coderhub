@@ -34,7 +34,7 @@ func (l *FollowUserLogic) FollowUser(req *types.FollowUserReq) (resp *types.Foll
 	}
 	_, err = l.svcCtx.UserFollowService.CreateUserFollow(l.ctx, &coderhub.CreateUserFollowReq{
 		FollowerId: UserID,
-		FollowedId: req.FollowUserId,
+		FollowedId: utils.String2Int(req.FollowUserId),
 	})
 	if err != nil {
 		return l.errorResp(err)

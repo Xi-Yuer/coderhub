@@ -34,7 +34,7 @@ func (l *DeleteFavoriteLogic) DeleteFavorite(req *types.DeleteFavorFoldReq) (res
 	}
 
 	if _, err := l.svcCtx.FavoriteService.DeleteFavorFold(l.ctx, &coderhub.DeleteFavorFoldRequest{
-		Id:     req.Id,
+		Id:     utils.String2Int(req.Id),
 		UserId: userID,
 	}); err != nil {
 		return l.errorResp(err)

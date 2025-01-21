@@ -77,7 +77,7 @@ func (l *UploadLogic) successResp(response *coderhub.ImageInfo) (*types.UploadRe
 			Message: conf.HttpMessage.MsgOK,
 		},
 		Data: &types.ImageInfo{
-			ImageId:      response.ImageId,
+			ImageId:      utils.Int2String(response.ImageId),
 			Url:          response.Url,
 			ThumbnailUrl: response.ThumbnailUrl,
 			Width:        response.Width,

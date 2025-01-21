@@ -35,7 +35,7 @@ func (l *CreateQuestionLogic) CreateQuestion(req *types.CreateQuestionReq) (resp
 
 	_, err = l.svcCtx.QuestionBankService.CreateQuestion(l.ctx, &coderhub.CreateQuestionRequest{
 		Title:      req.Title,
-		BankId:     req.BankId,
+		BankId:     utils.String2Int(req.BankId),
 		Content:    req.Content,
 		CreateUser: UserId,
 		Difficulty: req.Difficulty,

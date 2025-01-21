@@ -34,7 +34,7 @@ func (l *UnfollowUserLogic) UnfollowUser(req *types.UnfollowUserReq) (resp *type
 	}
 	_, err = l.svcCtx.UserFollowService.DeleteUserFollow(l.ctx, &coderhub.DeleteUserFollowReq{
 		FollowerId: UserID,
-		FollowedId: req.FollowUserId,
+		FollowedId: utils.String2Int(req.FollowUserId),
 	})
 	if err != nil {
 		return l.errorResp(err)

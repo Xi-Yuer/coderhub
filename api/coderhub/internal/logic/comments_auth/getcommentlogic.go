@@ -3,6 +3,7 @@ package comments_auth
 import (
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/client/commentservice"
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/coderhub/internal/svc"
@@ -28,7 +29,7 @@ func NewGetCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCom
 
 func (l *GetCommentLogic) GetComment(req *types.GetCommentReq) (resp *types.GetCommentResp, err error) {
 	comment, err := l.svcCtx.CommentService.GetComment(l.ctx, &commentservice.GetCommentRequest{
-		CommentId: req.CommentId,
+		CommentId: utils.String2Int(req.CommentId),
 	})
 	if err != nil {
 		return l.errorResp(err)
@@ -51,7 +52,7 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 	var userInfo *types.UserInfo
 	if comment.Comment.UserInfo != nil {
 		userInfo = &types.UserInfo{
-			Id:       comment.Comment.UserInfo.UserId,
+			Id:       utils.Int2String(comment.Comment.UserInfo.UserId),
 			Username: comment.Comment.UserInfo.UserName,
 			Nickname: comment.Comment.UserInfo.UserName,
 			Email:    comment.Comment.UserInfo.Email,
@@ -69,7 +70,7 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 	var replyToUserInfo *types.UserInfo
 	if comment.Comment.ReplyToUserInfo != nil {
 		replyToUserInfo = &types.UserInfo{
-			Id:       comment.Comment.ReplyToUserInfo.UserId,
+			Id:       utils.Int2String(comment.Comment.ReplyToUserInfo.UserId),
 			Username: comment.Comment.ReplyToUserInfo.UserName,
 			Avatar:   comment.Comment.ReplyToUserInfo.Avatar,
 			Nickname: comment.Comment.ReplyToUserInfo.UserName,
@@ -88,7 +89,7 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 	images := make([]types.ImageInfo, len(comment.Comment.Images))
 	for i, image := range comment.Comment.Images {
 		images[i] = types.ImageInfo{
-			ImageId:      image.ImageId,
+			ImageId:      utils.Int2String(image.ImageId),
 			BucketName:   image.BucketName,
 			ObjectName:   image.ObjectName,
 			Url:          image.Url,
@@ -98,7 +99,7 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 			Width:        image.Width,
 			Height:       image.Height,
 			UploadIp:     image.UploadIp,
-			UserId:       image.UserId,
+			UserId:       utils.Int2String(image.UserId),
 			CreatedAt:    image.CreatedAt,
 		}
 	}
@@ -109,11 +110,11 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 			Message: conf.HttpMessage.MsgOK,
 		},
 		Data: &types.Comment{
-			Id:              comment.Comment.Id,
-			EntityID:        comment.Comment.EntityId,
+			Id:              utils.Int2String(comment.Comment.Id),
+			EntityID:        utils.Int2String(comment.Comment.EntityId),
 			Content:         comment.Comment.Content,
-			ParentId:        comment.Comment.ParentId,
-			RootId:          comment.Comment.RootId,
+			ParentId:        utils.Int2String(comment.Comment.ParentId),
+			RootId:          utils.Int2String(comment.Comment.RootId),
 			UserInfo:        userInfo,
 			CreatedAt:       comment.Comment.CreatedAt,
 			UpdatedAt:       comment.Comment.UpdatedAt,

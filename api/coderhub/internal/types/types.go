@@ -9,8 +9,8 @@ type AcademicList struct {
 }
 
 type AcademicNavigator struct {
-	Id        int64  `json:"id"`         // 学术导航 ID
-	UserId    int64  `json:"user_id"`    // 用户 ID
+	Id        string `json:"id"`         // 学术导航 ID
+	UserId    string `json:"user_id"`    // 用户 ID
 	Education string `json:"education"`  // 学历
 	Content   string `json:"content"`    // 内容
 	Major     string `json:"major"`      // 专业
@@ -33,14 +33,14 @@ type AddAcademicNavigatorResp struct {
 }
 
 type Article struct {
-	Id           int64    `json:"id" form:"id"`                     // 主键 ID
+	Id           string   `json:"id" form:"id"`                     // 主键 ID
 	Type         string   `json:"type" form:"type"`                 // 内容类型：长文或短文
 	Title        string   `json:"title" form:"title"`               // 标题
 	Content      string   `json:"content" form:"content"`           // 内容
 	Summary      string   `json:"summary" form:"summary"`           // 摘要
 	ImageUrls    []string `json:"imageUrls" form:"imageUrls"`       // 图片 URL 列表
 	CoverImage   *string  `json:"coverImage" form:"coverImage"`     // 封面图片 URL
-	AuthorId     int64    `json:"authorId" form:"authorId"`         // 作者 ID
+	AuthorId     string   `json:"authorId" form:"authorId"`         // 作者 ID
 	Tags         []string `json:"tags" form:"tags"`                 // 标签列表
 	ViewCount    int64    `json:"viewCount" form:"viewCount"`       // 阅读次数
 	LikeCount    int64    `json:"likeCount" form:"likeCount"`       // 点赞次数
@@ -51,7 +51,7 @@ type Article struct {
 }
 
 type CancelLikeAcademicNavigatorReq struct {
-	Id int64 `path:"id"` // 学术导航 ID
+	Id string `path:"id"` // 学术导航 ID
 }
 
 type CancelLikeAcademicNavigatorResp struct {
@@ -60,11 +60,11 @@ type CancelLikeAcademicNavigatorResp struct {
 }
 
 type Comment struct {
-	Id              int64       `json:"id"`                 // 评论ID
-	EntityID        int64       `json:"entity_id"`          // 文章ID
+	Id              string      `json:"id"`                 // 评论ID
+	EntityID        string      `json:"entity_id"`          // 文章ID
 	Content         string      `json:"content"`            // 评论内容
-	RootId          int64       `json:"root_id"`            // 根评论ID
-	ParentId        int64       `json:"parent_id"`          // 父评论ID
+	RootId          string      `json:"root_id"`            // 根评论ID
+	ParentId        string      `json:"parent_id"`          // 父评论ID
 	UserInfo        *UserInfo   `json:"user_info"`          // 评论者信息
 	CreatedAt       int64       `json:"created_at"`         // 创建时间
 	UpdatedAt       int64       `json:"updated_at"`         // 更新时间
@@ -80,24 +80,24 @@ type CreateArticleReq struct {
 	Title        string   `json:"title,optional"`                                   // 标题
 	Content      string   `json:"content"`                                          // 内容
 	Summary      string   `json:"summary,optional"`                                 // 摘要
-	ImageIds     []int64  `json:"imageIds,optional"`                                // 图片 URL 列表
-	CoverImageID int64    `json:"coverImageID,optional"`                            // 封面图片 URL
+	ImageIds     []string `json:"imageIds,optional"`                                // 图片 URL 列表
+	CoverImageID string   `json:"coverImageID,optional"`                            // 封面图片 URL
 	Tags         []string `json:"tags,optional"`                                    // 标签列表
 	Status       string   `json:"status,options=draft|published,default=published"` // 文章状态
 }
 
 type CreateArticleResp struct {
 	Response
-	Data int64 `json:"data"` // 文章详情
+	Data string `json:"data"` // 文章详情
 }
 
 type CreateCommentReq struct {
-	EntityID   int64   `json:"entity_id"`    // 文章ID
-	Content    string  `json:"content"`      // 评论内容
-	RootId     int64   `json:"root_id"`      // 根评论ID
-	ParentId   int64   `json:"parent_id"`    // 父评论ID（可选）
-	ReplyToUID int64   `json:"reply_to_uid"` // 回复的目标评论ID（可选）
-	ImageIds   []int64 `json:"image_ids"`    // 图片ID列表
+	EntityID   string   `json:"entity_id"`    // 文章ID
+	Content    string   `json:"content"`      // 评论内容
+	RootId     string   `json:"root_id"`      // 根评论ID
+	ParentId   string   `json:"parent_id"`    // 父评论ID（可选）
+	ReplyToUID string   `json:"reply_to_uid"` // 回复的目标评论ID（可选）
+	ImageIds   []string `json:"image_ids"`    // 图片ID列表
 }
 
 type CreateCommentResp struct {
@@ -117,8 +117,8 @@ type CreateFavorFoldResp struct {
 }
 
 type CreateFavorReq struct {
-	FoldId     int64  `json:"foldId"`                               // 收藏夹 ID
-	EntityId   int64  `json:"entityId"`                             // 实体 ID
+	FoldId     string `json:"foldId"`                               // 收藏夹 ID
+	EntityId   string `json:"entityId"`                             // 实体 ID
 	EntityType string `json:"entity_type,options=article|question"` // 实体类型
 }
 
@@ -132,7 +132,7 @@ type CreateQuestionBankReq struct {
 	Description string   `json:"description"`
 	Difficulty  string   `json:"difficulty,options=default|easy|medium|hard"`
 	Tags        []string `json:"tags"`
-	CoverImage  int64    `json:"coverImage"` // 封面图片 URL
+	CoverImage  string   `json:"coverImage"` // 封面图片 URL
 }
 
 type CreateQuestionBankResp struct {
@@ -142,7 +142,7 @@ type CreateQuestionBankResp struct {
 
 type CreateQuestionReq struct {
 	Title      string `json:"title"`
-	BankId     int64  `json:"bankId"`
+	BankId     string `json:"bankId"`
 	Content    string `json:"content"`
 	Difficulty string `json:"difficulty,options=default|easy|medium|hard"`
 }
@@ -153,7 +153,7 @@ type CreateQuestionResp struct {
 }
 
 type DeleteAcademicNavigatorReq struct {
-	Id int64 `path:"id"` // 学术导航 ID
+	Id string `path:"id"` // 学术导航 ID
 }
 
 type DeleteAcademicNavigatorResp struct {
@@ -162,7 +162,7 @@ type DeleteAcademicNavigatorResp struct {
 }
 
 type DeleteArticleReq struct {
-	Id int64 `path:"id"` // 文章 ID
+	Id string `path:"id"` // 文章 ID
 }
 
 type DeleteArticleResp struct {
@@ -171,7 +171,7 @@ type DeleteArticleResp struct {
 }
 
 type DeleteCommentReq struct {
-	CommentId int64 `path:"comment_id"` // 评论ID
+	CommentId string `path:"comment_id"` // 评论ID
 }
 
 type DeleteCommentResp struct {
@@ -180,7 +180,7 @@ type DeleteCommentResp struct {
 }
 
 type DeleteFavorFoldReq struct {
-	Id int64 `path:"id"` // 收藏夹 ID
+	Id string `path:"id"` // 收藏夹 ID
 }
 
 type DeleteFavorFoldResp struct {
@@ -189,9 +189,9 @@ type DeleteFavorFoldResp struct {
 }
 
 type DeleteFavorReq struct {
-	Id          int64  `path:"id"` // 收藏夹 ID
-	FavorFoldId int64  `json:"favor_fold_id"`
-	EntityId    int64  `json:"entity_id"`
+	Id          string `path:"id"` // 收藏夹 ID
+	FavorFoldId string `json:"favor_fold_id"`
+	EntityId    string `json:"entity_id"`
 	EntityType  string `json:"entity_type,options=article|question"`
 }
 
@@ -201,7 +201,7 @@ type DeleteFavorResp struct {
 }
 
 type DeleteQuestionBankReq struct {
-	Id int64 `path:"id"` // 题库 ID
+	Id string `path:"id"` // 题库 ID
 }
 
 type DeleteQuestionBankResp struct {
@@ -210,7 +210,7 @@ type DeleteQuestionBankResp struct {
 }
 
 type DeleteQuestionReq struct {
-	Id int64 `path:"id"` // 题目 ID
+	Id string `path:"id"` // 题目 ID
 }
 
 type DeleteQuestionResp struct {
@@ -219,7 +219,7 @@ type DeleteQuestionResp struct {
 }
 
 type DeleteRequest struct {
-	ImageId int64 `json:"image_id"` // 图片ID
+	ImageId string `json:"image_id"` // 图片ID
 }
 
 type DeleteResponse struct {
@@ -228,7 +228,7 @@ type DeleteResponse struct {
 }
 
 type DeleteUserReq struct {
-	Id int64 `path:"id"` // 用户ID
+	Id string `path:"id"` // 用户ID
 }
 
 type DeleteUserResp struct {
@@ -237,7 +237,7 @@ type DeleteUserResp struct {
 }
 
 type EntityPreviewValue struct {
-	EntityId   int64    `json:"entity_id"`
+	EntityId   string   `json:"entity_id"`
 	Title      string   `json:"title"`
 	Content    string   `json:"content"`
 	EntityType string   `json:"entity_type"`
@@ -246,21 +246,21 @@ type EntityPreviewValue struct {
 }
 
 type Favor struct {
-	ID          int64              `json:"id"`
-	CreateUser  int64              `json:"create_user"`
-	FavorFoldId int64              `json:"favor_fold_id"`
-	EntityId    int64              `json:"entity_id"`
+	ID          string             `json:"id"`
+	CreateUser  string             `json:"create_user"`
+	FavorFoldId string             `json:"favor_fold_id"`
+	EntityId    string             `json:"entity_id"`
 	EntityValue EntityPreviewValue `json:"entity_value"`
 	EntityType  string             `json:"entity_type"`
 	CreatedAt   int64              `json:"createdAt"`
 }
 
 type FavorFold struct {
-	ID          int64  `json:"id"`
+	ID          string `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	IsPublic    bool   `json:"is_public"`
-	CreateUser  int64  `json:"create_user"`
+	CreateUser  string `json:"create_user"`
 	CreatedAt   int64  `json:"createdAt"`
 	UpdatedAt   int64  `json:"updatedAt"`
 }
@@ -281,7 +281,7 @@ type FollowList struct {
 }
 
 type FollowUserReq struct {
-	FollowUserId int64 `json:"follow_id"` // 被关注用户ID
+	FollowUserId string `json:"follow_id"` // 被关注用户ID
 }
 
 type FollowUserResp struct {
@@ -290,7 +290,7 @@ type FollowUserResp struct {
 }
 
 type GetAcademicNavigatorReq struct {
-	UserId    int64  `json:"user_id,optional"`   // 用户 ID
+	UserId    string `json:"user_id,optional"`   // 用户 ID
 	Education string `json:"education,optional"` // 学历
 	Content   string `json:"content,optional"`   // 内容
 	Major     string `json:"major,optional"`     // 专业
@@ -311,7 +311,7 @@ type GetArticle struct {
 }
 
 type GetArticleReq struct {
-	Id int64 `path:"id"` // 文章 ID
+	Id string `path:"id"` // 文章 ID
 }
 
 type GetArticleResp struct {
@@ -331,9 +331,9 @@ type GetArticlesResp struct {
 }
 
 type GetCommentRepliesReq struct {
-	CommentId int64 `path:"comment_id"` // 评论ID
-	Page      int32 `form:"page"`       // 页码
-	PageSize  int32 `form:"page_size"`  // 每页数量
+	CommentId string `path:"comment_id"` // 评论ID
+	Page      int32  `form:"page"`       // 页码
+	PageSize  int32  `form:"page_size"`  // 每页数量
 }
 
 type GetCommentRepliesResp struct {
@@ -342,7 +342,7 @@ type GetCommentRepliesResp struct {
 }
 
 type GetCommentReq struct {
-	CommentId int64 `path:"comment_id"` // 评论ID
+	CommentId string `path:"comment_id"` // 评论ID
 }
 
 type GetCommentResp struct {
@@ -351,9 +351,9 @@ type GetCommentResp struct {
 }
 
 type GetCommentsReq struct {
-	EntityID int64 `path:"entity_id"` // 文章ID
-	Page     int32 `form:"page"`      // 页码
-	PageSize int32 `form:"page_size"` // 每页数量
+	EntityID string `path:"entity_id"` // 文章ID
+	Page     int32  `form:"page"`      // 页码
+	PageSize int32  `form:"page_size"` // 每页数量
 }
 
 type GetCommentsResp struct {
@@ -362,9 +362,9 @@ type GetCommentsResp struct {
 }
 
 type GetFansListReq struct {
-	UserId   int64 `form:"user_id"`   // 用户ID
-	Page     int64 `form:"page"`      // 页码
-	PageSize int64 `form:"page_size"` // 每页数量
+	UserId   string `form:"user_id"`   // 用户ID
+	Page     int64  `form:"page"`      // 页码
+	PageSize int64  `form:"page_size"` // 每页数量
 }
 
 type GetFansListResp struct {
@@ -373,10 +373,10 @@ type GetFansListResp struct {
 }
 
 type GetFavorFoldListReq struct {
-	UserId        int64 `json:"user_id"`                  // 用户 ID
-	RequestUserId int64 `json:"request_user_id,optional"` // 请求用户 ID
-	Page          int32 `json:"page"`                     // 页码
-	PageSize      int32 `json:"page_size"`                //requestUserId 每页数量
+	UserId        string `json:"user_id"`                  // 用户 ID
+	RequestUserId string `json:"request_user_id,optional"` // 请求用户 ID
+	Page          int32  `json:"page"`                     // 页码
+	PageSize      int32  `json:"page_size"`                //requestUserId 每页数量
 }
 
 type GetFavorFoldListResp struct {
@@ -385,9 +385,9 @@ type GetFavorFoldListResp struct {
 }
 
 type GetFavorListReq struct {
-	UserId      int64  `json:"userId"`                               // 用户 ID
+	UserId      string `json:"userId"`                               // 用户 ID
 	EntityType  string `json:"entity_type,options=article|question"` // 实体类型
-	FavorFoldId int64  `json:"favor_fold_id"`                        // 收藏夹 ID
+	FavorFoldId string `json:"favor_fold_id"`                        // 收藏夹 ID
 	Page        int32  `json:"page"`                                 // 页码
 	PageSize    int32  `json:"page_size"`                            // 每页数量
 }
@@ -398,9 +398,9 @@ type GetFavorListResp struct {
 }
 
 type GetFollowListReq struct {
-	UserId   int64 `form:"user_id"`   // 用户ID
-	Page     int64 `form:"page"`      // 页码
-	PageSize int64 `form:"page_size"` // 每页数量
+	UserId   string `form:"user_id"`   // 用户ID
+	Page     int64  `form:"page"`      // 页码
+	PageSize int64  `form:"page_size"` // 每页数量
 }
 
 type GetFollowListResp struct {
@@ -419,7 +419,7 @@ type GetQuestionBankListResp struct {
 }
 
 type GetQuestionBankReq struct {
-	Id int64 `path:"id"` // 题库 ID
+	Id string `path:"id"` // 题库 ID
 }
 
 type GetQuestionBankResp struct {
@@ -428,9 +428,9 @@ type GetQuestionBankResp struct {
 }
 
 type GetQuestionListReq struct {
-	BankId   int64 `json:"bankId"`    // 题库 ID
-	Page     int32 `json:"page"`      // 页码
-	PageSize int32 `json:"page_size"` // 每页数量
+	BankId   string `json:"bankId"`    // 题库 ID
+	Page     int32  `json:"page"`      // 页码
+	PageSize int32  `json:"page_size"` // 每页数量
 }
 
 type GetQuestionListResp struct {
@@ -439,7 +439,7 @@ type GetQuestionListResp struct {
 }
 
 type GetRequest struct {
-	ImageId int64 `path:"image_id"` // 图片ID
+	ImageId string `path:"image_id"` // 图片ID
 }
 
 type GetResponse struct {
@@ -448,7 +448,7 @@ type GetResponse struct {
 }
 
 type GetUserInfoReq struct {
-	Id int64 `path:"id"` // 用户ID
+	Id string `path:"id"` // 用户ID
 }
 
 type GetUserInfoResp struct {
@@ -472,7 +472,7 @@ type HealthResp struct {
 }
 
 type ImageInfo struct {
-	ImageId      int64  `json:"image_id"`      // 图片ID
+	ImageId      string `json:"image_id"`      // 图片ID
 	BucketName   string `json:"bucket_name"`   // MinIO bucket名称
 	ObjectName   string `json:"object_name"`   // MinIO中的对象名称
 	Url          string `json:"url"`           // 完整的访问URL
@@ -482,7 +482,7 @@ type ImageInfo struct {
 	Width        int32  `json:"width"`         // 图片宽度(px)
 	Height       int32  `json:"height"`        // 图片高度(px)
 	UploadIp     string `json:"upload_ip"`     // 上传者IP
-	UserId       int64  `json:"user_id"`       // 上传者ID
+	UserId       string `json:"user_id"`       // 上传者ID
 	CreatedAt    int64  `json:"created_at"`    // 创建时间
 }
 
@@ -497,9 +497,9 @@ type List struct {
 }
 
 type ListByUserRequest struct {
-	UserId   int64 `json:"user_id"`   // 用户ID
-	Page     int32 `json:"page"`      // 页码
-	PageSize int32 `json:"page_size"` // 每页数量
+	UserId   string `json:"user_id"`   // 用户ID
+	Page     int32  `json:"page"`      // 页码
+	PageSize int32  `json:"page_size"` // 每页数量
 }
 
 type ListByUserResponse struct {
@@ -529,7 +529,7 @@ type PageResponse struct {
 }
 
 type PostAcademicNavigatorLikeReq struct {
-	Id int64 `path:"id"` // 学术导航 ID
+	Id string `path:"id"` // 学术导航 ID
 }
 
 type PostAcademicNavigatorLikeResp struct {
@@ -538,9 +538,9 @@ type PostAcademicNavigatorLikeResp struct {
 }
 
 type Question struct {
-	Id        int64  `json:"id"`
+	Id        string `json:"id"`
 	Title     string `json:"title"`
-	BankId    int64  `json:"bankId"`
+	BankId    string `json:"bankId"`
 	Content   string `json:"content"`
 	Difficult string `json:"difficult"`
 	CreatedAt int64  `json:"createdAt"`
@@ -548,7 +548,7 @@ type Question struct {
 }
 
 type QuestionBank struct {
-	Id          int64      `json:"id"`
+	Id          string     `json:"id"`
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
 	Difficulty  string     `json:"difficulty"`
@@ -570,7 +570,7 @@ type QuestionList struct {
 }
 
 type QuestionMenus struct {
-	Id    int64  `json:"id"`
+	Id    string `json:"id"`
 	Title string `json:"title"`
 }
 
@@ -611,7 +611,7 @@ type SendResetPasswordLinkResp struct {
 }
 
 type UnfollowUserReq struct {
-	FollowUserId int64 `json:"follow_id"` // 被关注用户ID
+	FollowUserId string `json:"follow_id"` // 被关注用户ID
 }
 
 type UnfollowUserResp struct {
@@ -620,12 +620,12 @@ type UnfollowUserResp struct {
 }
 
 type UpdateArticleReq struct {
-	Id           int64    `path:"id"`                        // 文章 ID
+	Id           string   `path:"id"`                        // 文章 ID
 	Title        string   `json:"title,optional"`            // 标题
 	Content      string   `json:"content,optional,optional"` // 内容
 	Summary      string   `json:"summary,optional"`          // 摘要
-	ImageIds     []int64  `json:"imageIds,optional"`         // 图片 URL 列表
-	CoverImageID int64    `json:"coverImageID,optional"`     // 封面图片 URL
+	ImageIds     []string `json:"imageIds,optional"`         // 图片 URL 列表
+	CoverImageID string   `json:"coverImageID,optional"`     // 封面图片 URL
 	Tags         []string `json:"tags,optional"`             // 标签列表
 	Status       string   `json:"status,optional"`           // 文章状态
 }
@@ -636,7 +636,7 @@ type UpdateArticleResp struct {
 }
 
 type UpdateCommentLikeCountReq struct {
-	CommentId int64 `json:"comment_id"` // 评论ID
+	CommentId string `json:"comment_id"` // 评论ID
 }
 
 type UpdateCommentLikeCountResp struct {
@@ -645,7 +645,7 @@ type UpdateCommentLikeCountResp struct {
 }
 
 type UpdateFavorFoldReq struct {
-	Id          int64  `path:"id"`                   // 收藏夹 ID
+	Id          string `path:"id"`                   // 收藏夹 ID
 	Name        string `json:"name,optional"`        // 收藏夹名称
 	Description string `json:"description,optional"` // 描述
 	IsPublic    bool   `json:"isPublic,optional"`    // 是否公开
@@ -657,7 +657,7 @@ type UpdateFavorFoldResp struct {
 }
 
 type UpdateLikeCountReq struct {
-	Id int64 `json:"id"` // 文章 ID
+	Id string `json:"id"` // 文章 ID
 }
 
 type UpdateLikeCountResp struct {
@@ -676,7 +676,7 @@ type UpdatePasswordResp struct {
 }
 
 type UpdateUserAvatarReq struct {
-	Avatar int64 `json:"avatar"` // 头像
+	Avatar string `json:"avatar"` // 头像
 }
 
 type UpdateUserAvatarResp struct {
@@ -685,7 +685,7 @@ type UpdateUserAvatarResp struct {
 }
 
 type UpdateUserInfoReq struct {
-	Id       int64  `path:"id"`                          // 用户ID
+	Id       string `path:"id"`                          // 用户ID
 	Nickname string `json:"nickname,optional"`           // 昵称
 	Email    string `json:"email,optional"`              // 邮箱
 	Phone    string `json:"phone,optional"`              // 手机号
@@ -704,7 +704,7 @@ type UploadResponse struct {
 }
 
 type UserInfo struct {
-	Id       int64  `json:"id"`                 // 用户ID
+	Id       string `json:"id"`                 // 用户ID
 	Username string `json:"username"`           // 用户名
 	Nickname string `json:"nickname"`           // 昵称
 	Email    string `json:"email"`              // 邮箱

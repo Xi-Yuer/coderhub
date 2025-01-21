@@ -35,7 +35,7 @@ func (l *DeleteCommentLogic) DeleteComment(req *types.DeleteCommentReq) (resp *t
 	}
 
 	_, err = l.svcCtx.CommentService.DeleteComment(utils.SetUserMetaData(l.ctx), &commentservice.DeleteCommentRequest{
-		CommentId: req.CommentId,
+		CommentId: utils.String2Int(req.CommentId),
 	})
 	if err != nil {
 		return l.errorResp(err)

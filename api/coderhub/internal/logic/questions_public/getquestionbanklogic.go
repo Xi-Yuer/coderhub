@@ -3,6 +3,7 @@ package questions_public
 import (
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/coderhub/internal/svc"
@@ -28,16 +29,16 @@ func NewGetQuestionBankLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 
 func (l *GetQuestionBankLogic) GetQuestionBank(req *types.GetQuestionBankReq) (resp *types.GetQuestionBankResp, err error) {
 	question, err := l.svcCtx.QuestionBankService.GetQuestion(l.ctx, &coderhub.GetQuestionRequest{
-		QuestionId: req.Id,
+		QuestionId: utils.String2Int(req.Id),
 	})
 	if err != nil {
 		return l.errorResp(err)
 	}
 
 	return l.successResp(&types.Question{
-		Id:        question.Id,
+		Id:        utils.Int2String(question.Id),
 		Title:     question.Title,
-		BankId:    question.BankId,
+		BankId:    utils.Int2String(question.BankId),
 		Content:   question.Content,
 		Difficult: question.Difficulty,
 		CreatedAt: question.CreateTime,

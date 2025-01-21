@@ -5,8 +5,10 @@ import (
 	"coderhub/api/coderhub/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 	"context"
 	"fmt"
+
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -121,7 +123,7 @@ func (l *GetArticlesLogic) convertToArticleType(article *coderhub.GetArticleResp
 
 	return &types.GetArticle{
 		Article: &types.Article{
-			Id:        article.Article.Id,
+			Id:        utils.Int2String(article.Article.Id),
 			Type:      article.Article.Type,
 			Title:     article.Article.Title,
 			Content:   article.Article.Content,
@@ -133,7 +135,7 @@ func (l *GetArticlesLogic) convertToArticleType(article *coderhub.GetArticleResp
 				}
 				return &img.Url
 			}(article.Article.CoverImage),
-			AuthorId:     article.Article.AuthorId,
+			AuthorId:     utils.Int2String(article.Article.Id),
 			Tags:         article.Article.Tags,
 			ViewCount:    article.Article.ViewCount,
 			LikeCount:    article.Article.LikeCount,
@@ -143,7 +145,7 @@ func (l *GetArticlesLogic) convertToArticleType(article *coderhub.GetArticleResp
 			UpdatedAt:    article.Article.UpdatedAt,
 		},
 		Author: &types.UserInfo{
-			Id:       article.Author.UserId,
+			Id:       utils.Int2String(article.Author.UserId),
 			Username: article.Author.UserName,
 			Nickname: article.Author.NickName,
 			Email:    article.Author.Email,

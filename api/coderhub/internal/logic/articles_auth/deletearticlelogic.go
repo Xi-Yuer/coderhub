@@ -29,11 +29,11 @@ func NewDeleteArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Del
 }
 
 func (l *DeleteArticleLogic) DeleteArticle(req *types.DeleteArticleReq) (resp *types.DeleteArticleResp, err error) {
-	if err := utils.NewValidator().ArticleID(req.Id).Check(); err != nil {
+	if err := utils.NewValidator().ArticleID(utils.String2Int(req.Id)).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
 
-	articleIdInt, err := strconv.ParseInt(strconv.FormatInt(req.Id, 10), 10, 64)
+	articleIdInt, err := strconv.ParseInt(req.Id, 10, 64)
 	if err != nil {
 		return l.errorResp(err), nil
 	}

@@ -34,7 +34,7 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(req *types.UpdateUserInfoReq) (resp
 		return l.errorResp(err)
 	}
 
-	userInfo, err := l.svcCtx.UserService.UpdateUserInfo(utils.SetUserMetaData(l.ctx), &coderhub.UpdateUserInfoRequest{
+	_, err = l.svcCtx.UserService.UpdateUserInfo(utils.SetUserMetaData(l.ctx), &coderhub.UpdateUserInfoRequest{
 		UserId:   userID,
 		Email:    req.Email,
 		Nickname: req.Nickname,
@@ -45,7 +45,7 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(req *types.UpdateUserInfoReq) (resp
 	if err != nil {
 		return nil, err
 	}
-	return l.successResp(userInfo)
+	return l.successResp()
 }
 
 func (l *UpdateUserInfoLogic) errorResp(err error) (*types.UpdateUserInfoResp, error) {
@@ -58,7 +58,7 @@ func (l *UpdateUserInfoLogic) errorResp(err error) (*types.UpdateUserInfoResp, e
 	}, nil
 }
 
-func (l *UpdateUserInfoLogic) successResp(data *coderhub.UpdateUserInfoResponse) (*types.UpdateUserInfoResp, error) {
+func (l *UpdateUserInfoLogic) successResp() (*types.UpdateUserInfoResp, error) {
 	return &types.UpdateUserInfoResp{
 		Response: types.Response{
 			Code:    conf.HttpCode.HttpStatusOK,

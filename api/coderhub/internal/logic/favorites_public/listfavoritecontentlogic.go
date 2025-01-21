@@ -3,6 +3,7 @@ package favorites_public
 import (
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/coderhub/internal/svc"
@@ -27,15 +28,12 @@ func NewListFavoriteContentLogic(ctx context.Context, svcCtx *svc.ServiceContext
 }
 
 func (l *ListFavoriteContentLogic) ListFavoriteContent(req *types.GetFavorListReq) (resp *types.GetFavorListResp, err error) {
-	if err != nil {
-		return l.errorResp(err)
-	}
 	list, err := l.svcCtx.FavoriteContentService.GetFavorList(l.ctx, &coderhub.GetFavorListRequest{
 		Page:          req.Page,
 		PageSize:      req.PageSize,
-		UserId:        req.UserId,
+		UserId:        utils.String2Int(req.UserId),
 		EntityType:    req.EntityType,
-		FavorFolderId: req.FavorFoldId,
+		FavorFolderId: utils.String2Int(req.FavorFoldId),
 	})
 	if err != nil {
 		return l.errorResp(err)
@@ -45,18 +43,18 @@ func (l *ListFavoriteContentLogic) ListFavoriteContent(req *types.GetFavorListRe
 
 	for _, v := range list.Favors {
 		response = append(response, &types.Favor{
-			ID:          v.Id,
-			CreateUser:  v.UserId,
-			FavorFoldId: v.FavorFolderId,
-			EntityId:    v.EntityId,
+			ID:          utils.Int2String(v.Id),
+			CreateUser:  utils.Int2String(v.UserId),
+			FavorFoldId: utils.Int2String(v.FavorFolderId),
+			EntityId:    utils.Int2String(v.EntityId),
 			EntityValue: types.EntityPreviewValue{
-				EntityId:   v.EntityValue.EntityId,
+				EntityId:   utils.Int2String(v.EntityValue.EntityId),
 				Title:      v.EntityValue.Title,
 				Content:    v.EntityValue.Content,
 				EntityType: v.EntityValue.EntityType,
 				CoverImage: v.EntityValue.CoverImage,
 				UserInfo: types.UserInfo{
-					Id:       v.EntityValue.User.UserId,
+					Id:       utils.Int2String(v.EntityValue.User.UserId),
 					Username: v.EntityValue.User.UserName,
 					Nickname: v.EntityValue.User.NickName,
 					Email:    v.EntityValue.User.Email,

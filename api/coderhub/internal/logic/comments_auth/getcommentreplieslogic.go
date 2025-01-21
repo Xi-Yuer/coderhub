@@ -3,6 +3,7 @@ package comments_auth
 import (
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/coderhub/internal/svc"
@@ -28,7 +29,7 @@ func NewGetCommentRepliesLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 func (l *GetCommentRepliesLogic) GetCommentReplies(req *types.GetCommentRepliesReq) (resp *types.GetCommentRepliesResp, err error) {
 	reply, err := l.svcCtx.CommentService.GetCommentReplies(l.ctx, &coderhub.GetCommentRepliesRequest{
-		CommentId: req.CommentId,
+		CommentId: utils.String2Int(req.CommentId),
 		Page:      req.Page,
 		PageSize:  req.PageSize,
 	})
@@ -45,7 +46,7 @@ func (l *GetCommentRepliesLogic) successResp(reply *coderhub.GetCommentRepliesRe
 		images := make([]types.ImageInfo, len(val.Images))
 		for j, img := range val.Images {
 			images[j] = types.ImageInfo{
-				ImageId:      img.ImageId,
+				ImageId:      utils.Int2String(img.ImageId),
 				BucketName:   img.BucketName,
 				ObjectName:   img.ObjectName,
 				Url:          img.Url,
@@ -55,14 +56,14 @@ func (l *GetCommentRepliesLogic) successResp(reply *coderhub.GetCommentRepliesRe
 				Width:        img.Width,
 				Height:       img.Height,
 				UploadIp:     img.UploadIp,
-				UserId:       img.UserId,
+				UserId:       utils.Int2String(img.UserId),
 				CreatedAt:    img.CreatedAt,
 			}
 		}
 		var replyToUserInfo *types.UserInfo
 		if val.ReplyToUserInfo != nil {
 			replyToUserInfo = &types.UserInfo{
-				Id:       val.Id,
+				Id:       utils.Int2String(val.Id),
 				Username: val.UserInfo.UserName,
 				Nickname: val.UserInfo.NickName,
 				Email:    val.UserInfo.Email,
@@ -77,11 +78,11 @@ func (l *GetCommentRepliesLogic) successResp(reply *coderhub.GetCommentRepliesRe
 			}
 		}
 		replies[i] = &types.Comment{
-			Id:              val.Id,
-			EntityID:        val.EntityId,
+			Id:              utils.Int2String(val.Id),
+			EntityID:        utils.Int2String(val.EntityId),
 			Content:         val.Content,
-			ParentId:        val.ParentId,
-			RootId:          val.RootId,
+			ParentId:        utils.Int2String(val.ParentId),
+			RootId:          utils.Int2String(val.RootId),
 			UserInfo:        replyToUserInfo,
 			ReplyToUserInfo: replyToUserInfo,
 			CreatedAt:       val.CreatedAt,

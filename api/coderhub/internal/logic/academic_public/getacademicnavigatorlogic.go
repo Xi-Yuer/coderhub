@@ -7,6 +7,7 @@ import (
 	"coderhub/api/coderhub/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -29,7 +30,7 @@ func NewGetAcademicNavigatorLogic(ctx context.Context, svcCtx *svc.ServiceContex
 func (l *GetAcademicNavigatorLogic) GetAcademicNavigator(req *types.GetAcademicNavigatorReq) (resp *types.GetAcademicNavigatorResp, err error) {
 	var respAcademicNavigator *coderhub.GetAcademicNavigatorResponse
 	respAcademicNavigator, err = l.svcCtx.AcademicService.GetAcademicNavigator(l.ctx, &coderhub.GetAcademicNavigatorRequest{
-		UserId:    req.UserId,
+		UserId:    utils.String2Int(req.UserId),
 		Education: req.Education,
 		Major:     req.Major,
 		School:    req.School,
@@ -45,8 +46,8 @@ func (l *GetAcademicNavigatorLogic) GetAcademicNavigator(req *types.GetAcademicN
 	academicNavigator := make([]types.AcademicNavigator, len(respAcademicNavigator.AcademicNavigator))
 	for i, v := range respAcademicNavigator.AcademicNavigator {
 		academicNavigator[i] = types.AcademicNavigator{
-			Id:        v.Id,
-			UserId:    v.UserId,
+			Id:        utils.Int2String(v.Id),
+			UserId:    utils.Int2String(v.UserId),
 			Education: v.Education,
 			Content:   v.Content,
 			Major:     v.Major,

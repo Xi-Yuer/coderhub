@@ -34,8 +34,8 @@ func (l *AddFavoriteContentLogic) AddFavoriteContent(req *types.CreateFavorReq) 
 	}
 	response, err := l.svcCtx.FavoriteContentService.CreateFavor(l.ctx, &coderhub.CreateFavorRequest{
 		UserId:        userID,
-		FavorFolderId: req.FoldId,
-		EntityId:      req.EntityId,
+		FavorFolderId: utils.String2Int(req.FoldId),
+		EntityId:      utils.String2Int(req.EntityId),
 		EntityType:    req.EntityType,
 	})
 	if err != nil {

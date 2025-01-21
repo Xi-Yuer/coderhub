@@ -33,12 +33,12 @@ func (l *UpdateLikeCountLogic) UpdateLikeCount(req *types.UpdateLikeCountReq) (r
 		return l.errorResp(err), nil
 	}
 
-	if err := utils.NewValidator().ArticleID(req.Id).Check(); err != nil {
+	if err := utils.NewValidator().ArticleID(utils.String2Int(req.Id)).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
 
 	if _, err := l.svcCtx.ArticlesService.UpdateLikeCount(utils.SetUserMetaData(l.ctx), &coderhub.UpdateLikeCountRequest{
-		Id:     req.Id,
+		Id:     utils.String2Int(req.Id),
 		UserId: userId,
 	}); err != nil {
 		return l.errorResp(err), nil

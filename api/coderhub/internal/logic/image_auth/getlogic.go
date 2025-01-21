@@ -7,6 +7,7 @@ import (
 	"coderhub/api/coderhub/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +29,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 
 func (l *GetLogic) Get(req *types.GetRequest) (resp *types.GetResponse, err error) {
 	response, err := l.svcCtx.ImageAuthService.Get(l.ctx, &coderhub.GetRequest{
-		ImageId: req.ImageId,
+		ImageId: utils.String2Int(req.ImageId),
 	})
 	if err != nil {
 		return l.errorResp(err)
@@ -44,7 +45,7 @@ func (l *GetLogic) successResp(response *coderhub.ImageInfo) (*types.GetResponse
 			Message: conf.HttpMessage.MsgOK,
 		},
 		Data: &types.ImageInfo{
-			ImageId:      response.ImageId,
+			ImageId:      utils.Int2String(response.ImageId),
 			BucketName:   response.BucketName,
 			ObjectName:   response.ObjectName,
 			Url:          response.Url,

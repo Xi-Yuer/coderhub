@@ -3,6 +3,7 @@ package favorites_public
 import (
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/coderhub/internal/svc"
@@ -30,8 +31,8 @@ func (l *ListFavoriteLogic) ListFavorite(req *types.GetFavorFoldListReq) (resp *
 	list, err := l.svcCtx.FavoriteService.GetFavorFoldList(l.ctx, &coderhub.GetFavorFoldListRequest{
 		Page:          req.Page,
 		PageSize:      req.PageSize,
-		UserId:        req.UserId,
-		RequestUserId: req.RequestUserId,
+		UserId:        utils.String2Int(req.UserId),
+		RequestUserId: utils.String2Int(req.RequestUserId),
 	})
 	if err != nil {
 		return l.errorResp(err)
@@ -41,11 +42,11 @@ func (l *ListFavoriteLogic) ListFavorite(req *types.GetFavorFoldListReq) (resp *
 
 	for _, v := range list.FavorFolds {
 		response = append(response, &types.FavorFold{
-			ID:          v.Id,
+			ID:          utils.Int2String(v.Id),
 			Name:        v.Name,
 			Description: v.Description,
 			IsPublic:    v.IsPublic,
-			CreateUser:  v.UserId,
+			CreateUser:  utils.Int2String(v.UserId),
 			CreatedAt:   v.CreateTime,
 			UpdatedAt:   v.UpdateTime,
 		})

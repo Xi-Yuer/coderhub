@@ -70,7 +70,7 @@ func (l *CreateArticleLogic) successResp(articleId int64) *types.CreateArticleRe
 			Code:    conf.HttpCode.HttpStatusOK,
 			Message: conf.HttpMessage.MsgOK,
 		},
-		Data: articleId,
+		Data: utils.Int2String(articleId),
 	}
 }
 
@@ -94,8 +94,8 @@ func (l *CreateArticleLogic) prepareArticleData(req *types.CreateArticleReq, use
 				return ""
 			}
 		}(),
-		ImageIds:     req.ImageIds,
-		CoverImageId: req.CoverImageID,
+		ImageIds:     utils.StringArray2Int64Array(req.ImageIds),
+		CoverImageId: utils.String2Int(req.CoverImageID),
 		AuthorId:     userId,
 		Tags:         req.Tags,
 		Status:       req.Status,

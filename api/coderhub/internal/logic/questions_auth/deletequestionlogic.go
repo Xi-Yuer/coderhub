@@ -32,7 +32,7 @@ func (l *DeleteQuestionLogic) DeleteQuestion(req *types.DeleteQuestionReq) (resp
 		return l.errorResp(err)
 	}
 	_, err = l.svcCtx.QuestionBankService.DeleteQuestion(l.ctx, &coderhub.DeleteQuestionRequest{
-		Id:         req.Id,
+		Id:         utils.String2Int(req.Id),
 		CreateUser: UserId,
 	})
 

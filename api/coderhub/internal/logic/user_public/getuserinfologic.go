@@ -7,6 +7,7 @@ import (
 	"coderhub/api/coderhub/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +28,7 @@ func NewGetUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 }
 
 func (l *GetUserInfoLogic) GetUserInfo(req *types.GetUserInfoReq) (resp *types.GetUserInfoResp, err error) {
-	UserInfo, err := l.svcCtx.UserService.GetUserInfo(l.ctx, &coderhub.GetUserInfoRequest{UserId: req.Id})
+	UserInfo, err := l.svcCtx.UserService.GetUserInfo(l.ctx, &coderhub.GetUserInfoRequest{UserId: utils.String2Int(req.Id)})
 	if err != nil {
 		return &types.GetUserInfoResp{
 			Response: types.Response{
@@ -43,7 +44,7 @@ func (l *GetUserInfoLogic) GetUserInfo(req *types.GetUserInfoReq) (resp *types.G
 			Message: conf.HttpMessage.MsgOK,
 		},
 		Data: &types.UserInfo{
-			Id:       UserInfo.UserId,
+			Id:       utils.Int2String(UserInfo.UserId),
 			Username: UserInfo.UserName,
 			Nickname: UserInfo.NickName,
 			Email:    UserInfo.Email,

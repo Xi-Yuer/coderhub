@@ -34,7 +34,7 @@ func (l *DeleteAcademicNavigatorLogic) DeleteAcademicNavigator(req *types.Delete
 		return l.errorResp(err)
 	}
 	_, err = l.svcCtx.AcademicService.DeleteAcademicNavigator(l.ctx, &coderhub.DeleteAcademicNavigatorRequest{
-		Id:     req.Id,
+		Id:     utils.String2Int(req.Id),
 		UserId: userId,
 	})
 	if err != nil {

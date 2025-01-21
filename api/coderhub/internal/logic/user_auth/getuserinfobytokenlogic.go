@@ -39,7 +39,7 @@ func (l *GetUserInfoByTokenLogic) GetUserInfoByToken() (resp *types.GetUserInfoR
 		return l.errorResp(err)
 	}
 	return l.successResp(&types.UserInfo{
-		Id:       user.UserId,
+		Id:       utils.Int2String(user.UserId),
 		Username: user.UserName,
 		Nickname: user.NickName,
 		Email:    user.Email,

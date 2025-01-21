@@ -32,7 +32,7 @@ func (l *DeleteQuestionBankLogic) DeleteQuestionBank(req *types.DeleteQuestionBa
 		return l.errorResp(err)
 	}
 	_, err = l.svcCtx.QuestionBankService.DeleteQuestionBank(l.ctx, &coderhub.DeleteQuestionBankRequest{
-		Id:         req.Id,
+		Id:         utils.String2Int(req.Id),
 		CreateUser: UserId,
 	})
 	if err != nil {

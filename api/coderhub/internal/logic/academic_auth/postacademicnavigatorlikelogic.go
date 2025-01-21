@@ -34,7 +34,7 @@ func (l *PostAcademicNavigatorLikeLogic) PostAcademicNavigatorLike(req *types.Po
 		return l.errorResp(err)
 	}
 	_, err = l.svcCtx.AcademicService.LikeAcademicNavigator(l.ctx, &coderhub.LikeAcademicNavigatorRequest{
-		Id:     req.Id,
+		Id:     utils.String2Int(req.Id),
 		UserId: userId,
 	})
 	if err != nil {

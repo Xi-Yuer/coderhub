@@ -7,6 +7,7 @@ import (
 	"coderhub/api/coderhub/internal/types"
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +29,7 @@ func NewListByUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListBy
 
 func (l *ListByUserLogic) ListByUser(req *types.ListByUserRequest) (resp *types.ListByUserResponse, err error) {
 	response, err := l.svcCtx.ImageAuthService.ListByUser(l.ctx, &coderhub.ListByUserRequest{
-		UserId:   req.UserId,
+		UserId:   utils.String2Int(req.UserId),
 		Page:     req.Page,
 		PageSize: req.PageSize,
 	})
@@ -45,7 +46,7 @@ func (l *ListByUserLogic) successResp(response *coderhub.ListByUserResponse) (*t
 	}
 	for _, val := range response.Images {
 		list.List = append(list.List, types.ImageInfo{
-			ImageId:      val.ImageId,
+			ImageId:      utils.Int2String(val.ImageId),
 			BucketName:   val.BucketName,
 			ObjectName:   val.ObjectName,
 			Url:          val.Url,
@@ -55,7 +56,7 @@ func (l *ListByUserLogic) successResp(response *coderhub.ListByUserResponse) (*t
 			Width:        val.Width,
 			Height:       val.Height,
 			UploadIp:     val.UploadIp,
-			UserId:       val.UserId,
+			UserId:       utils.Int2String(val.UserId),
 			CreatedAt:    val.CreatedAt,
 		})
 	}

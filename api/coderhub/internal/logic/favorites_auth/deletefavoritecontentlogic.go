@@ -34,10 +34,10 @@ func (l *DeleteFavoriteContentLogic) DeleteFavoriteContent(req *types.DeleteFavo
 	}
 
 	if _, err := l.svcCtx.FavoriteContentService.DeleteFavor(l.ctx, &coderhub.DeleteFavorRequest{
-		Id:            req.Id,
+		Id:            utils.String2Int(req.Id),
 		UserId:        userID,
-		FavorFolderId: req.FavorFoldId,
-		EntityId:      req.EntityId,
+		FavorFolderId: utils.String2Int(req.FavorFoldId),
+		EntityId:      utils.String2Int(req.EntityId),
 		EntityType:    req.EntityType,
 	}); err != nil {
 		return l.errorResp(err)

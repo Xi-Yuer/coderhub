@@ -3,6 +3,7 @@ package questions_public
 import (
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/coderhub"
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/coderhub/internal/svc"
@@ -28,7 +29,7 @@ func NewListQuestionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 
 func (l *ListQuestionsLogic) ListQuestions(req *types.GetQuestionListReq) (resp *types.GetQuestionListResp, err error) {
 	tree, err := l.svcCtx.QuestionBankService.GetQuestionTree(l.ctx, &coderhub.GetQuestionTreeRequest{
-		BankId:   req.BankId,
+		BankId:   utils.String2Int(req.BankId),
 		Page:     req.Page,
 		PageSize: req.PageSize,
 	})
@@ -39,7 +40,7 @@ func (l *ListQuestionsLogic) ListQuestions(req *types.GetQuestionListReq) (resp 
 	list := make([]*types.QuestionMenus, 0, len(tree.Nodes))
 	for _, node := range tree.Nodes {
 		list = append(list, &types.QuestionMenus{
-			Id:    node.Id,
+			Id:    utils.Int2String(node.Id),
 			Title: node.Title,
 		})
 	}

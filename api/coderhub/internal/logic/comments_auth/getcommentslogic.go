@@ -3,6 +3,7 @@ package comments_auth
 import (
 	"coderhub/conf"
 	"coderhub/rpc/coderhub/client/commentservice"
+	"coderhub/shared/utils"
 	"context"
 
 	"coderhub/api/coderhub/internal/svc"
@@ -28,7 +29,7 @@ func NewGetCommentsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCo
 
 func (l *GetCommentsLogic) GetComments(req *types.GetCommentsReq) (resp *types.GetCommentsResp, err error) {
 	comments, err := l.svcCtx.CommentService.GetComments(l.ctx, &commentservice.GetCommentsRequest{
-		EntityId: req.EntityID,
+		EntityId: utils.String2Int(req.EntityID),
 		Page:     req.Page,
 		PageSize: req.PageSize,
 	})
@@ -70,7 +71,7 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 		images := make([]types.ImageInfo, 0, len(val.Images))
 		for _, image := range val.Images {
 			images = append(images, types.ImageInfo{
-				ImageId:      image.ImageId,
+				ImageId:      utils.Int2String(image.ImageId),
 				ObjectName:   image.ObjectName,
 				BucketName:   image.BucketName,
 				Url:          image.Url,
@@ -80,7 +81,7 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 				Width:        image.Width,
 				Height:       image.Height,
 				UploadIp:     image.UploadIp,
-				UserId:       image.UserId,
+				UserId:       utils.Int2String(image.UserId),
 				CreatedAt:    image.CreatedAt,
 			})
 		}
@@ -88,7 +89,7 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 		var replyToUserInfo *types.UserInfo
 		if val.ReplyToUserInfo != nil {
 			replyToUserInfo = &types.UserInfo{
-				Id:       val.Id,
+				Id:       utils.Int2String(val.Id),
 				Username: val.ReplyToUserInfo.UserName,
 				Nickname: val.ReplyToUserInfo.NickName,
 				Email:    val.ReplyToUserInfo.Email,
@@ -104,13 +105,13 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 		}
 
 		rootComments[i] = &types.Comment{
-			Id:       val.Id,
-			EntityID: val.EntityId,
+			Id:       utils.Int2String(val.Id),
+			EntityID: utils.Int2String(val.EntityId),
 			Content:  val.Content,
-			ParentId: val.ParentId,
-			RootId:   val.RootId,
+			ParentId: utils.Int2String(val.ParentId),
+			RootId:   utils.Int2String(val.RootId),
 			UserInfo: &types.UserInfo{
-				Id:       val.Id,
+				Id:       utils.Int2String(val.Id),
 				Username: val.UserInfo.UserName,
 				Nickname: val.UserInfo.NickName,
 				Email:    val.UserInfo.Email,
