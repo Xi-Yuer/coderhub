@@ -396,8 +396,8 @@ type GetCommentsResp struct {
 }
 
 type GetEmojiListReq struct {
-	Page     int32 `json:"page"`      // 页码
-	PageSize int32 `json:"page_size"` // 每页数量
+	Page     int32 `form:"page"`      // 页码
+	PageSize int32 `form:"page_size"` // 每页数量
 }
 
 type GetEmojiListResp struct {

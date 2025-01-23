@@ -111,7 +111,7 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 			ParentId: utils.Int2String(val.ParentId),
 			RootId:   utils.Int2String(val.RootId),
 			UserInfo: &types.UserInfo{
-				Id:       utils.Int2String(val.Id),
+				Id:       utils.Int2String(val.UserInfo.UserId),
 				Username: val.UserInfo.UserName,
 				Nickname: val.UserInfo.NickName,
 				Email:    val.UserInfo.Email,
