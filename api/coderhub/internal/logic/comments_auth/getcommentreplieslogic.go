@@ -41,8 +41,11 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(req *types.GetCommentRepliesR
 }
 
 func (l *GetCommentRepliesLogic) successResp(reply *coderhub.GetCommentRepliesResponse) (*types.GetCommentRepliesResp, error) {
+	// 优化后的评论切片初始化
 	replies := make([]*types.Comment, len(reply.Replies))
+
 	for i, val := range reply.Replies {
+		// 转换图片信息，避免重复转换
 		images := make([]types.ImageInfo, len(val.Images))
 		for j, img := range val.Images {
 			images[j] = types.ImageInfo{
@@ -61,9 +64,30 @@ func (l *GetCommentRepliesLogic) successResp(reply *coderhub.GetCommentRepliesRe
 			}
 		}
 		var replyToUserInfo *types.UserInfo
-		if val.ReplyToUserInfo != nil {
+		if val.ReplyToUserInfo != nil { // 从 val.ReplyToUserInfo 构建回复目标的用户信息
 			replyToUserInfo = &types.UserInfo{
-				Id:       utils.Int2String(val.Id),
+				Id:       utils.Int2String(val.ReplyToUserInfo.UserId),
+				Username: val.ReplyToUserInfo.UserName,
+				Nickname: val.ReplyToUserInfo.NickName,
+				Email:    val.ReplyToUserInfo.Email,
+				Phone:    val.ReplyToUserInfo.Phone,
+				Avatar:   val.ReplyToUserInfo.Avatar,
+				Gender:   val.ReplyToUserInfo.Gender,
+				Age:      val.ReplyToUserInfo.Age,
+				Status:   val.ReplyToUserInfo.Status,
+				IsAdmin:  val.ReplyToUserInfo.IsAdmin,
+				CreateAt: val.ReplyToUserInfo.CreatedAt,
+				UpdateAt: val.ReplyToUserInfo.UpdatedAt,
+			}
+		}
+		replies[i] = &types.Comment{
+			Id:       utils.Int2String(val.Id),
+			EntityID: utils.Int2String(val.EntityId),
+			Content:  val.Content,
+			ParentId: utils.Int2String(val.ParentId),
+			RootId:   utils.Int2String(val.RootId),
+			UserInfo: &types.UserInfo{
+				Id:       utils.Int2String(val.UserInfo.UserId),
 				Username: val.UserInfo.UserName,
 				Nickname: val.UserInfo.NickName,
 				Email:    val.UserInfo.Email,
@@ -75,15 +99,7 @@ func (l *GetCommentRepliesLogic) successResp(reply *coderhub.GetCommentRepliesRe
 				IsAdmin:  val.UserInfo.IsAdmin,
 				CreateAt: val.UserInfo.CreatedAt,
 				UpdateAt: val.UserInfo.UpdatedAt,
-			}
-		}
-		replies[i] = &types.Comment{
-			Id:              utils.Int2String(val.Id),
-			EntityID:        utils.Int2String(val.EntityId),
-			Content:         val.Content,
-			ParentId:        utils.Int2String(val.ParentId),
-			RootId:          utils.Int2String(val.RootId),
-			UserInfo:        replyToUserInfo,
+			},
 			ReplyToUserInfo: replyToUserInfo,
 			CreatedAt:       val.CreatedAt,
 			UpdatedAt:       val.UpdatedAt,
@@ -93,6 +109,8 @@ func (l *GetCommentRepliesLogic) successResp(reply *coderhub.GetCommentRepliesRe
 			Images:          images,
 		}
 	}
+
+	// 构建并返回响应
 	return &types.GetCommentRepliesResp{
 		Response: types.Response{
 			Code:    conf.HttpCode.HttpStatusOK,
@@ -104,7 +122,6 @@ func (l *GetCommentRepliesLogic) successResp(reply *coderhub.GetCommentRepliesRe
 		},
 	}, nil
 }
-
 func (l *GetCommentRepliesLogic) errorResp(err error) (*types.GetCommentRepliesResp, error) {
 	return &types.GetCommentRepliesResp{
 		Response: types.Response{

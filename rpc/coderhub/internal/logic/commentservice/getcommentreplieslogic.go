@@ -8,6 +8,7 @@ import (
 	"coderhub/rpc/coderhub/internal/svc"
 	"context"
 	"sort"
+	"sync"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,10 +28,12 @@ func NewGetCommentRepliesLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 // GetCommentReplies 获取某条评论的子评论列表
+// GetCommentReplies 获取某条评论的子评论列表
 func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentRepliesRequest) (*coderhub.GetCommentRepliesResponse, error) {
 	// 获取回复列表
 	replies, total, err := l.svcCtx.CommentRepository.ListReplies(l.ctx, in.CommentId, int64(in.Page), int64(in.PageSize))
 	if err != nil {
+		l.Logger.Errorf("获取回复列表失败: %v", err)
 		return nil, err
 	}
 
@@ -57,15 +60,42 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentReplie
 	// 合并所有需要查询的用户ID
 	allUserIds := append(userIds, replyToUserIds...)
 
-	// 获取图片关联
-	batchGetImageByEntityService := imagerelationservicelogic.NewBatchGetImagesByEntityLogic(l.ctx, l.svcCtx)
-	imageRelations, err := batchGetImageByEntityService.BatchGetImagesByEntity(&coderhub.BatchGetImagesByEntityRequest{
-		EntityIds:  replyIds,
-		EntityType: model.ImageRelationComment,
-	})
-	if err != nil {
-		l.Logger.Errorf("获取回复图片失败: %v", err)
-		return nil, err
+	// 使用并发异步请求图片和用户信息
+	var wg sync.WaitGroup
+	var imageErr, userErr error
+	var imageRelations *coderhub.BatchGetImagesByEntityResponse
+	var users *coderhub.BatchGetUserByIDResponse
+
+	// 异步获取图片
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		imageRelations, imageErr = imagerelationservicelogic.NewBatchGetImagesByEntityLogic(l.ctx, l.svcCtx).BatchGetImagesByEntity(&coderhub.BatchGetImagesByEntityRequest{
+			EntityIds:  replyIds,
+			EntityType: model.ImageRelationComment,
+		})
+	}()
+
+	// 异步获取用户信息
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		users, userErr = userservicelogic.NewBatchGetUserByIDLogic(l.ctx, l.svcCtx).BatchGetUserByID(&coderhub.BatchGetUserByIDRequest{
+			UserIds: allUserIds,
+		})
+	}()
+
+	// 等待并发请求完成
+	wg.Wait()
+
+	// 错误处理
+	if imageErr != nil {
+		l.Logger.Errorf("获取回复图片失败: %v", imageErr)
+		return nil, imageErr
+	}
+	if userErr != nil {
+		l.Logger.Errorf("获取用户信息失败: %v", userErr)
+		return nil, userErr
 	}
 
 	// 构建回复ID到图片列表的映射
@@ -89,45 +119,11 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentReplie
 		}
 	}
 
-	// 获取所有用户信息（包括评论者和被回复者）
-	getUserInfoService := userservicelogic.NewBatchGetUserByIDLogic(l.ctx, l.svcCtx)
-	users, err := getUserInfoService.BatchGetUserByID(&coderhub.BatchGetUserByIDRequest{
-		UserIds: allUserIds,
-	})
-	if err != nil {
-		l.Logger.Errorf("获取用户信息失败: %v", err)
-		return nil, err
-	}
-
-	// 添加调试日志
-	l.Logger.Infof("用户ID列表: %v", allUserIds)
-	l.Logger.Infof("获取到的用户信息: %+v", users)
-
 	// 构建用户信息映射
 	userInfos := make(map[int64]*coderhub.UserInfo)
-	if users != nil && len(users.UserInfos) > 0 {
-		for _, user := range users.UserInfos {
-			if user != nil {
-				l.Logger.Infof("映射用户信息: userId=%d, userName=%s", user.UserId, user.UserName)
-				// 如果用户信息不存在，则添加到映射中
-				if _, ok := userInfos[user.UserId]; !ok {
-					userInfos[user.UserId] = &coderhub.UserInfo{
-						UserId:    user.UserId,
-						UserName:  user.UserName,
-						Avatar:    user.Avatar,
-						Email:     user.Email,
-						Password:  user.Password,
-						Gender:    user.Gender,
-						Age:       user.Age,
-						Phone:     user.Phone,
-						NickName:  user.NickName,
-						IsAdmin:   user.IsAdmin,
-						Status:    user.Status,
-						CreatedAt: user.CreatedAt,
-						UpdatedAt: user.UpdatedAt,
-					}
-				}
-			}
+	for _, user := range users.UserInfos {
+		if user != nil {
+			userInfos[user.UserId] = user
 		}
 	}
 
@@ -150,7 +146,7 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentReplie
 			Content:         reply.Content,
 			ParentId:        reply.ParentID,
 			RootId:          reply.RootID,
-			UserInfo:        userInfos[reply.UserID],
+			UserInfo:        userInfos[reply.UserID], // 直接获取映射中的用户信息
 			ReplyToUserInfo: userInfos[reply.ReplyToUID],
 			LikeCount:       int32(likeCountMap[reply.ID]),
 			Images:          replyImages[reply.ID],
