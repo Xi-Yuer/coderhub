@@ -28,7 +28,6 @@ func NewGetCommentRepliesLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 // GetCommentReplies 获取某条评论的子评论列表
-// GetCommentReplies 获取某条评论的子评论列表
 func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentRepliesRequest) (*coderhub.GetCommentRepliesResponse, error) {
 	// 获取回复列表
 	replies, total, err := l.svcCtx.CommentRepository.ListReplies(l.ctx, in.CommentId, int64(in.Page), int64(in.PageSize))
@@ -134,6 +133,13 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentReplie
 		return nil, err
 	}
 
+	// 获取评论点赞状态
+	likeStatusMap, err := l.svcCtx.CommentRelationLikeRepository.BatchGetCommentsHasBeenUserLiked(l.ctx, replyIds, in.UserId)
+	if err != nil {
+		l.Logger.Errorf("获取评论点赞状态失败: %v", err)
+		return nil, err
+	}
+
 	// 构建回复列表时添加被回复者信息
 	commentReplies := make([]*coderhub.Comment, len(replies))
 	for i, reply := range replies {
@@ -148,10 +154,13 @@ func (l *GetCommentRepliesLogic) GetCommentReplies(in *coderhub.GetCommentReplie
 			RootId:          reply.RootID,
 			UserInfo:        userInfos[reply.UserID], // 直接获取映射中的用户信息
 			ReplyToUserInfo: userInfos[reply.ReplyToUID],
-			LikeCount:       int32(likeCountMap[reply.ID]),
-			Images:          replyImages[reply.ID],
 			CreatedAt:       reply.CreatedAt.Unix(),
 			UpdatedAt:       reply.UpdatedAt.Unix(),
+			Replies:         nil,
+			RepliesCount:    0,
+			LikeCount:       int32(likeCountMap[reply.ID]),
+			Images:          replyImages[reply.ID],
+			IsLiked:         likeStatusMap[reply.ID], // 直接获取映射中的点赞状态
 		}
 	}
 

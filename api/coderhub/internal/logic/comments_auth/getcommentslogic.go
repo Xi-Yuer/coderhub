@@ -18,7 +18,7 @@ type GetCommentsLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 获取评论列表
+// NewGetCommentsLogic 获取评论列表
 func NewGetCommentsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCommentsLogic {
 	return &GetCommentsLogic{
 		Logger: logx.WithContext(ctx),
@@ -28,10 +28,12 @@ func NewGetCommentsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCo
 }
 
 func (l *GetCommentsLogic) GetComments(req *types.GetCommentsReq) (resp *types.GetCommentsResp, err error) {
+	userID, _ := utils.GetUserID(l.ctx)
 	comments, err := l.svcCtx.CommentService.GetComments(l.ctx, &commentservice.GetCommentsRequest{
 		EntityId: utils.String2Int(req.EntityID),
 		Page:     req.Page,
 		PageSize: req.PageSize,
+		UserId:   userID,
 	})
 	if err != nil {
 		return l.errorResp(err)
@@ -108,8 +110,8 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 			Id:       utils.Int2String(val.Id),
 			EntityID: utils.Int2String(val.EntityId),
 			Content:  val.Content,
-			ParentId: utils.Int2String(val.ParentId),
 			RootId:   utils.Int2String(val.RootId),
+			ParentId: utils.Int2String(val.ParentId),
 			UserInfo: &types.UserInfo{
 				Id:       utils.Int2String(val.UserInfo.UserId),
 				Username: val.UserInfo.UserName,
@@ -124,12 +126,13 @@ func (l *GetCommentsLogic) buildTree(comments []*commentservice.Comment) []*type
 				CreateAt: val.UserInfo.CreatedAt,
 				UpdateAt: val.UserInfo.UpdatedAt,
 			},
-			ReplyToUserInfo: replyToUserInfo,
 			CreatedAt:       val.CreatedAt,
 			UpdatedAt:       val.UpdatedAt,
 			Replies:         l.buildTree(val.Replies),
+			ReplyToUserInfo: replyToUserInfo,
 			RepliesCount:    val.RepliesCount,
 			LikeCount:       val.LikeCount,
+			IsLiked:         val.IsLiked,
 			Images:          images,
 		}
 	}

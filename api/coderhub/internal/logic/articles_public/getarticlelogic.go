@@ -31,8 +31,9 @@ func (l *GetArticleLogic) GetArticle(req *types.GetArticleReq) (resp *types.GetA
 	if err := utils.NewValidator().ArticleID(utils.String2Int(req.Id)).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
+	userID, _ := utils.GetUserID(l.ctx)
 
-	article, err := l.getArticle(utils.String2Int(req.Id))
+	article, err := l.getArticle(utils.String2Int(req.Id), userID)
 	if err != nil {
 		return l.errorResp(err), nil
 	}
@@ -62,9 +63,10 @@ func (l *GetArticleLogic) successResp(article *coderhub.GetArticleResponse) *typ
 	}
 }
 
-func (l *GetArticleLogic) getArticle(articleId int64) (*coderhub.GetArticleResponse, error) {
+func (l *GetArticleLogic) getArticle(articleId, userID int64) (*coderhub.GetArticleResponse, error) {
 	return l.svcCtx.ArticlesService.GetArticle(l.ctx, &coderhub.GetArticleRequest{
-		Id: articleId,
+		Id:     articleId,
+		UserId: userID,
 	})
 }
 
@@ -97,12 +99,13 @@ func (l *GetArticleLogic) convertToArticleType(article *coderhub.GetArticleRespo
 			Title:        article.Article.Title,
 			Content:      article.Article.Content,
 			Summary:      article.Article.Summary,
-			CoverImage:   &coverImageUrl,
 			ImageUrls:    imageUrls,
+			CoverImage:   &coverImageUrl,
 			AuthorId:     utils.Int2String(article.Article.AuthorId),
 			Tags:         article.Article.Tags,
 			ViewCount:    article.Article.ViewCount,
 			LikeCount:    article.Article.LikeCount,
+			IsLiked:      article.Article.IsLicked,
 			CommentCount: article.Article.CommentCount,
 			Status:       article.Article.Status,
 			CreatedAt:    article.Article.CreatedAt,

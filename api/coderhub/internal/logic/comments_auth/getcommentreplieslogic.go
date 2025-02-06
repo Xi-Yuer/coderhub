@@ -28,10 +28,12 @@ func NewGetCommentRepliesLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *GetCommentRepliesLogic) GetCommentReplies(req *types.GetCommentRepliesReq) (resp *types.GetCommentRepliesResp, err error) {
+	userID, _ := utils.GetUserID(l.ctx)
 	reply, err := l.svcCtx.CommentService.GetCommentReplies(l.ctx, &coderhub.GetCommentRepliesRequest{
 		CommentId: utils.String2Int(req.CommentId),
 		Page:      req.Page,
 		PageSize:  req.PageSize,
+		UserId:    userID,
 	})
 	if err != nil {
 		return l.errorResp(err)
@@ -84,8 +86,8 @@ func (l *GetCommentRepliesLogic) successResp(reply *coderhub.GetCommentRepliesRe
 			Id:       utils.Int2String(val.Id),
 			EntityID: utils.Int2String(val.EntityId),
 			Content:  val.Content,
-			ParentId: utils.Int2String(val.ParentId),
 			RootId:   utils.Int2String(val.RootId),
+			ParentId: utils.Int2String(val.ParentId),
 			UserInfo: &types.UserInfo{
 				Id:       utils.Int2String(val.UserInfo.UserId),
 				Username: val.UserInfo.UserName,
@@ -100,12 +102,13 @@ func (l *GetCommentRepliesLogic) successResp(reply *coderhub.GetCommentRepliesRe
 				CreateAt: val.UserInfo.CreatedAt,
 				UpdateAt: val.UserInfo.UpdatedAt,
 			},
-			ReplyToUserInfo: replyToUserInfo,
 			CreatedAt:       val.CreatedAt,
 			UpdatedAt:       val.UpdatedAt,
 			Replies:         nil,
+			ReplyToUserInfo: replyToUserInfo,
 			RepliesCount:    val.RepliesCount,
 			LikeCount:       val.LikeCount,
+			IsLiked:         val.IsLiked,
 			Images:          images,
 		}
 	}

@@ -13,8 +13,8 @@ type CommentRelationLikeRepository interface {
 	Delete(ctx context.Context, commentRelationLike *model.CommentRelationLike) error
 	Get(ctx context.Context, commentRelationLike *model.CommentRelationLike) bool
 	List(ctx context.Context, commentID int64) (int64, error)
-	// 批量获取评论点赞数
 	BatchList(ctx context.Context, commentIDs []int64) (map[int64]int64, error)
+	BatchGetCommentsHasBeenUserLiked(ctx context.Context, commentIDs []int64, userID int64) (map[int64]bool, error)
 }
 
 type commentRelationLikeRepository struct {
@@ -29,31 +29,31 @@ func NewCommentRelationLikeRepository(db *gorm.DB, redis storage.RedisDB) Commen
 	}
 }
 
-// 创建评论点赞
+// Create 创建评论点赞
 func (r *commentRelationLikeRepository) Create(ctx context.Context, commentRelationLike *model.CommentRelationLike) error {
 	return r.DB.Create(commentRelationLike).Error
 }
 
-// 删除评论点赞
+// Delete 删除评论点赞
 func (r *commentRelationLikeRepository) Delete(ctx context.Context, commentRelationLike *model.CommentRelationLike) error {
 	return r.DB.Delete(commentRelationLike, "comment_id = ? AND user_id = ?", commentRelationLike.CommentID, commentRelationLike.UserID).Error
 }
 
-// 获取评论是否被用户点赞
+// Get 获取评论是否被用户点赞
 func (r *commentRelationLikeRepository) Get(ctx context.Context, commentRelationLike *model.CommentRelationLike) bool {
 	var count int64
 	r.DB.Model(commentRelationLike).Where("comment_id = ? AND user_id = ?", commentRelationLike.CommentID, commentRelationLike.UserID).Count(&count)
 	return count > 0
 }
 
-// 获取评论点赞数
+// List 获取评论点赞数
 func (r *commentRelationLikeRepository) List(ctx context.Context, commentID int64) (int64, error) {
 	var count int64
 	r.DB.Model(&model.CommentRelationLike{}).Where("comment_id = ?", commentID).Count(&count)
 	return count, nil
 }
 
-// 批量获取评论点赞数
+// BatchList 批量获取评论点赞数
 func (r *commentRelationLikeRepository) BatchList(ctx context.Context, commentIDs []int64) (map[int64]int64, error) {
 	commentRelationLikes := make([]model.CommentRelationLike, 0)
 	err := r.DB.Where("comment_id IN (?)", commentIDs).Find(&commentRelationLikes).Error
@@ -68,4 +68,18 @@ func (r *commentRelationLikeRepository) BatchList(ctx context.Context, commentID
 		commentLikeCountMap[commentRelationLike.CommentID]++
 	}
 	return commentLikeCountMap, nil
+}
+
+// BatchGetCommentsHasBeenUserLiked 批量获取评论是否被用户点赞
+func (r *commentRelationLikeRepository) BatchGetCommentsHasBeenUserLiked(ctx context.Context, commentIDs []int64, userID int64) (map[int64]bool, error) {
+	commentRelationLikes := make([]model.CommentRelationLike, 0)
+	err := r.DB.Where("comment_id IN (?) AND user_id = ?", commentIDs, userID).Find(&commentRelationLikes).Error
+	if err != nil {
+		return nil, err
+	}
+	commentLikeMap := make(map[int64]bool)
+	for _, commentRelationLike := range commentRelationLikes {
+		commentLikeMap[commentRelationLike.CommentID] = true
+	}
+	return commentLikeMap, nil
 }

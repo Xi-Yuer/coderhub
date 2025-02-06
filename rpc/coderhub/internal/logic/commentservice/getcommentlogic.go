@@ -71,6 +71,13 @@ func (l *GetCommentLogic) GetComment(in *coderhub.GetCommentRequest) (*coderhub.
 			ThumbnailUrl: val.ThumbnailUrl,
 		})
 	}
+	// 获取评论点赞状态
+	likeStatusMap, err := l.svcCtx.CommentRelationLikeRepository.BatchGetCommentsHasBeenUserLiked(l.ctx, commentId, in.UserId)
+	if err != nil {
+		l.Logger.Errorf("获取评论点赞状态失败: %v", err)
+		return nil, err
+	}
+
 	// 获取评论点赞数
 	likeCount, err := l.svcCtx.CommentRelationLikeRepository.List(l.ctx, commentModel.ID)
 	if err != nil {
@@ -91,6 +98,7 @@ func (l *GetCommentLogic) GetComment(in *coderhub.GetCommentRequest) (*coderhub.
 			RepliesCount:    0,
 			LikeCount:       int32(likeCount),
 			Images:          images,
+			IsLiked:         likeStatusMap[commentModel.ID],
 		},
 	}, nil
 }

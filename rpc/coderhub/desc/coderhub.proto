@@ -308,14 +308,17 @@ message Article {
   int64 created_at = 14;           // 创建时间
   int64 updated_at = 15;           // 更新时间
   int64 deleted_at = 16;           // 删除时间
+  bool is_licked = 17;             // 当前用户是否已点赞
 }
 
 // 请求文章详情
 message GetArticleRequest {
   int64 id = 1;                     // 文章 ID
+  int64 user_id = 2;                // 用户 ID
 }
 message GetArticlesRequest {
   repeated int64 ids = 1;                     // 文章 ID
+  int64 user_id = 2;                          // 用户 ID
 }
 
 message ListRecommendedArticlesRequest {
@@ -432,6 +435,7 @@ message Comment {
   int64 replies_count = 11;          // 子评论数量
   int32 like_count = 12;            // 点赞数
   repeated ImageInfo images = 13;  // 评论包含的图片列表
+  bool is_liked = 14;         // 当前用户是否已点赞
 }
 
 // 创建评论请求
@@ -454,6 +458,7 @@ message GetCommentsRequest {
   int64 entity_id = 1;            // 实体ID
   int32 page = 2;                  // 页码
   int32 page_size = 3;             // 每页数量
+  int64 user_id = 4;               // 用户ID
 }
 
 message GetCommentsResponse {
@@ -466,6 +471,7 @@ message GetCommentRepliesRequest {
   int64 comment_id = 1;            // 评论ID
   int32 page = 2;                  // 页码
   int32 page_size = 3;             // 每页数量
+  int64 user_id = 4;               // 用户ID
 }
 
 message GetCommentRepliesResponse {
@@ -476,6 +482,7 @@ message GetCommentRepliesResponse {
 // 获取单个评论请求
 message GetCommentRequest {
   int64 comment_id = 1;            // 评论ID
+  int64 user_id = 2;              // 用户ID
 }
 
 message GetCommentResponse {

@@ -131,6 +131,9 @@ func (l *GetArticleLogic) GetArticle(in *coderhub.GetArticleRequest) (*coderhub.
 		l.Logger.Errorf("获取作者信息失败: %v", err)
 		return nil, fmt.Errorf("获取作者信息失败: %v", err)
 	}
+
+	// 获取文章是否被用户点赞
+	isUserLiked, err := l.svcCtx.ArticlesRelationLikeRepository.BatchArticlesHasBeenUserLiked(l.ctx, []int64{article.ID}, in.UserId)
 	response := &coderhub.GetArticleResponse{
 		Article: &coderhub.Article{
 			Id:           article.ID,
@@ -148,6 +151,7 @@ func (l *GetArticleLogic) GetArticle(in *coderhub.GetArticleRequest) (*coderhub.
 			Status:       article.Status,
 			CreatedAt:    article.CreatedAt.Unix(),
 			UpdatedAt:    article.UpdatedAt.Unix(),
+			IsLicked:     isUserLiked[article.ID],
 		},
 		Author: &coderhub.UserInfo{
 			UserId:    author.ID,

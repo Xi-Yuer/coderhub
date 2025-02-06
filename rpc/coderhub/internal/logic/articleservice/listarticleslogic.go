@@ -97,6 +97,9 @@ func (l *ListArticlesLogic) ListArticles(in *coderhub.GetArticlesRequest) (*code
 		return nil, fmt.Errorf("获取作者信息失败: %v", err)
 	}
 
+	// 获取文章是否被用户点赞
+	isUserLiked, err := l.svcCtx.ArticlesRelationLikeRepository.BatchArticlesHasBeenUserLiked(l.ctx, in.Ids, in.UserId)
+
 	// 构造响应
 	response := make([]*coderhub.GetArticleResponse, 0)
 	authorMap := make(map[int64]*coderhub.UserInfo)
@@ -175,6 +178,7 @@ func (l *ListArticlesLogic) ListArticles(in *coderhub.GetArticlesRequest) (*code
 				Status:       article.Status,
 				CreatedAt:    article.CreatedAt.Unix(),
 				UpdatedAt:    article.UpdatedAt.Unix(),
+				IsLicked:     isUserLiked[article.ID],
 			},
 			Author: authorMap[article.AuthorID],
 		})

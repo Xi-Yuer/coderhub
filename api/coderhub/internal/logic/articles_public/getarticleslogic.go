@@ -49,9 +49,12 @@ func (l *GetArticlesLogic) GetArticles(req *types.GetArticlesReq) (resp *types.G
 		}, nil
 	}
 
+	userID, _ := utils.GetUserID(l.ctx)
+
 	// 获取文章列表详情
 	response, err := l.svcCtx.ArticlesService.ListArticles(l.ctx, &coderhub.GetArticlesRequest{
-		Ids: articles.Ids,
+		Ids:    articles.Ids,
+		UserId: userID,
 	})
 	if err != nil {
 		return l.errorResp(err)
@@ -139,6 +142,7 @@ func (l *GetArticlesLogic) convertToArticleType(article *coderhub.GetArticleResp
 			Tags:         article.Article.Tags,
 			ViewCount:    article.Article.ViewCount,
 			LikeCount:    article.Article.LikeCount,
+			IsLiked:      article.Article.IsLicked,
 			CommentCount: article.Article.CommentCount,
 			Status:       article.Article.Status,
 			CreatedAt:    article.Article.CreatedAt,

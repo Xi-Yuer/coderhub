@@ -44,6 +44,7 @@ type Article struct {
 	Tags         []string `json:"tags" form:"tags"`                 // 标签列表
 	ViewCount    int64    `json:"viewCount" form:"viewCount"`       // 阅读次数
 	LikeCount    int64    `json:"likeCount" form:"likeCount"`       // 点赞次数
+	IsLiked      bool     `json:"isLiked" form:"isLiked"`           // 是否已点赞
 	CommentCount int64    `json:"commentCount" form:"commentCount"` // 评论数
 	Status       string   `json:"status" form:"status"`             // 文章状态
 	CreatedAt    int64    `json:"createdAt" form:"createdAt"`       // 创建时间
@@ -72,6 +73,7 @@ type Comment struct {
 	ReplyToUserInfo *UserInfo   `json:"reply_to_user_info"` // 被回复者信息
 	RepliesCount    int64       `json:"replies_count"`      // 子评论数量
 	LikeCount       int32       `json:"like_count"`         // 点赞数
+	IsLiked         bool        `json:"is_liked"`           // 是否已点赞
 	Images          []ImageInfo `json:"images"`             // 评论图片列表
 }
 

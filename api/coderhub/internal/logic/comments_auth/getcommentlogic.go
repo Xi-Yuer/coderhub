@@ -28,8 +28,10 @@ func NewGetCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCom
 }
 
 func (l *GetCommentLogic) GetComment(req *types.GetCommentReq) (resp *types.GetCommentResp, err error) {
+	userID, _ := utils.GetUserID(l.ctx)
 	comment, err := l.svcCtx.CommentService.GetComment(l.ctx, &commentservice.GetCommentRequest{
 		CommentId: utils.String2Int(req.CommentId),
+		UserId:    userID,
 	})
 	if err != nil {
 		return l.errorResp(err)
@@ -113,15 +115,16 @@ func (l *GetCommentLogic) successResp(comment *commentservice.GetCommentResponse
 			Id:              utils.Int2String(comment.Comment.Id),
 			EntityID:        utils.Int2String(comment.Comment.EntityId),
 			Content:         comment.Comment.Content,
-			ParentId:        utils.Int2String(comment.Comment.ParentId),
 			RootId:          utils.Int2String(comment.Comment.RootId),
+			ParentId:        utils.Int2String(comment.Comment.ParentId),
 			UserInfo:        userInfo,
 			CreatedAt:       comment.Comment.CreatedAt,
 			UpdatedAt:       comment.Comment.UpdatedAt,
 			Replies:         nil,
-			RepliesCount:    comment.Comment.RepliesCount,
 			ReplyToUserInfo: replyToUserInfo,
+			RepliesCount:    comment.Comment.RepliesCount,
 			LikeCount:       comment.Comment.LikeCount,
+			IsLiked:         comment.Comment.IsLiked,
 			Images:          images,
 		},
 	}, nil

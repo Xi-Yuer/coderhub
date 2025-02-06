@@ -34,7 +34,7 @@ func (l *GetCommentsLogic) GetComments(in *coderhub.GetCommentsRequest) (*coderh
 	}
 
 	// 构建树形结构
-	rootComments := l.buildTree(comments)
+	rootComments := l.buildTree(in, comments)
 
 	return &coderhub.GetCommentsResponse{
 		Comments: rootComments,
@@ -43,7 +43,7 @@ func (l *GetCommentsLogic) GetComments(in *coderhub.GetCommentsRequest) (*coderh
 }
 
 // buildTree 构建树形结构
-func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*coderhub.Comment {
+func (l *GetCommentsLogic) buildTree(in *coderhub.GetCommentsRequest, comments []model.Comment) []*coderhub.Comment {
 	if len(comments) == 0 {
 		return nil
 	}
@@ -139,6 +139,14 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*coderhub.Comme
 		l.Logger.Errorf("获取评论点赞数失败: %v", err)
 		return make([]*coderhub.Comment, 0)
 	}
+
+	// 获取评论点赞状态
+	likeStatusMap, err := l.svcCtx.CommentRelationLikeRepository.BatchGetCommentsHasBeenUserLiked(l.ctx, commentIds, in.UserId)
+	if err != nil {
+		l.Logger.Errorf("获取评论点赞状态失败: %v", err)
+		return make([]*coderhub.Comment, 0)
+	}
+
 	for i, val := range comments {
 		// 确保每个评论的图片列表都被初始化
 		if _, ok := commentImages[val.ID]; !ok {
@@ -155,10 +163,11 @@ func (l *GetCommentsLogic) buildTree(comments []model.Comment) []*coderhub.Comme
 			ReplyToUserInfo: userInfos[val.ReplyToUID],
 			CreatedAt:       val.CreatedAt.Unix(),
 			UpdatedAt:       val.UpdatedAt.Unix(),
-			Replies:         l.buildTree(val.Replies),
+			Replies:         l.buildTree(in, val.Replies),
 			RepliesCount:    val.ReplyCount,
 			LikeCount:       int32(likeCountMap[val.ID]),
 			Images:          commentImages[val.ID],
+			IsLiked:         likeStatusMap[val.ID],
 		}
 	}
 	// 按照点赞数量进行排序
