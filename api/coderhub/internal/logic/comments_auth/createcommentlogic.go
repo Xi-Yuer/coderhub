@@ -68,24 +68,47 @@ func (l *CreateCommentLogic) successResp(comment *commentservice.CreateCommentRe
 			CreatedAt:    image.CreatedAt,
 		})
 	}
+	var replyToUserInfo *types.UserInfo
+	var userInfo *types.UserInfo
+	if comment.Comment.ReplyToUserInfo != nil {
+		replyToUserInfo = &types.UserInfo{
+			Id:       utils.Int2String(comment.Comment.ReplyToUserInfo.UserId),
+			Username: comment.Comment.ReplyToUserInfo.UserName,
+			Nickname: comment.Comment.ReplyToUserInfo.NickName,
+			Email:    comment.Comment.ReplyToUserInfo.Email,
+			Phone:    comment.Comment.ReplyToUserInfo.Phone,
+			Avatar:   comment.Comment.ReplyToUserInfo.Avatar,
+		}
+	}
+	if comment.Comment.UserInfo != nil {
+		userInfo = &types.UserInfo{
+			Id:       utils.Int2String(comment.Comment.UserInfo.UserId),
+			Username: comment.Comment.UserInfo.UserName,
+			Nickname: comment.Comment.UserInfo.NickName,
+			Email:    comment.Comment.UserInfo.Email,
+			Phone:    comment.Comment.UserInfo.Phone,
+			Avatar:   comment.Comment.UserInfo.Avatar,
+		}
+	}
 	return &types.CreateCommentResp{
 		Response: types.Response{
 			Code:    conf.HttpCode.HttpStatusOK,
 			Message: conf.HttpMessage.MsgOK,
 		},
 		Data: &types.Comment{
-			Id:           utils.Int2String(comment.Comment.Id),
-			EntityID:     utils.Int2String(comment.Comment.EntityId),
-			Content:      comment.Comment.Content,
-			ParentId:     utils.Int2String(comment.Comment.ParentId),
-			RootId:       utils.Int2String(comment.Comment.RootId),
-			UserInfo:     &types.UserInfo{Id: utils.Int2String(comment.Comment.UserInfo.UserId), Username: comment.Comment.UserInfo.UserName, Avatar: comment.Comment.UserInfo.Avatar},
-			CreatedAt:    comment.Comment.CreatedAt,
-			UpdatedAt:    comment.Comment.UpdatedAt,
-			Replies:      nil,
-			RepliesCount: comment.Comment.RepliesCount,
-			LikeCount:    comment.Comment.LikeCount,
-			Images:       Images,
+			Id:              utils.Int2String(comment.Comment.Id),
+			EntityID:        utils.Int2String(comment.Comment.EntityId),
+			Content:         comment.Comment.Content,
+			RootId:          utils.Int2String(comment.Comment.RootId),
+			ParentId:        utils.Int2String(comment.Comment.ParentId),
+			UserInfo:        userInfo,
+			CreatedAt:       comment.Comment.CreatedAt,
+			UpdatedAt:       comment.Comment.UpdatedAt,
+			Replies:         nil,
+			ReplyToUserInfo: replyToUserInfo,
+			RepliesCount:    comment.Comment.RepliesCount,
+			LikeCount:       comment.Comment.LikeCount,
+			Images:          Images,
 		},
 	}, nil
 }
