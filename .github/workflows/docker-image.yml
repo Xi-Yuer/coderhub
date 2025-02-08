@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "merge" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "merge" ]
 
 jobs:
   build:
@@ -19,32 +19,10 @@ jobs:
       matrix:
         # 定义镜像列表
         image:
-          - name: user-api
-            dockerfile: ./api/User/Dockerfile
-          - name: articles-api
-            dockerfile: ./api/TechSphere/Articles/Dockerfile
-          - name: comments-api
-            dockerfile: ./api/TechSphere/Comment/Dockerfile
-          - name: images-api
-            dockerfile: ./api/Image/Dockerfile
-          - name: user-follow-api
-            dockerfile: ./api/UserFollow/Dockerfile
-          - name: academic-navigator-api
-            dockerfile: ./api/TechSphere/AcademicNavigator/Dockerfile
-          - name: image-relation-service
-            dockerfile: ./rpc/ImageRelation/Dockerfile
-          - name: user-service
-            dockerfile: ./rpc/User/Dockerfile
-          - name: articles-service
-            dockerfile: ./rpc/TechSphere/Articles/Dockerfile
-          - name: comments-service
-            dockerfile: ./rpc/TechSphere/Comment/Dockerfile
-          - name: images-service
-            dockerfile: ./rpc/Image/Dockerfile
-          - name: user-follow-service
-            dockerfile: ./rpc/UserFollow/Dockerfile
-          - name: academic-navigator-service
-            dockerfile: ./rpc/TechSphere/AcademicNavigator/Dockerfile
+          - name: api
+            dockerfile: ./api/coderhub/Dockerfile
+          - name: service
+            dockerfile: ./rpc/coderhub/Dockerfile
 
     # 定义步骤（该 Step 会根据矩阵策略执行多次）
     steps:

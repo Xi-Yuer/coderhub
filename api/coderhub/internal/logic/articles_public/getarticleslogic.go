@@ -49,12 +49,10 @@ func (l *GetArticlesLogic) GetArticles(req *types.GetArticlesReq) (resp *types.G
 		}, nil
 	}
 
-	userID, _ := utils.GetUserID(l.ctx)
-
 	// 获取文章列表详情
 	response, err := l.svcCtx.ArticlesService.ListArticles(l.ctx, &coderhub.GetArticlesRequest{
 		Ids:    articles.Ids,
-		UserId: userID,
+		UserId: utils.String2Int(req.UserID),
 	})
 	if err != nil {
 		return l.errorResp(err)
@@ -123,7 +121,7 @@ func (l *GetArticlesLogic) convertToArticleType(article *coderhub.GetArticleResp
 			fmt.Printf("article.Article.Images[%d] is nil\n", i)
 		}
 	}
-
+	fmt.Printf("article.Article.IsLicked ==> %v\n", article.Article.IsLicked)
 	return &types.GetArticle{
 		Article: &types.Article{
 			Id:        utils.Int2String(article.Article.Id),
@@ -138,7 +136,7 @@ func (l *GetArticlesLogic) convertToArticleType(article *coderhub.GetArticleResp
 				}
 				return &img.Url
 			}(article.Article.CoverImage),
-			AuthorId:     utils.Int2String(article.Article.Id),
+			AuthorId:     utils.Int2String(article.Author.UserId),
 			Tags:         article.Article.Tags,
 			ViewCount:    article.Article.ViewCount,
 			LikeCount:    article.Article.LikeCount,

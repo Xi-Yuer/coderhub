@@ -347,7 +347,8 @@ type GetArticle struct {
 }
 
 type GetArticleReq struct {
-	Id string `path:"id"` // 文章 ID
+	Id     string `path:"id"`               // 文章 ID
+	UserID string `form:"user_id,optional"` // 用户 ID
 }
 
 type GetArticleResp struct {
@@ -359,6 +360,7 @@ type GetArticlesReq struct {
 	Type     string `form:"type,options=article|micro_post"` // 内容类型
 	Page     int32  `form:"page"`                            // 页码
 	PageSize int32  `form:"page_size"`                       // 每页数量
+	UserID   string `form:"user_id,optional"`                // 用户 ID
 }
 
 type GetArticlesResp struct {

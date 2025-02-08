@@ -31,9 +31,8 @@ func (l *GetArticleLogic) GetArticle(req *types.GetArticleReq) (resp *types.GetA
 	if err := utils.NewValidator().ArticleID(utils.String2Int(req.Id)).Check(); err != nil {
 		return l.errorResp(err), nil
 	}
-	userID, _ := utils.GetUserID(l.ctx)
 
-	article, err := l.getArticle(utils.String2Int(req.Id), userID)
+	article, err := l.getArticle(utils.String2Int(req.Id), utils.String2Int(req.UserID))
 	if err != nil {
 		return l.errorResp(err), nil
 	}

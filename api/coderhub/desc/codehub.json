@@ -293,10 +293,20 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "user_id",
+            "description": " 用户 ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
           "articles_public"
+        ],
+        "consumes": [
+          "multipart/form-data"
         ]
       }
     },
@@ -339,6 +349,13 @@
             "required": true,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "name": "user_id",
+            "description": " 用户 ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -3367,6 +3384,12 @@
     },
     "GetArticleReq": {
       "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": " 用户 ID"
+        }
+      },
       "title": "GetArticleReq"
     },
     "GetArticleResp": {
@@ -3411,6 +3434,10 @@
           "type": "integer",
           "format": "int32",
           "description": " 每页数量"
+        },
+        "user_id": {
+          "type": "string",
+          "description": " 用户 ID"
         }
       },
       "title": "GetArticlesReq",
