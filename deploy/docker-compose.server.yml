@@ -189,7 +189,7 @@ services:
       retries: 10
       start_period: 30s
       timeout: 10s
-      restart: always
+    restart: always
 
 networks:
   coderhub-network:
