@@ -100,15 +100,9 @@ services:
     ports:
       - "80:80"
     depends_on:
-      user-service:
+      service:
         condition: service_healthy
-      user-api:
-        condition: service_healthy
-      articles-api:
-        condition: service_healthy
-      comment-api:
-        condition: service_healthy
-      user-follow-api:
+      api:
         condition: service_healthy
     networks:
       - coderhub-network
