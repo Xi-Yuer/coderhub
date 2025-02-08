@@ -101,6 +101,11 @@ services:
       - "80:80"
     networks:
       - coderhub-network
+    depends_on:
+      service:
+        condition: service_healthy
+      api:
+        condition: service_healthy
     volumes:
       - type: bind
         source: ./nginx.conf
