@@ -36,6 +36,8 @@ message UserInfo {
   bool status = 11;
   int64 created_at = 12;
   int64 updated_at = 13;
+  int64 follow_count = 14;
+  int64 follower_count = 15;
 }
 
 message UpdateUserInfoRequest {

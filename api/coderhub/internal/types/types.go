@@ -752,18 +752,20 @@ type UploadResponse struct {
 }
 
 type UserInfo struct {
-	Id       string `json:"id"`                 // 用户ID
-	Username string `json:"username"`           // 用户名
-	Nickname string `json:"nickname"`           // 昵称
-	Email    string `json:"email"`              // 邮箱
-	Phone    string `json:"phone"`              // 手机号
-	Avatar   string `json:"avatar"`             // 头像
-	Gender   int32  `json:"gender,options=0|1"` // 性别 0:未知 1:男 2:女
-	Age      int32  `json:"age,range=[0:120]"`  // 年龄
-	Status   bool   `json:"status"`             // 状态 true:正常 false:禁用
-	IsAdmin  bool   `json:"is_admin"`           // 角色 0:普通用户 1:管理员
-	CreateAt int64  `json:"create_at"`          // 创建时间
-	UpdateAt int64  `json:"update_at"`          // 更新时间
+	Id          string `json:"id"`                 // 用户ID
+	Username    string `json:"username"`           // 用户名
+	Nickname    string `json:"nickname"`           // 昵称
+	Email       string `json:"email"`              // 邮箱
+	Phone       string `json:"phone"`              // 手机号
+	Avatar      string `json:"avatar"`             // 头像
+	Gender      int32  `json:"gender,options=0|1"` // 性别 0:未知 1:男 2:女
+	Age         int32  `json:"age,range=[0:120]"`  // 年龄
+	Status      bool   `json:"status"`             // 状态 true:正常 false:禁用
+	IsAdmin     bool   `json:"is_admin"`           // 角色 0:普通用户 1:管理员
+	CreateAt    int64  `json:"create_at"`          // 创建时间
+	UpdateAt    int64  `json:"update_at"`          // 更新时间
+	FollowCount int64  `json:"follow_count"`       // 关注数量
+	FansCount   int64  `json:"fans_count"`         // 粉丝数量
 }
 
 type UserList struct {

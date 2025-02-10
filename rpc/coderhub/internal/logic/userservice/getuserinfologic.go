@@ -33,18 +33,20 @@ func (l *GetUserInfoLogic) GetUserInfo(in *coderhub.GetUserInfoRequest) (*coderh
 	}
 
 	return &coderhub.UserInfo{
-		UserId:    User.ID,
-		UserName:  User.UserName,
-		Avatar:    User.Avatar.String,
-		Email:     User.Email.String,
-		Password:  User.Password,
-		Gender:    User.Gender,
-		Age:       User.Age,
-		Phone:     User.Phone.String,
-		NickName:  User.NickName.String,
-		IsAdmin:   User.IsAdmin,
-		Status:    User.Status,
-		CreatedAt: User.CreatedAt.Unix(),
-		UpdatedAt: User.UpdatedAt.Unix(),
+		UserId:        User.ID,
+		UserName:      User.UserName,
+		Avatar:        User.Avatar.String,
+		Email:         User.Email.String,
+		Password:      User.Password,
+		Gender:        User.Gender,
+		Age:           User.Age,
+		Phone:         User.Phone.String,
+		NickName:      User.NickName.String,
+		IsAdmin:       User.IsAdmin,
+		Status:        User.Status,
+		CreatedAt:     User.CreatedAt.Unix(),
+		UpdatedAt:     User.UpdatedAt.Unix(),
+		FollowCount:   User.FollowCount,
+		FollowerCount: User.FollowerCount,
 	}, nil
 }

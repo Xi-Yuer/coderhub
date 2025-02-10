@@ -38,6 +38,10 @@ type User struct {
 	UpdatedAt time.Time `gorm:"autoCreateTime;autoUpdateTime" json:"updated_at"`
 	// 软删除时间戳
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
+	// 用户的粉丝数量（忽略）
+	FollowerCount int64 `gorm:"-" json:"follower_count"`
+	// 用户的关注数量（忽略）
+	FollowCount int64 `gorm:"-" json:"follow_count"`
 }
 
 // CacheKeyByID 根据用户ID生成缓存键

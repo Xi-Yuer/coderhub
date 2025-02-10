@@ -15,7 +15,7 @@ type GetUserListLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// 获取用户列表
+// NewGetUserListLogic 获取用户列表
 func NewGetUserListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserListLogic {
 	return &GetUserListLogic{
 		Logger: logx.WithContext(ctx),

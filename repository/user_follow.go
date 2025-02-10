@@ -48,7 +48,7 @@ func (r *UserFollowRepositoryImpl) CreateUserFollow(userFollow *model.UserFollow
 		return err
 	}
 	if isFollowed {
-		return errors.New("已关注")
+		return r.DeleteUserFollow(userFollow)
 	}
 	if userFollow.FollowerID == userFollow.FollowedID {
 		return errors.New("不能关注自己")

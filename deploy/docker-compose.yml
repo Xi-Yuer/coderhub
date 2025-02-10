@@ -102,9 +102,9 @@ services:
     networks:
       - coderhub-network
     depends_on:
-      service:
+      coderhub-api:
         condition: service_healthy
-      api:
+      coderhub-service:
         condition: service_healthy
     volumes:
       - type: bind
@@ -174,7 +174,7 @@ services:
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "8888"] # 使用netcat检查端口是否开放
+      test: [ "CMD", "nc", "-z", "localhost", "8080" ] # 使用netcat检查端口是否开放
       interval: 10s
       retries: 10
       start_period: 30s

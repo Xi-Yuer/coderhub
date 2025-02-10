@@ -88,6 +88,24 @@ func (r *UserRepositoryImpl) GetUserByID(id int64) (*model.User, error) {
 		return nil, err
 	}
 
+	// 查询用户粉丝数量
+	var followerCount int64
+	if err := r.DB.Model(&model.UserFollow{}).Where("followed_id = ?", id).Count(&followerCount).Error; err != nil {
+		return nil, err
+	}
+
+	// 查询用户关注数量
+	var followCount int64
+	if err := r.DB.Model(&model.UserFollow{}).Where("follower_id = ?", id).Count(&followCount).Error; err != nil {
+		return nil, err
+	}
+
+	fmt.Println("用户粉丝数量==>", followerCount)
+	fmt.Println("用户关注数量==>", followCount)
+
+	user.FollowerCount = followerCount
+	user.FollowCount = followCount
+
 	// 异步设置缓存
 	go func() {
 		_ = r.setCache(key, &user)
