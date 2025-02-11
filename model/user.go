@@ -42,6 +42,8 @@ type User struct {
 	FollowerCount int64 `gorm:"-" json:"follower_count"`
 	// 用户的关注数量（忽略）
 	FollowCount int64 `gorm:"-" json:"follow_count"`
+	// 用户是否被关注（忽略）
+	IsFollowed bool `gorm:"-" json:"is_followed"`
 }
 
 // CacheKeyByID 根据用户ID生成缓存键

@@ -53,11 +53,26 @@ func (r *UserFollowRepositoryImpl) CreateUserFollow(userFollow *model.UserFollow
 	if userFollow.FollowerID == userFollow.FollowedID {
 		return errors.New("不能关注自己")
 	}
+
+	// 删除缓存中的用户数据
+	var user model.User
+	followerKey := user.CacheKeyByID(userFollow.FollowerID)
+	followedKey := user.CacheKeyByID(userFollow.FollowedID)
+	_ = r.Redis.Del(followerKey, followedKey)
+
 	return r.DB.Model(&model.UserFollow{}).Create(userFollow).Error
 }
 
 // DeleteUserFollow 删除用户关注关系
 func (r *UserFollowRepositoryImpl) DeleteUserFollow(userFollow *model.UserFollow) error {
+	if userFollow.FollowerID == userFollow.FollowedID {
+		return errors.New("不能取消关注自己")
+	}
+	// 删除缓存中的用户数据
+	var user model.User
+	followerKey := user.CacheKeyByID(userFollow.FollowerID)
+	followedKey := user.CacheKeyByID(userFollow.FollowedID)
+	_ = r.Redis.Del(followerKey, followedKey)
 	return r.DB.Model(&model.UserFollow{}).Where("follower_id = ? AND followed_id = ?", userFollow.FollowerID, userFollow.FollowedID).Unscoped().Delete(userFollow).Error
 }
 
@@ -105,8 +120,9 @@ func (r *UserFollowRepositoryImpl) BatchGetUserFans(followedID int64, page int32
 
 // IsUserFollowed 判断两个用户是否存在关注关系
 func (r *UserFollowRepositoryImpl) IsUserFollowed(followerID int64, followedID int64) (bool, error) {
-	var userFollow model.UserFollow
-	return r.DB.Model(&model.UserFollow{}).Where("follower_id = ? AND followed_id = ?", followerID, followedID).First(&userFollow).RowsAffected > 0, nil
+	var isFollowed int64
+	r.DB.Model(&model.UserFollow{}).Where("follower_id = ? AND followed_id = ?", followerID, followedID).Count(&isFollowed)
+	return isFollowed > 0, nil
 }
 
 // GetMutualFollows 查询互相关注的用户

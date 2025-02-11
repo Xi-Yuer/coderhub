@@ -2,6 +2,7 @@ package user_public
 
 import (
 	"context"
+	"fmt"
 
 	"coderhub/api/coderhub/internal/svc"
 	"coderhub/api/coderhub/internal/types"
@@ -28,7 +29,8 @@ func NewGetUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 }
 
 func (l *GetUserInfoLogic) GetUserInfo(req *types.GetUserInfoReq) (resp *types.GetUserInfoResp, err error) {
-	UserInfo, err := l.svcCtx.UserService.GetUserInfo(l.ctx, &coderhub.GetUserInfoRequest{UserId: utils.String2Int(req.Id)})
+	fmt.Println("req.RequestUserID:", req.RequestUserID)
+	UserInfo, err := l.svcCtx.UserService.GetUserInfo(l.ctx, &coderhub.GetUserInfoRequest{UserId: utils.String2Int(req.Id), RequestUserId: utils.String2Int(req.RequestUserID)})
 	if err != nil {
 		return &types.GetUserInfoResp{
 			Response: types.Response{
@@ -58,6 +60,7 @@ func (l *GetUserInfoLogic) GetUserInfo(req *types.GetUserInfoReq) (resp *types.G
 			UpdateAt:    UserInfo.UpdatedAt,
 			FollowCount: UserInfo.FollowerCount,
 			FansCount:   UserInfo.FollowCount,
+			IsFollowed:  UserInfo.IsFollowed,
 		},
 	}, nil
 }

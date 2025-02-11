@@ -3,6 +3,7 @@ package userservicelogic
 import (
 	"coderhub/model"
 	"context"
+	"fmt"
 
 	"coderhub/rpc/coderhub/coderhub"
 	"coderhub/rpc/coderhub/internal/svc"
@@ -32,6 +33,15 @@ func (l *GetUserInfoLogic) GetUserInfo(in *coderhub.GetUserInfoRequest) (*coderh
 		return nil, err
 	}
 
+	isUserFollowed, err := l.svcCtx.UserFollowRepository.IsUserFollowed(in.RequestUserId, User.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("isUserFollowed: %v\n", isUserFollowed)
+	fmt.Printf("RequestUserId: %v\n", in.RequestUserId)
+	fmt.Printf("User.ID: %v\n", User.ID)
+
 	return &coderhub.UserInfo{
 		UserId:        User.ID,
 		UserName:      User.UserName,
@@ -48,5 +58,6 @@ func (l *GetUserInfoLogic) GetUserInfo(in *coderhub.GetUserInfoRequest) (*coderh
 		UpdatedAt:     User.UpdatedAt.Unix(),
 		FollowCount:   User.FollowCount,
 		FollowerCount: User.FollowerCount,
+		IsFollowed:    isUserFollowed,
 	}, nil
 }

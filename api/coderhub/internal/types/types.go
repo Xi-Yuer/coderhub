@@ -496,7 +496,8 @@ type GetResponse struct {
 }
 
 type GetUserInfoReq struct {
-	Id string `path:"id"` // 用户ID
+	Id            string `path:"id"` // 用户ID
+	RequestUserID string `header:"request-user-id,optional"`
 }
 
 type GetUserInfoResp struct {
@@ -766,6 +767,7 @@ type UserInfo struct {
 	UpdateAt    int64  `json:"update_at"`          // 更新时间
 	FollowCount int64  `json:"follow_count"`       // 关注数量
 	FansCount   int64  `json:"fans_count"`         // 粉丝数量
+	IsFollowed  bool   `json:"is_followed"`        // 是否已关注
 }
 
 type UserList struct {
